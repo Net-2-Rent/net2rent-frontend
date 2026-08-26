@@ -1,0 +1,36 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.property-card {
+  @include mix.surface-card;
+
+  padding: vars.space(20);
+
+  &__name {
+    @include mix.text-style("card-title", "guest");
+
+    margin: 0;
+    color: var(--color-text-strong);
+  }
+
+  &__reference {
+    display: flex;
+    align-items: baseline;
+    gap: vars.space(8);
+    margin: vars.space(8) 0 0;
+  }
+
+  &__reference-label {
+    @include mix.text-style("eyebrow", "guest");
+
+    color: var(--color-text-muted);
+  }
+
+  &__reference-value {
+    @include mix.mono-data;
+
+    font-size: 15px;
+    font-weight: vars.weight("bold");
+    color: var(--color-text-strong);
+  }
+}

@@ -203,14 +203,22 @@ $type-guest: (
 $color-text-strong: #2e2e2e;
 $color-text-soft: #666363;
 $color-text-muted: #69727d;
-$color-text-faint: #8b929c;
+$color-text-faint: #5f6772;
 
 $color-surface: #ffffff;
 $color-fill-subtle: #f1f3f6;
-$color-fill-disabled: #d5d9e0;
+$color-fill-disabled: #c3c9d3;
 
 $color-danger: #dc2626;
 $color-danger-soft: #fdecec;
+
+$color-success: #15803d;
+$color-success-soft: #dcfce7;
+$color-success-ink: #0f5227;
+
+$color-success-dark: #4ade80;
+$color-success-soft-dark: #173a26;
+$color-success-ink-dark: #d3ead9;
 
 $bo-brand: #4169e1;
 $bo-brand-ink: #2f51bd;
@@ -258,6 +266,16 @@ $bo-note-ink-dark: #e2cd8e;
 
 $bo-danger-dark: #f87171;
 $bo-danger-soft-dark: #3a1e1e;
+
+$status-keys: (
+        "new",
+        "assigned",
+        "in-progress",
+        "paused",
+        "resolved",
+        "closed",
+        "rejected"
+);
 
 $bo-status: (
         "new": (

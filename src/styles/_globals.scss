@@ -62,6 +62,8 @@ select {
   --badge-padding-block: 4px;
   --badge-padding-inline: 11px;
   --badge-font-size: 12.5px;
+
+  --color-spinner-track: #{rgba(#ffffff, 0.4)};
 }
 
 @mixin emit-status-tokens($status-map, $variant: "light") {
@@ -126,6 +128,10 @@ select {
   --color-danger-soft: #{vars.$bo-danger-soft-dark};
   --color-danger-ring: #{rgba(vars.$bo-danger-dark, 0.24)};
 
+  --color-success: #{vars.$color-success-dark};
+  --color-success-soft: #{vars.$color-success-soft-dark};
+  --color-success-ink: #{vars.$color-success-ink-dark};
+
   --color-disabled-bg: #{vars.$bo-surface-subtle-dark};
   --color-disabled-text: #{vars.$bo-text-muted-dark};
 
@@ -154,6 +160,10 @@ select {
   --color-text-soft: #{vars.$guest-dark-text-muted};
   --color-text-muted: #{vars.$guest-dark-text-muted};
   --color-text-faint: #{vars.$guest-dark-text-muted};
+
+  --color-success: #{vars.$color-success};
+  --color-success-soft: #{vars.$color-success-soft};
+  --color-success-ink: #{vars.$color-success-ink};
 
   --color-disabled-bg: #{vars.$guest-disabled-bg-dark};
   --color-disabled-text: #{vars.$guest-disabled-text-dark};
@@ -204,6 +214,10 @@ select {
   --color-danger: #{vars.$color-danger};
   --color-danger-soft: #{vars.$color-danger-soft};
   --color-danger-ring: #{rgba(vars.$color-danger, 0.16)};
+
+  --color-success: #{vars.$color-success};
+  --color-success-soft: #{vars.$color-success-soft};
+  --color-success-ink: #{vars.$color-success-ink};
 
   --color-disabled-bg: #{vars.$color-fill-disabled};
   --color-disabled-text: #{vars.$color-text-faint};
@@ -287,6 +301,10 @@ select {
   --color-danger: #{vars.$color-danger};
   --color-danger-soft: #{vars.$color-danger-soft};
   --color-danger-ring: #{rgba(vars.$color-danger, 0.16)};
+
+  --color-success: #{vars.$color-success};
+  --color-success-soft: #{vars.$color-success-soft};
+  --color-success-ink: #{vars.$color-success-ink};
 
   --color-disabled-bg: #{vars.$color-fill-disabled};
   --color-disabled-text: #{vars.$color-text-faint};
@@ -381,17 +399,6 @@ pre,
   color: var(--color-text-strong);
 }
 
-.status-badge {
-  @include mix.badge-shape;
-
-  @each $key, $definition in vars.$bo-status {
-    &--#{$key} {
-      background: var(--status-#{$key}-bg);
-      color: var(--status-#{$key}-fg);
-    }
-  }
-}
-
 .status-dot {
   display: inline-block;
   width: 8px;
@@ -402,20 +409,6 @@ pre,
   @each $key, $definition in vars.$bo-status {
     &--#{$key} {
       background: var(--status-#{$key}-dot);
-    }
-  }
-}
-
-.priority-pill {
-  @include mix.badge-shape;
-
-  @each $key, $definition in vars.$bo-priority {
-    &--#{$key} {
-      background: var(--priority-#{$key}-bg);
-      color: var(--priority-#{$key}-fg);
-      border: 1px var(--priority-#{$key}-border-style)
-      var(--priority-#{$key}-border);
-      font-weight: var(--priority-#{$key}-weight);
     }
   }
 }

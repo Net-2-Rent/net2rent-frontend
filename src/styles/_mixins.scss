@@ -24,11 +24,23 @@
   :root[data-theme="dark"] & {
     @content;
   }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) & {
+      @content;
+    }
+  }
 }
 
 @mixin when-light {
   :root[data-theme="light"] & {
     @content;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) & {
+      @content;
+    }
   }
 }
 

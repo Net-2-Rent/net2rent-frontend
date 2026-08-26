@@ -161,9 +161,9 @@ select {
   --color-text-muted: #{vars.$guest-dark-text-muted};
   --color-text-faint: #{vars.$guest-dark-text-muted};
 
-  --color-success: #{vars.$color-success};
-  --color-success-soft: #{vars.$color-success-soft};
-  --color-success-ink: #{vars.$color-success-ink};
+  --color-success: #{vars.$color-success-dark};
+  --color-success-soft: #{vars.$color-success-soft-dark};
+  --color-success-ink: #{vars.$color-success-ink-dark};
 
   --color-disabled-bg: #{vars.$guest-disabled-bg-dark};
   --color-disabled-text: #{vars.$guest-disabled-text-dark};
@@ -271,6 +271,11 @@ select {
 
   --gradient-background: #{vars.$guest-gradient-background};
   --gradient-cta: #{vars.$guest-gradient-cta};
+  --gradient-accent: linear-gradient(
+          135deg,
+          #{vars.$guest-accent-bright},
+          #{vars.$guest-accent-bright-end}
+  );
 
   --color-brand: #{vars.$guest-cta-start};
   --color-brand-ink: #{vars.$guest-link};

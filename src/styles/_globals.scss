@@ -1,0 +1,480 @@
+@use "sass:map";
+@use "variables" as vars;
+@use "mixins" as mix;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root {
+  --color-text-on-brand: #ffffff;
+
+  --badge-padding-block: 4px;
+  --badge-padding-inline: 11px;
+  --badge-font-size: 12.5px;
+}
+
+@mixin emit-status-tokens($status-map, $variant: "light") {
+  @each $key, $definition in $status-map {
+    $bg-key: if($variant == "dark", "bg-dark", "bg");
+    $fg-key: if($variant == "dark", "fg-dark", "fg");
+
+    @if not map.has-key($definition, $bg-key) {
+      $bg-key: "bg";
+      $fg-key: "fg";
+    }
+
+    --status-#{$key}-bg: #{map.get($definition, $bg-key)};
+    --status-#{$key}-fg: #{map.get($definition, $fg-key)};
+
+    @if map.has-key($definition, "dot") {
+      --status-#{$key}-dot: #{map.get($definition, "dot")};
+    }
+  }
+}
+
+@mixin emit-priority-tokens {
+  @each $key, $definition in vars.$bo-priority {
+    --priority-#{$key}-bg: #{map.get($definition, "bg")};
+    --priority-#{$key}-fg: #{map.get($definition, "fg")};
+    --priority-#{$key}-border: #{map.get($definition, "border")};
+    --priority-#{$key}-border-style: #{map.get($definition, "border-style")};
+    --priority-#{$key}-weight: #{map.get($definition, "weight")};
+  }
+}
+
+@mixin backoffice-dark-tokens {
+  --color-brand: #{vars.$bo-brand-dark};
+  --color-brand-ink: #{vars.$bo-brand-ink-dark};
+  --color-brand-ink-hover: #ffffff;
+  --color-brand-soft: #{vars.$bo-brand-soft-dark};
+  --color-focus-ring: #{vars.$bo-brand-soft-dark};
+
+  --color-page-bg: #{vars.$bo-page-bg-dark};
+  --color-app-bg: #{vars.$bo-app-bg-dark};
+  --color-surface: #{vars.$bo-surface-dark};
+  --color-surface-subtle: #{vars.$bo-surface-subtle-dark};
+  --color-input-bg: #{vars.$bo-surface-dark};
+  --color-border: #{vars.$bo-border-dark};
+  --color-border-strong: #{vars.$bo-border-strong-dark};
+
+  --color-text-strong: #{vars.$bo-text-dark-mode};
+  --color-text-soft: #{vars.$bo-text-soft-dark};
+  --color-text-muted: #{vars.$bo-text-muted-dark};
+  --color-text-faint: #{vars.$bo-text-muted-dark};
+
+  --color-nav-bg: #{vars.$bo-sidebar-dark};
+  --color-nav-bg-active: #{vars.$bo-sidebar-hover-dark};
+  --color-navy: #{vars.$bo-navy-dark};
+  --color-navy-deep: #{vars.$bo-navy-deep-dark};
+
+  --color-note-bg: #{vars.$bo-note-bg-dark};
+  --color-note-border: #{vars.$bo-note-border-dark};
+  --color-note-ink: #{vars.$bo-note-ink-dark};
+
+  --color-danger: #{vars.$bo-danger-dark};
+  --color-danger-soft: #{vars.$bo-danger-soft-dark};
+  --color-danger-ring: #{rgba(vars.$bo-danger-dark, 0.24)};
+
+  --color-disabled-bg: #{vars.$bo-surface-subtle-dark};
+  --color-disabled-text: #{vars.$bo-text-muted-dark};
+
+  --shadow-card: #{vars.$shadow-backoffice-card-dark};
+  --shadow-floating: #{vars.$shadow-backoffice-floating-dark};
+  --color-overlay: #{rgba(#000000, 0.62)};
+
+  @include emit-status-tokens(vars.$bo-status, "dark");
+}
+
+@mixin guest-dark-tokens {
+  --color-brand-ink: #{vars.$guest-link-dark};
+  --color-brand-ink-hover: #{vars.$guest-dark-text-strong};
+
+  --color-page-bg: #{vars.$guest-dark-app-bg};
+  --color-app-bg: #{vars.$guest-dark-app-bg};
+  --color-surface: #{vars.$guest-dark-surface};
+  --color-surface-subtle: #{vars.$guest-dark-locked-bg};
+  --color-input-bg: #{vars.$guest-dark-input-bg};
+  --color-border: #{vars.$guest-dark-border};
+  --color-border-strong: #{vars.$guest-dark-border};
+  --color-locked-bg: #{vars.$guest-dark-locked-bg};
+  --color-locked-text: #{vars.$guest-dark-locked-text};
+
+  --color-text-strong: #{vars.$guest-dark-text-strong};
+  --color-text-soft: #{vars.$guest-dark-text-muted};
+  --color-text-muted: #{vars.$guest-dark-text-muted};
+  --color-text-faint: #{vars.$guest-dark-text-muted};
+
+  --color-disabled-bg: #{vars.$guest-disabled-bg-dark};
+  --color-disabled-text: #{vars.$guest-disabled-text-dark};
+
+  --shadow-list-item: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 14px 34px rgba(0, 0, 0, 0.45);
+  --shadow-card-on-gradient: 0 18px 44px rgba(0, 0, 0, 0.55);
+  --shadow-floating: 0 18px 44px rgba(0, 0, 0, 0.55);
+  --color-overlay: #{rgba(#000000, 0.6)};
+
+  @include emit-status-tokens(vars.$guest-status, "dark");
+}
+
+:root[data-app="backoffice"] {
+  --font-family-base: #{vars.$font-family-backoffice};
+  --font-family-mono: #{vars.$font-family-mono};
+
+  --color-brand: #{vars.$bo-brand};
+  --color-brand-ink: #{vars.$bo-brand-ink};
+  --color-brand-ink-hover: #{vars.$bo-navy-deep};
+  --color-brand-soft: #{vars.$bo-brand-soft};
+  --color-focus-ring: #{vars.$bo-brand-soft};
+
+  --color-nav-bg: #{vars.$bo-sidebar};
+  --color-nav-bg-active: #{vars.$bo-sidebar-hover};
+  --color-navy: #{vars.$bo-navy};
+  --color-navy-deep: #{vars.$bo-navy-deep};
+  --color-nav-text: #ffffff;
+  --color-nav-text-muted: #{rgba(#ffffff, 0.68)};
+
+  --color-page-bg: #{vars.$bo-page-bg};
+  --color-app-bg: #{vars.$bo-app-bg};
+  --color-surface: #{vars.$bo-surface};
+  --color-surface-subtle: #{vars.$bo-surface-subtle};
+  --color-input-bg: #{vars.$bo-surface};
+  --color-border: #{vars.$bo-border};
+  --color-border-strong: #{vars.$bo-border-strong};
+
+  --color-text-strong: #{vars.$color-text-strong};
+  --color-text-soft: #{vars.$color-text-soft};
+  --color-text-muted: #{vars.$color-text-muted};
+  --color-text-faint: #{vars.$color-text-faint};
+
+  --color-note-bg: #{vars.$bo-note-bg};
+  --color-note-border: #{vars.$bo-note-border};
+  --color-note-ink: #{vars.$bo-note-ink};
+
+  --color-danger: #{vars.$color-danger};
+  --color-danger-soft: #{vars.$color-danger-soft};
+  --color-danger-ring: #{rgba(vars.$color-danger, 0.16)};
+
+  --color-disabled-bg: #{vars.$color-fill-disabled};
+  --color-disabled-text: #{vars.$color-text-faint};
+
+  --color-overlay: #{rgba(vars.$bo-navy-deep, 0.55)};
+  --shadow-card: #{vars.$shadow-backoffice-card};
+  --shadow-floating: #{vars.$shadow-backoffice-floating};
+
+  --radius-chip: #{vars.radius-backoffice("chip")};
+  --radius-field: #{vars.radius-backoffice("field")};
+  --radius-button: #{vars.radius-backoffice("action")};
+  --radius-card: #{vars.radius-backoffice("card")};
+  --radius-modal: #{vars.radius-backoffice("modal")};
+  --radius-pill: #{vars.radius-backoffice("pill")};
+
+  --field-height: 46px;
+  --field-padding-inline: 14px;
+  --field-font-size: 15px;
+  --field-border-width: 1px;
+
+  --layout-content-max: #{vars.$layout-backoffice-content-max};
+  --layout-sidebar-width: #{vars.$layout-backoffice-sidebar-width};
+  --layout-screen-padding: #{vars.space(16)};
+  --touch-target-min: #{vars.$layout-backoffice-touch-min};
+  --touch-target-action: #{vars.$layout-backoffice-touch-action};
+
+  --badge-font-size: 11.5px;
+  --badge-padding-inline: #{vars.space(8)};
+
+  @include emit-status-tokens(vars.$bo-status, "light");
+  @include emit-priority-tokens;
+
+  @include mix.respond-to("desktop") {
+    --layout-screen-padding: #{vars.space(24)};
+  }
+
+  &[data-theme="dark"] {
+    @include backoffice-dark-tokens;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &:not([data-theme="light"]) {
+      @include backoffice-dark-tokens;
+    }
+  }
+}
+
+:root[data-app="guest"] {
+  --font-family-base: #{vars.$font-family-guest};
+  --font-family-mono: #{vars.$font-family-mono};
+
+  --gradient-background: #{vars.$guest-gradient-background};
+  --gradient-cta: #{vars.$guest-gradient-cta};
+
+  --color-brand: #{vars.$guest-cta-start};
+  --color-brand-ink: #{vars.$guest-link};
+  --color-brand-ink-hover: #{vars.$guest-navy};
+  --color-brand-soft: #{rgba(vars.$guest-accent-bright, 0.12)};
+  --color-focus-ring: #{rgba(vars.$guest-accent-bright, 0.16)};
+
+  --color-accent-bright: #{vars.$guest-accent-bright};
+  --color-accent-bright-end: #{vars.$guest-accent-bright-end};
+
+  --color-navy: #{vars.$guest-navy};
+
+  --color-page-bg: #{vars.$guest-page-bg};
+  --color-app-bg: #{vars.$guest-app-bg};
+  --color-surface: #{vars.$color-surface};
+  --color-surface-subtle: #{vars.$color-fill-subtle};
+  --color-input-bg: #{vars.$color-surface};
+  --color-border: #{vars.$guest-border};
+  --color-border-strong: #{vars.$guest-border};
+  --color-locked-bg: #{vars.$color-fill-subtle};
+  --color-locked-text: #{vars.$color-text-strong};
+
+  --color-text-strong: #{vars.$color-text-strong};
+  --color-text-soft: #{vars.$color-text-soft};
+  --color-text-muted: #{vars.$color-text-muted};
+  --color-text-faint: #{vars.$color-text-faint};
+
+  --color-danger: #{vars.$color-danger};
+  --color-danger-soft: #{vars.$color-danger-soft};
+  --color-danger-ring: #{rgba(vars.$color-danger, 0.16)};
+
+  --color-disabled-bg: #{vars.$color-fill-disabled};
+  --color-disabled-text: #{vars.$color-text-faint};
+
+  --color-overlay: #{rgba(vars.$guest-navy, 0.55)};
+  --shadow-list-item: #{vars.$shadow-guest-list-item};
+  --shadow-card: #{vars.$shadow-guest-card};
+  --shadow-card-on-gradient: #{vars.$shadow-guest-card-on-gradient};
+  --shadow-button: #{vars.$shadow-guest-button};
+  --shadow-floating: #{vars.$shadow-guest-card-on-gradient};
+
+  --radius-thumbnail: #{vars.radius-guest("thumbnail")};
+  --radius-field: #{vars.radius-guest("field")};
+  --radius-button: #{vars.radius-guest("button")};
+  --radius-list-item: #{vars.radius-guest("list-item")};
+  --radius-card: #{vars.radius-guest("card")};
+  --radius-modal: #{vars.radius-guest("card")};
+  --radius-pill: #{vars.radius-guest("pill")};
+
+  --field-height: #{vars.$layout-guest-touch-min};
+  --field-padding-inline: 15px;
+  --field-font-size: #{vars.$layout-guest-input-min-font};
+  --field-border-width: 1.5px;
+
+  --button-height: 56px;
+  --button-font-size: 17px;
+
+  --layout-content-max: #{vars.$layout-guest-content-max};
+  --layout-auth-max: #{vars.$layout-guest-auth-max};
+  --layout-screen-padding: #{vars.$layout-guest-screen-padding};
+  --touch-target-min: #{vars.$layout-guest-touch-min};
+  --touch-target-action: #{vars.$layout-guest-touch-min};
+
+  @include emit-status-tokens(vars.$guest-status, "light");
+
+  &[data-theme="dark"] {
+    @include guest-dark-tokens;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &:not([data-theme="light"]) {
+      @include guest-dark-tokens;
+    }
+  }
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--color-app-bg);
+  color: var(--color-text-strong);
+  font-family: var(--font-family-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition: background-color vars.$transition-base, color
+  vars.$transition-base;
+}
+
+:root[data-app="backoffice"] body {
+  @include mix.text-style("body", "backoffice");
+}
+
+:root[data-app="guest"] body {
+  @include mix.text-style("body", "guest");
+}
+
+a {
+  color: var(--color-brand-ink);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-brand-ink-hover);
+  }
+}
+
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+code,
+kbd,
+samp,
+pre,
+.is-mono {
+  font-family: var(--font-family-mono);
+}
+
+::selection {
+  background: var(--color-brand-soft);
+  color: var(--color-text-strong);
+}
+
+.status-badge {
+  @include mix.badge-shape;
+
+  @each $key, $definition in vars.$bo-status {
+    &--#{$key} {
+      background: var(--status-#{$key}-bg);
+      color: var(--status-#{$key}-fg);
+    }
+  }
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+
+  @each $key, $definition in vars.$bo-status {
+    &--#{$key} {
+      background: var(--status-#{$key}-dot);
+    }
+  }
+}
+
+.priority-pill {
+  @include mix.badge-shape;
+
+  @each $key, $definition in vars.$bo-priority {
+    &--#{$key} {
+      background: var(--priority-#{$key}-bg);
+      color: var(--priority-#{$key}-fg);
+      border: 1px var(--priority-#{$key}-border-style)
+      var(--priority-#{$key}-border);
+      font-weight: var(--priority-#{$key}-weight);
+    }
+  }
+}
+
+.visually-hidden {
+  @include mix.visually-hidden;
+}
+
+.is-truncated {
+  @include mix.truncate(1);
+}
+
+.scroll-x {
+  @include mix.scroll-contained-x;
+}
+
+@keyframes n2r-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes n2r-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes n2r-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes n2r-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

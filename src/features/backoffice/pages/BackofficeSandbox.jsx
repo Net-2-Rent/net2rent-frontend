@@ -1,9 +1,10 @@
 //página de desarrollo - ELIMINAR ANTES DE ENTREGA
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import StatusBadge from '../../../shared/components/StatusBadge/StatusBadge.jsx';
 import { INCIDENT_STATUS } from '../../../shared/constants/incidentStatus.js';
+import { getInitialTheme, setTheme } from '../../../shared/utils/theme.js';
 
 /* Helpers de la sandbox                                               */
 
@@ -56,13 +57,13 @@ function Row({ label, children }) {
 /* Sandbox                                                             */
 
 export default function BackofficeSandbox() {
-  const [theme, setTheme] = useState(() =>
-    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
-  );
+    const [theme, setThemeState] = useState(getInitialTheme);
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
+    function toggleTheme() {
+        const next = theme === 'dark' ? 'light' : 'dark';
+        setThemeState(next);
+        setTheme(next);
+    }
 
   return (
     <main style={{
@@ -85,19 +86,19 @@ export default function BackofficeSandbox() {
           </p>
         </div>
 
-        <button
-          onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-          style={{
-            padding: '8px 14px',
-            borderRadius: 'var(--radius-field)',
-            background: 'var(--color-surface)',
-            border: '1px solid var(--color-border-strong)',
-            color: 'var(--color-text-strong)',
-            cursor: 'pointer',
-          }}
-        >
-          Tema: {theme}
-        </button>
+          <button
+              onClick={toggleTheme}
+              style={{
+                  padding: '8px 14px',
+                  borderRadius: 'var(--radius-field)',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border-strong)',
+                  color: 'var(--color-text-strong)',
+                  cursor: 'pointer',
+              }}
+          >
+              Tema: {theme}
+          </button>
       </header>
 
       <DemoSection title="StatusBadge · compartido">

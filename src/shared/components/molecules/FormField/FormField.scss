@@ -1,0 +1,55 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(8);
+
+  &__label {
+    color: var(--color-text-strong);
+
+    @include mix.when-guest {
+      @include mix.text-style("field-label", "guest");
+    }
+    @include mix.when-backoffice {
+      @include mix.text-style("field-label", "backoffice");
+    }
+  }
+
+  &__optional {
+    color: var(--color-text-muted);
+    font-weight: vars.weight("regular");
+  }
+
+  &__footer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: vars.space(8);
+    min-height: 1.2em;
+  }
+
+  &__error,
+  &__hint {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  &__error {
+    color: var(--color-danger);
+    font-weight: vars.weight("semibold");
+  }
+
+  &__hint {
+    color: var(--color-text-muted);
+  }
+
+  &__counter {
+    margin-left: auto;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+}

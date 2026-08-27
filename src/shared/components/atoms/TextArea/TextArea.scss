@@ -1,0 +1,16 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.text-area {
+  @include mix.field-base;
+
+  min-height: calc(var(--field-height) * 2.4);
+  height: auto;
+  padding-block: vars.space(12);
+  line-height: 1.5;
+  resize: vertical;
+
+  &--invalid {
+    @include mix.field-error;
+  }
+}

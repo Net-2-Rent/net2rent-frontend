@@ -1,7 +1,7 @@
 @use "variables" as vars;
 @use "mixins" as mix;
 
-.issue-list-item {
+.guest-incident-item {
   display: flex;
   flex-direction: column;
   gap: vars.space(8);

@@ -1,7 +1,7 @@
 @use "variables" as vars;
 @use "mixins" as mix;
 
-.property-card {
+.lodging-card {
   @include mix.surface-card;
 
   padding: vars.space(20);

@@ -1,0 +1,23 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.notice-box {
+  display: flex;
+  gap: vars.space(12);
+  padding: vars.space(16);
+  background: var(--color-surface-subtle);
+  border-radius: var(--radius-field);
+  color: var(--color-text-soft);
+
+  &__icon {
+    flex: none;
+    margin-top: 2px;
+    color: var(--color-text-muted);
+  }
+
+  &__text {
+    @include mix.text-style("meta", "guest");
+
+    margin: 0;
+  }
+}

@@ -24,11 +24,23 @@
   :root[data-theme="dark"] & {
     @content;
   }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) & {
+      @content;
+    }
+  }
 }
 
 @mixin when-light {
   :root[data-theme="light"] & {
     @content;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) & {
+      @content;
+    }
   }
 }
 
@@ -45,7 +57,16 @@
 }
 
 @mixin text-style($role, $app: "backoffice") {
-  $scale: if($app == "guest", vars.$type-guest, vars.$type-backoffice);
+  $scales: (
+          "backoffice": vars.$type-backoffice,
+          "guest": vars.$type-guest,
+  );
+
+  @if not map.has-key($scales, $app) {
+    @error "text-style(): unknown app '#{$app}'. Available: #{map.keys($scales)}.";
+  }
+
+  $scale: map.get($scales, $app);
 
   @if not map.has-key($scale, $role) {
     @error "text-style(): role '#{$role}' is not in the '#{$app}' scale.";

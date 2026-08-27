@@ -1,5 +1,5 @@
-@use "variables" as vars;
-@use "mixins" as mix;
+@use "../../../../styles/variables" as vars;
+@use "../../../../styles/mixins" as mix;
 
 .primary-button {
   @include mix.button-reset;

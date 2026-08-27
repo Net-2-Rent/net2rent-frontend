@@ -4,14 +4,14 @@ import { useForm } from 'react-hook-form'
 import PrimaryButton from '../components/PrimaryButton/PrimaryButton.jsx'
 import TextButton from '../components/TextButton/TextButton.jsx';
 import StatusBadge from '../../../shared/components/StatusBadge/StatusBadge.jsx';
-import { INCIDENT_STATUS } from '../../../constants/incidentStatus';
+import { INCIDENT_STATUS } from '../../../shared/constants/incidentStatus';
 import NoticeBox from "../components/NoticeBox/NoticeBox.jsx";
 import DetailRow from "../components/DetailRow/DetailRow.jsx";
-import PropertyCard from "../components/PropertyCard/PropertyCard.jsx";
+import LodgingCard from "../components/LodgingCard/LodgingCard.jsx";
 import EmptyState from "../components/EmptyState/EmptyState.jsx";
 import { CheckCircle2 } from 'lucide-react';
 import SuccessPanel from "../components/SuccessPanel/SuccessPanel.jsx";
-import IssueListItem from "../components/IssueListItem/IssueListItem.jsx";
+import GuestIncidentItem from "../components/GuestIncidentItem/GuestIncidentItem.jsx";
 
 export default function GuestSandbox() {
     const {
@@ -80,7 +80,7 @@ export default function GuestSandbox() {
             </dl>
             </div>
 
-            <PropertyCard name="Apto. Marina 3B" reference="CB-001" />
+            <LodgingCard name="Apto. Marina 3B" reference="CB-001" />
 
             <EmptyState
                 icon={CheckCircle2}
@@ -100,14 +100,14 @@ export default function GuestSandbox() {
             </SuccessPanel>
 
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', padding: 0, margin: 0 }}>
-                <IssueListItem
+                <GuestIncidentItem
                     to="/incidencias/1"
                     code="INC-2026-000042"
                     title="El aire acondicionado del salón no enfría y hace un ruido fuerte al arrancar"
                     status={INCIDENT_STATUS.IN_PROGRESS}
                     openedAt="2026-08-21T09:14:00Z"
                 />
-                <IssueListItem
+                <GuestIncidentItem
                     to="/incidencias/2"
                     code="INC-2026-000038"
                     title="Gotera en el baño"

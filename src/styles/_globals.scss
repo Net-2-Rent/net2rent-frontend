@@ -68,12 +68,12 @@ select {
 
 @mixin emit-status-tokens($status-map, $variant: "light") {
   @each $key, $definition in $status-map {
-    $bg-key: if($variant == "dark", "bg-dark", "bg");
-    $fg-key: if($variant == "dark", "fg-dark", "fg");
+    $bg-key: "bg";
+    $fg-key: "fg";
 
-    @if not map.has-key($definition, $bg-key) {
-      $bg-key: "bg";
-      $fg-key: "fg";
+    @if $variant == "dark" and map.has-key($definition, "bg-dark") {
+      $bg-key: "bg-dark";
+      $fg-key: "fg-dark";
     }
 
     --status-#{$key}-bg: #{map.get($definition, $bg-key)};

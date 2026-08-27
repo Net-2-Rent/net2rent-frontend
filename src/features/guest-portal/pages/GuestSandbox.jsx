@@ -17,6 +17,8 @@ import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
 import NewIncidentForm from "../components/organisms/NewIncidentForm/NewIncidentForm.jsx";
 import ReadonlyField from "../../../shared/components/molecules/ReadonlyField/ReadonlyField.jsx";
 import PinInput from "../components/atoms/PinInput/PinInput.jsx";
+import InlineError from "../../../shared/components/atoms/InlineError/InlineError.jsx";
+
 
 export default function GuestSandbox() {
   const {
@@ -192,6 +194,7 @@ export default function GuestSandbox() {
       </div>
 
       <PinInput value={pin} onChange={setPin} />
+      <InlineError>Referencia o código incorrectos</InlineError>
     </main>
   );
 }

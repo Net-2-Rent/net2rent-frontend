@@ -1,6 +1,6 @@
-import './PropertyCard.scss';
+import './LodgingCard.scss';
 
-export default function PropertyCard({ name, reference, className = '' }) {
+export default function LodgingCard({ name, reference, className = '' }) {
     const classes = ['property-card', className].filter(Boolean).join(' ');
 
     return (

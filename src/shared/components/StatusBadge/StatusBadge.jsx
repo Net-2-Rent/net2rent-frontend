@@ -1,7 +1,7 @@
 import {
     INCIDENT_STATUS_LABEL,
     toStatusModifier,
-} from '../../../constants/incidentStatus';
+} from '../../constants/incidentStatus.js';
 import './StatusBadge.scss';
 
 export default function StatusBadge({ status, className = '' }) {

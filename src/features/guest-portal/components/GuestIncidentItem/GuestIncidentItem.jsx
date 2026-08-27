@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import StatusBadge from '../../shared/StatusBadge/StatusBadge';
-import { formatDate } from '../../../utils/formatDate';
-import './IssueListItem.scss';
+import StatusBadge from '../../../../shared/components/StatusBadge/StatusBadge';
+import { formatDate } from '../../../../shared/utils/formatDate';
+import './GuestIncidentItem.scss';
 
-export default function IssueListItem({
+export default function GuestIncidentItem({
                                           to,
                                           code,
                                           title,

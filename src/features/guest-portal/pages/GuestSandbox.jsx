@@ -1,16 +1,15 @@
 //página de desarollo - ELIMINAR ANTES DE ENTREGA
 
-import { useForm } from "react-hook-form";
-import PrimaryButton from "../../../components/guest/PrimaryButton/PrimaryButton";
-import TextButton from "../../../components/guest/TextButton/TextButton";
-import StatusBadge from "../../../components/shared/StatusBadge/StatusBadge";
-import { INCIDENT_STATUS } from "../../../constants/incidentStatus";
-import NoticeBox from "../../../components/guest/NoticeBox/NoticeBox.jsx";
-import DetailRow from "../../../components/guest/DetailRow/DetailRow.jsx";
+import { useForm } from 'react-hook-form'
+import PrimaryButton from '../components/PrimaryButton/PrimaryButton.jsx'
+import TextButton from '../components/TextButton/TextButton.jsx';
+import StatusBadge from '../../../shared/components/StatusBadge/StatusBadge.jsx';
+import { INCIDENT_STATUS } from '../../../shared/constants/incidentStatus';
+import DetailRow from "../components/DetailRow/DetailRow.jsx";
+import LodgingCard from "../components/LodgingCard/LodgingCard.jsx";
 import PropertyCard from "../../../components/guest/PropertyCard/PropertyCard.jsx";
-import EmptyState from "../../../components/guest/EmptyState/EmptyState.jsx";
-import { CheckCircle2 } from "lucide-react";
-import SuccessPanel from "../../../components/guest/SuccessPanel/SuccessPanel.jsx";
+import SuccessPanel from "../components/SuccessPanel/SuccessPanel.jsx";
+import GuestIncidentItem from "../components/GuestIncidentItem/GuestIncidentItem.jsx";
 import IssueListItem from "../../../components/guest/IssueListItem/IssueListItem.jsx";
 
 import GradientBackground from "../../../components/guest/GradientBackground/GradientBackground.jsx";
@@ -116,39 +115,34 @@ export default function GuestSandbox() {
 
       <StatusBadge status="INVENTADO" />
 
-      <div
-        style={{
-          background: "var(--color-surface)",
-          borderRadius: "var(--radius-card)",
-          padding: "1.25rem",
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-        }}
-      >
-        <NoticeBox>
-          Para incidencias urgentes como una fuga de agua o un corte de luz,
-          llama directamente al teléfono de emergencias del alojamiento.
-        </NoticeBox>
+      <LodgingCard name="Apto. Marina 3B" reference="CB-001" />
 
-        <dl style={{ margin: 0 }}>
-          <DetailRow label="Alojamiento">Apto. Marina 3B</DetailRow>
-          <DetailRow label="Referencia">CB-001</DetailRow>
-          <DetailRow label="Estado">
-            <StatusBadge status={INCIDENT_STATUS.IN_PROGRESS} />
-          </DetailRow>
-        </dl>
-      </div>
+      <dl style={{ margin: 0 }}>
+        <DetailRow label="Alojamiento">Apto. Marina 3B</DetailRow>
+        <DetailRow label="Referencia">CB-001</DetailRow>
+        <DetailRow label="Estado">
+          <StatusBadge status={INCIDENT_STATUS.IN_PROGRESS} />
+        </DetailRow>
+      </dl>
 
       <PropertyCard name="Apto. Marina 3B" reference="CB-001" />
 
-      <EmptyState
-        icon={CheckCircle2}
-        title="Todo en orden"
-        action={<PrimaryButton>Reportar una incidencia</PrimaryButton>}
-      >
-        No hay incidencias abiertas en tu alojamiento.
-      </EmptyState>
+      <ul style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', padding: 0, margin: 0 }}>
+                <GuestIncidentItem
+                    to="/incidencias/1"
+                    code="INC-2026-000042"
+                    title="El aire acondicionado del salón no enfría y hace un ruido fuerte al arrancar"
+                    status={INCIDENT_STATUS.IN_PROGRESS}
+                    openedAt="2026-08-21T09:14:00Z"
+                />
+                <GuestIncidentItem
+                    to="/incidencias/2"
+                    code="INC-2026-000038"
+                    title="Gotera en el baño"
+                    status={INCIDENT_STATUS.CLOSED}
+                    openedAt="2026-08-14T17:02:00Z"
+                />
+            </ul>
 
       <SuccessPanel
         title="Hemos recibido tu aviso"

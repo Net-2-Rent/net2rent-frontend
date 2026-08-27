@@ -1,17 +1,17 @@
 //página de desarollo - ELIMINAR ANTES DE ENTREGA
 
 import { useForm } from 'react-hook-form'
-import PrimaryButton from '../../../components/guest/PrimaryButton/PrimaryButton'
-import TextButton from '../../../components/guest/TextButton/TextButton';
-import StatusBadge from '../../../components/shared/StatusBadge/StatusBadge';
+import PrimaryButton from '../components/PrimaryButton/PrimaryButton.jsx'
+import TextButton from '../components/TextButton/TextButton.jsx';
+import StatusBadge from '../../../shared/components/StatusBadge/StatusBadge.jsx';
 import { INCIDENT_STATUS } from '../../../constants/incidentStatus';
-import NoticeBox from "../../../components/guest/NoticeBox/NoticeBox.jsx";
-import DetailRow from "../../../components/guest/DetailRow/DetailRow.jsx";
-import PropertyCard from "../../../components/guest/PropertyCard/PropertyCard.jsx";
-import EmptyState from "../../../components/guest/EmptyState/EmptyState.jsx";
+import NoticeBox from "../components/NoticeBox/NoticeBox.jsx";
+import DetailRow from "../components/DetailRow/DetailRow.jsx";
+import PropertyCard from "../components/PropertyCard/PropertyCard.jsx";
+import EmptyState from "../components/EmptyState/EmptyState.jsx";
 import { CheckCircle2 } from 'lucide-react';
-import SuccessPanel from "../../../components/guest/SuccessPanel/SuccessPanel.jsx";
-import IssueListItem from "../../../components/guest/IssueListItem/IssueListItem.jsx";
+import SuccessPanel from "../components/SuccessPanel/SuccessPanel.jsx";
+import IssueListItem from "../components/IssueListItem/IssueListItem.jsx";
 
 export default function GuestSandbox() {
     const {

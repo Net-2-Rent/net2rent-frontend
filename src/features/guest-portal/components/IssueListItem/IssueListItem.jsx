@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import StatusBadge from '../../shared/StatusBadge/StatusBadge';
-import { formatDate } from '../../../utils/formatDate';
+import StatusBadge from '../../../../shared/components/StatusBadge/StatusBadge';
+import { formatDate } from '../../../../shared/utils/formatDate';
 import './IssueListItem.scss';
 
 export default function IssueListItem({

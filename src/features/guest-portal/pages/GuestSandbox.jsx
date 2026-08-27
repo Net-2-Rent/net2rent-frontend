@@ -12,6 +12,10 @@ import EmptyState from "../components/EmptyState/EmptyState.jsx";
 import { CheckCircle2 } from 'lucide-react';
 import SuccessPanel from "../components/SuccessPanel/SuccessPanel.jsx";
 import GuestIncidentItem from "../components/GuestIncidentItem/GuestIncidentItem.jsx";
+import { useState } from 'react';
+import { getInitialTheme, setTheme } from '../../../shared/utils/theme.js';
+import NewIncidentForm from '../components/organisms/NewIncidentForm/NewIncidentForm.jsx';
+import ReadonlyField from '../../../shared/components/molecules/ReadonlyField/ReadonlyField.jsx';
 
 export default function GuestSandbox() {
     const {
@@ -22,6 +26,20 @@ export default function GuestSandbox() {
     // Simula una llamada al backend para ver el spinner
     const onSubmit = () => new Promise((resolve) => setTimeout(resolve, 1500))
 
+    const handleIncidentDemo = (data) =>
+        new Promise((resolve) => {
+            console.log('Nueva incidencia (demo):', data);
+            setTimeout(resolve, 1500); // simula el backend para ver el spinner
+        });
+
+    const [theme, setThemeState] = useState(getInitialTheme);
+
+    function toggleTheme() {
+        const next = theme === 'dark' ? 'light' : 'dark';
+        setThemeState(next);
+        setTheme(next);
+    }
+
     return (
         <main style={{
             padding: '2rem',
@@ -31,7 +49,23 @@ export default function GuestSandbox() {
             flexDirection: 'column',
             gap: '1rem',}}>
 
-            <h1>Sandbox · G3 y G4</h1>
+            <h1>Sandbox · GP, G3 y G4</h1>
+
+            <button
+                type="button"
+                onClick={toggleTheme}
+                style={{
+                    alignSelf: 'flex-start',
+                    padding: '8px 14px',
+                    borderRadius: 'var(--radius-field)',
+                    background: 'var(--color-surface)',
+                    border: '1px solid var(--color-border-strong)',
+                    color: 'var(--color-text-strong)',
+                    cursor: 'pointer',
+                }}
+            >
+                Tema: {theme}
+            </button>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <PrimaryButton type="submit" isLoading={isSubmitting}>
@@ -115,6 +149,33 @@ export default function GuestSandbox() {
                     openedAt="2026-08-14T17:02:00Z"
                 />
             </ul>
+
+            <h2 style={{ margin: '1rem 0 0' }}>Organismo · Reportar incidencia</h2>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1.25rem',
+                    background: 'var(--color-surface)',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-card)',
+                    padding: '1.25rem',
+                }}
+            >
+                <ReadonlyField label="Fecha del reporte" tag="Automático">
+                    27 ago 2026, 17:46
+                </ReadonlyField>
+
+                <ReadonlyField label="Dirección del alojamiento" tag="Fijo">
+                    <strong>Carrer de la Marina 118, 3ºB · 08013 Barcelona</strong>
+                    <br />
+                    <span style={{ color: 'var(--color-text-muted)' }}>
+                        Apartamento Marina Blava, 3ºB
+                    </span>
+                </ReadonlyField>
+
+                <NewIncidentForm onSubmit={handleIncidentDemo} />
+            </div>
 
         </main>
     )

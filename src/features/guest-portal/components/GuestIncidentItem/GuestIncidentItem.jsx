@@ -4,26 +4,26 @@ import { formatDate } from '../../../../shared/utils/formatDate';
 import './GuestIncidentItem.scss';
 
 export default function GuestIncidentItem({
-                                          to,
-                                          code,
-                                          title,
-                                          status,
-                                          openedAt,
-                                          className = '',
-                                      }) {
-    const classes = ['issue-list-item', className].filter(Boolean).join(' ');
+                                              to,
+                                              code,
+                                              title,
+                                              status,
+                                              openedAt,
+                                              className = '',
+                                          }) {
+    const classes = ['guest-incident-item', className].filter(Boolean).join(' ');
 
     return (
-        <li className="issue-list-item__wrapper">
+        <li className="guest-incident-item__wrapper">
             <Link to={to} className={classes}>
-        <span className="issue-list-item__header">
-          <span className="issue-list-item__code">{code}</span>
+        <span className="guest-incident-item__header">
+          <span className="guest-incident-item__code">{code}</span>
           <StatusBadge status={status} />
         </span>
 
-                <span className="issue-list-item__title">{title}</span>
+                <span className="guest-incident-item__title">{title}</span>
 
-                <time className="issue-list-item__date" dateTime={openedAt}>
+                <time className="guest-incident-item__date" dateTime={openedAt}>
                     {formatDate(openedAt)}
                 </time>
             </Link>

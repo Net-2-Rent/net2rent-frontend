@@ -1,16 +1,16 @@
 import './LodgingCard.scss';
 
 export default function LodgingCard({ name, reference, className = '' }) {
-    const classes = ['property-card', className].filter(Boolean).join(' ');
+    const classes = ['lodging-card', className].filter(Boolean).join(' ');
 
     return (
-        <section className={classes} aria-labelledby="property-card-name">
-            <h2 className="property-card__name" id="property-card-name">
+        <section className={classes} aria-labelledby="lodging-card-name">
+            <h2 className="lodging-card__name" id="lodging-card-name">
                 {name}
             </h2>
-            <p className="property-card__reference">
-                <span className="property-card__reference-label">Referencia</span>
-                <span className="property-card__reference-value">{reference}</span>
+            <p className="lodging-card__reference">
+                <span className="lodging-card__reference-label">Referencia</span>
+                <span className="lodging-card__reference-value">{reference}</span>
             </p>
         </section>
     );

@@ -19,6 +19,13 @@ import ReadonlyField from "../../../shared/components/ui/molecules/ReadonlyField
 import PinInput from "../components/ui/atoms/PinInput/PinInput.jsx";
 import InlineError from "../../../shared/components/ui/atoms/InlineError/InlineError.jsx";
 
+import GradientBackground from "../components/ui/atoms/GradientBackground/GradientBackground.jsx";
+import Logo from "../components/ui/atoms/Logo/Logo.jsx";
+import Card from "../components/ui/atoms/Card/Card.jsx";
+import PageHeader from "../components/ui/molecules/PageHeader/PageHeader.jsx";
+import AuthLayout from "../components/ui/organisms/AuthLayout/AuthLayout.jsx";
+import ContentLayout from "../components/ui/organisms/ContentLayout/ContentLayout.jsx";
+
 
 export default function GuestSandbox() {
   const {
@@ -56,23 +63,58 @@ export default function GuestSandbox() {
         gap: "1rem",
       }}
     >
-      <h1>Sandbox · GP, G3 y G4</h1>
+      <h1>Sandbox · G3 y G4</h1>
 
-      <button
-        type="button"
-        onClick={toggleTheme}
+      <h2>GP — Base y layout</h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: ".75rem" }}>
+        <GradientBackground
+          fullHeight={false}
+          style={{ padding: "20px", borderRadius: "12px" }}
+        >
+          <Logo />
+        </GradientBackground>
+        <Card variant="content">Card variante "content" (radio 22)</Card>
+        <Card variant="auth">Card variante "auth" (radio 20)</Card>
+      </div>
+
+      <div
         style={{
-          alignSelf: "flex-start",
-          padding: "8px 14px",
-          borderRadius: "var(--radius-field)",
-          background: "var(--color-surface)",
-          border: "1px solid var(--color-border-strong)",
-          color: "var(--color-text-strong)",
-          cursor: "pointer",
+          position: "relative",
+          height: "360px",
+          overflow: "hidden",
+          borderRadius: "12px",
         }}
       >
-        Tema: {theme}
-      </button>
+        <AuthLayout>
+          <PageHeader
+            eyebrow="Identificación"
+            title="Accede a tu alojamiento"
+          />
+          <p>Contenido del formulario de login aquí.</p>
+        </AuthLayout>
+      </div>
+
+      <div
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          borderRadius: "12px",
+        }}
+      >
+        <ContentLayout
+          header={
+            <PageHeader
+              backLabel="Mi alojamiento"
+              onBack={() => alert("volver")}
+              eyebrow="INC-2026-000042"
+              title="El aire acondicionado no enfría"
+            />
+          }
+        >
+          <p>Contenido de la incidencia aquí.</p>
+        </ContentLayout>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <PrimaryButton type="submit" isLoading={isSubmitting}>
@@ -80,6 +122,9 @@ export default function GuestSandbox() {
         </PrimaryButton>
       </form>
 
+      <PrimaryButton>Reposo</PrimaryButton>
+      <PrimaryButton disabled>Deshabilitado</PrimaryButton>
+      <PrimaryButton isLoading>Enviando</PrimaryButton>
       <PrimaryButton>Reposo</PrimaryButton>
       <PrimaryButton disabled>Deshabilitado</PrimaryButton>
       <PrimaryButton isLoading>Enviando</PrimaryButton>

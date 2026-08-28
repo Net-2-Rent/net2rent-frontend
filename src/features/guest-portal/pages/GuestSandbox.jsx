@@ -1,31 +1,30 @@
 //página de desarollo - ELIMINAR ANTES DE ENTREGA
 
 import { useForm } from "react-hook-form";
-import PrimaryButton from "../components/PrimaryButton/PrimaryButton.jsx";
-import TextButton from "../components/TextButton/TextButton.jsx";
-import StatusBadge from "../../../shared/components/StatusBadge/StatusBadge.jsx";
+import PrimaryButton from "../components/ui/atoms/PrimaryButton/PrimaryButton.jsx";
+import TextButton from "../components/ui/atoms/TextButton/TextButton.jsx";
+import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
 import { INCIDENT_STATUS } from "../../../shared/constants/incidentStatus";
-import DetailRow from "../components/DetailRow/DetailRow.jsx";
-import LodgingCard from "../components/LodgingCard/LodgingCard.jsx";
-import EmptyState from "../components/EmptyState/EmptyState.jsx";
+import NoticeBox from "../components/ui/molecules/NoticeBox/NoticeBox.jsx";
+import DetailRow from "../components/ui/molecules/DetailRow/DetailRow.jsx";
+import LodgingCard from "../components/ui/molecules/LodgingCard/LodgingCard.jsx";
+import EmptyState from "../components/ui/organisms/EmptyState/EmptyState.jsx";
 import { CheckCircle2 } from "lucide-react";
-import SuccessPanel from "../components/SuccessPanel/SuccessPanel.jsx";
-import GuestIncidentItem from "../components/GuestIncidentItem/GuestIncidentItem.jsx";
-
-import NoticeBox from "../components/NoticeBox/NoticeBox.jsx";
-import GradientBackground from "../../../components/guest/GradientBackground/GradientBackground.jsx";
-import Logo from "../../../components/guest/Logo/Logo.jsx";
-import Card from "../../../components/guest/Card/Card.jsx";
-import PageHeader from "../../../components/guest/PageHeader/PageHeader.jsx";
-import AuthLayout from "../../../components/guest/AuthLayout/AuthLayout.jsx";
-import ContentLayout from "../../../components/guest/ContentLayout/ContentLayout.jsx";
-
+import SuccessPanel from "../components/ui/organisms/SuccessPanel/SuccessPanel.jsx";
+import GuestIncidentItem from "../components/ui/organisms/GuestIncidentItem/GuestIncidentItem.jsx";
 import { useState } from "react";
 import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
-import NewIncidentForm from "../components/organisms/NewIncidentForm/NewIncidentForm.jsx";
-import ReadonlyField from "../../../shared/components/molecules/ReadonlyField/ReadonlyField.jsx";
-import PinInput from "../components/atoms/PinInput/PinInput.jsx";
-import InlineError from "../../../shared/components/atoms/InlineError/InlineError.jsx";
+import NewIncidentForm from "../components/ui/organisms/NewIncidentForm/NewIncidentForm.jsx";
+import ReadonlyField from "../../../shared/components/ui/molecules/ReadonlyField/ReadonlyField.jsx";
+import PinInput from "../components/ui/atoms/PinInput/PinInput.jsx";
+import InlineError from "../../../shared/components/ui/atoms/InlineError/InlineError.jsx";
+
+import GradientBackground from "../components/ui/atoms/GradientBackground/GradientBackground.jsx";
+import Logo from "../components/ui/atoms/Logo/Logo.jsx";
+import Card from "../components/ui/atoms/Card/Card.jsx";
+import PageHeader from "../components/ui/molecules/PageHeader/PageHeader.jsx";
+import AuthLayout from "../components/ui/organisms/AuthLayout/AuthLayout.jsx";
+import ContentLayout from "../components/ui/organisms/ContentLayout/ContentLayout.jsx";
 
 
 export default function GuestSandbox() {
@@ -57,7 +56,7 @@ export default function GuestSandbox() {
     <main
       style={{
         padding: "2rem",
-        maxWidth: "420px",
+        maxWidth: "600px",
         margin: "0 auto",
         display: "flex",
         flexDirection: "column",

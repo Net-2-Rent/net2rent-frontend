@@ -1,9 +1,0 @@
-@use "mixins" as mix;
-
-.text-field {
-  @include mix.field-base;
-
-  &--invalid {
-    @include mix.field-error;
-  }
-}

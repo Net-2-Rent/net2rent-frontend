@@ -1,7 +1,0 @@
-@use "variables" as vars;
-
-.inline-error {
-  margin: 0;
-  color: var(--color-danger);
-  font-weight: vars.weight("semibold");
-}

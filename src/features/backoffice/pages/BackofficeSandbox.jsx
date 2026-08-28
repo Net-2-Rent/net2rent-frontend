@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import StatusBadge from '../../../shared/components/StatusBadge/StatusBadge.jsx';
+import StatusBadge from '../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx';
 import { INCIDENT_STATUS } from '../../../shared/constants/incidentStatus.js';
 import { getInitialTheme, setTheme } from '../../../shared/utils/theme.js';
 

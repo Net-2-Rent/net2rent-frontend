@@ -1,0 +1,44 @@
+@use "../../../../../styles/variables" as vars;
+@use "../../../../../styles/mixins" as mix;
+
+.readonly-field {
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(8);
+
+  &__label {
+    color: var(--color-text-strong);
+
+    @include mix.when-guest {
+      @include mix.text-style("field-label", "guest");
+    }
+    @include mix.when-backoffice {
+      @include mix.text-style("field-label", "backoffice");
+    }
+  }
+
+  &__box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: vars.space(12);
+    padding: vars.space(12) vars.space(16);
+    border-radius: var(--radius-field);
+    background: var(--color-locked-bg, var(--color-surface-subtle));
+    color: var(--color-locked-text, var(--color-text-strong));
+  }
+
+  &__value {
+    min-width: 0;
+    line-height: 1.4;
+  }
+
+  &__tag {
+    flex: none;
+    font-size: 11px;
+    font-weight: vars.weight("bold");
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+}

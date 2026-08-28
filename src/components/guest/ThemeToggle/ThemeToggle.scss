@@ -1,0 +1,27 @@
+@use "../../../styles/variables" as vars;
+@use "../../../styles/mixins" as mix;
+
+.theme-toggle {
+  @include mix.button-reset;
+  @include mix.touch-target(38px);
+
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: vars.z("sticky-header");
+  width: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  backdrop-filter: blur(6px);
+  transition: background-color vars.$transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.32);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+}

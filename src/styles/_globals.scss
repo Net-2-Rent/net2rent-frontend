@@ -326,6 +326,7 @@ select {
   --radius-button: #{vars.radius-guest("button")};
   --radius-list-item: #{vars.radius-guest("list-item")};
   --radius-card: #{vars.radius-guest("card")};
+  --radius-card-auth: 20px;
   --radius-modal: #{vars.radius-guest("card")};
   --radius-pill: #{vars.radius-guest("pill")};
 

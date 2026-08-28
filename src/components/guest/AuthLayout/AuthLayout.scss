@@ -1,0 +1,10 @@
+.auth-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--layout-screen-padding);
+
+  &__card {
+    max-width: var(--layout-auth-max);
+  }
+}

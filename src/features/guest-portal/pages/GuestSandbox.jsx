@@ -11,6 +11,15 @@ import EmptyState from "../components/EmptyState/EmptyState.jsx";
 import { CheckCircle2 } from "lucide-react";
 import SuccessPanel from "../components/SuccessPanel/SuccessPanel.jsx";
 import GuestIncidentItem from "../components/GuestIncidentItem/GuestIncidentItem.jsx";
+
+import NoticeBox from "../components/NoticeBox/NoticeBox.jsx";
+import GradientBackground from "../../../components/guest/GradientBackground/GradientBackground.jsx";
+import Logo from "../../../components/guest/Logo/Logo.jsx";
+import Card from "../../../components/guest/Card/Card.jsx";
+import PageHeader from "../../../components/guest/PageHeader/PageHeader.jsx";
+import AuthLayout from "../../../components/guest/AuthLayout/AuthLayout.jsx";
+import ContentLayout from "../../../components/guest/ContentLayout/ContentLayout.jsx";
+
 import { useState } from "react";
 import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
 import NewIncidentForm from "../components/organisms/NewIncidentForm/NewIncidentForm.jsx";

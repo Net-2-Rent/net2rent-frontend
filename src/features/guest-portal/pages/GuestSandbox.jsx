@@ -5,7 +5,7 @@ import PrimaryButton from "../components/ui/atoms/PrimaryButton/PrimaryButton.js
 import TextButton from "../components/ui/atoms/TextButton/TextButton.jsx";
 import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
 import { INCIDENT_STATUS } from "../../../shared/constants/incidentStatus";
-import NoticeBox from "../components/ui/molecules/NoticeBox/NoticeBox.jsx";
+import NoticeBox from "../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
 import DetailRow from "../components/ui/molecules/DetailRow/DetailRow.jsx";
 import LodgingCard from "../components/ui/molecules/LodgingCard/LodgingCard.jsx";
 import EmptyState from "../components/ui/organisms/EmptyState/EmptyState.jsx";
@@ -25,7 +25,6 @@ import Card from "../components/ui/atoms/Card/Card.jsx";
 import PageHeader from "../components/ui/molecules/PageHeader/PageHeader.jsx";
 import AuthLayout from "../components/ui/organisms/AuthLayout/AuthLayout.jsx";
 import ContentLayout from "../components/ui/organisms/ContentLayout/ContentLayout.jsx";
-
 
 export default function GuestSandbox() {
   const {

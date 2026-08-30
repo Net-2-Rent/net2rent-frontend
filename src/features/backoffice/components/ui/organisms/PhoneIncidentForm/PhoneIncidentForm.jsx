@@ -10,6 +10,7 @@ import {
   INCIDENT_CATEGORY,
   INCIDENT_CATEGORY_LABEL,
 } from "../../../../../../shared/constants/incidentCategory.js";
+import NoticeBox from "../../../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
 import "./PhoneIncidentForm.scss";
 
 const TITLE_MAX = 150;
@@ -150,6 +151,7 @@ export default function PhoneIncidentForm({
         >
           <TextField
             id="firstName"
+            placeholder="Nombre del reportante"
             invalid={!!errors.firstName}
             autoComplete="given-name"
             aria-describedby={describedBy("firstName", false)}
@@ -164,6 +166,7 @@ export default function PhoneIncidentForm({
         >
           <TextField
             id="lastName"
+            placeholder="Apellido"
             invalid={!!errors.lastName}
             autoComplete="family-name"
             aria-describedby={describedBy("lastName", false)}
@@ -247,6 +250,14 @@ export default function PhoneIncidentForm({
           })}
         />
       </FormField>
+
+      <div>
+        <NoticeBox>
+          {watch("operatorId")
+            ? "Se creará en estado ASSIGNED con la fecha de apertura indicada."
+            : "Sin operario seleccionado: la incidencia se creará con estado NEW y estará disponible en el pool."}
+        </NoticeBox>
+      </div>
 
       <div className="phone-incident-form__actions">
         <button type="submit" disabled={isSubmitting}>

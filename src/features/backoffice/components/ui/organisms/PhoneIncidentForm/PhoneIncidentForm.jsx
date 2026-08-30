@@ -29,6 +29,7 @@ export default function PhoneIncidentForm({
     register,
     handleSubmit,
     watch,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onTouched",
@@ -121,6 +122,13 @@ export default function PhoneIncidentForm({
             aria-describedby={describedBy("openedDate", false)}
             {...register("openedDate", {
               required: "La fecha de apertura es obligatoria",
+              validate: (date) => {
+                const time = getValues("openedTime") || "00:00";
+                return (
+                  new Date(`${date}T${time}`) <= new Date() ||
+                  "No se admiten fechas ni horas futuras."
+                );
+              },
             })}
           />
         </FormField>

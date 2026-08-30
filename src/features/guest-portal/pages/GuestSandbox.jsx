@@ -66,6 +66,20 @@ export default function GuestSandbox() {
 
       <h2>GP — Base y layout</h2>
 
+      <button
+        onClick={toggleTheme}
+        style={{
+          padding: "8px 14px",
+          borderRadius: "var(--radius-field)",
+          background: "var(--color-surface)",
+          border: "1px solid var(--color-border-strong)",
+          color: "var(--color-text-strong)",
+          cursor: "pointer",
+        }}
+      >
+        Tema: {theme}
+      </button>
+
       <div style={{ display: "flex", flexDirection: "column", gap: ".75rem" }}>
         <GradientBackground
           fullHeight={false}

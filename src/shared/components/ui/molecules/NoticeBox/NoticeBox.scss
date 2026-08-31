@@ -13,7 +13,7 @@
   @include mix.when-backoffice {
     border: 1px solid var(--color-border);
   }
-  
+
   &__icon {
     flex: none;
     color: var(--color-text-muted);
@@ -27,6 +27,19 @@
     }
     @include mix.when-backoffice {
       @include mix.text-style("body", "backoffice");
+    }
+  }
+
+  &--brand {
+    background: var(--color-brand-soft);
+    color: var(--color-brand-ink);
+
+    @include mix.when-backoffice {
+      border: 1px solid var(--color-brand-soft);
+    }
+
+    .notice-box__icon {
+      color: var(--color-brand-ink);
     }
   }
 }

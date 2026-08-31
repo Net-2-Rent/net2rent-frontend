@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
-import { INCIDENT_STATUS, INCIDENT_STATUS_LABEL } from "../../../shared/constants/incidentStatus.js";
+import {
+  INCIDENT_STATUS,
+  INCIDENT_STATUS_LABEL,
+} from "../../../shared/constants/incidentStatus.js";
 import Spinner from "../../../shared/components/ui/atoms/Spinner/Spinner.jsx";
 import Button from "../../../shared/components/ui/atoms/Button/Button.jsx";
 import Input from "../../../shared/components/ui/atoms/Input/Input.jsx";
@@ -28,8 +31,9 @@ import ToggleIncident from "../components/ui/molecules/ToggleIncident/ToggleInci
 import PageButton from "../components/ui/atoms/PageButton/PageButton.jsx";
 import EmptyMessage from "../components/ui/atoms/EmptyMessage/EmptyMessage.jsx";
 import TableIncident from "../components/ui/organisms/TableIncident/TableIncident.jsx";
-import { INCIDENT_PRIORITY, INCIDENT_PRIORITY_LABEL } from "../../../shared/constants/incidentPriority.js";
-import { INCIDENT_CATEGORY_LABEL } from "../../../shared/constants/incidentCategory.js";
+import PhoneIncidentForm from "../components/ui/organisms/PhoneIncidentForm/PhoneIncidentForm.jsx";
+import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
+import { INCIDENT_PRIORITY_LABEL } from "../../../shared/constants/incidentPriority.js";
 
 /* Helpers de la sandbox                                               */
 
@@ -132,25 +136,120 @@ const PRIORITY_OPTIONS = [
 ];
 
 const MOCK_TABLE_INCIDENTS = [
-  { code: "INC-1042", title: "El aire acondicionado del salón no enfría", category: "CLIMATIZATION", accommodation: "Apto. Marina 3B", status: "IN_PROGRESS", priority: "HIGH", assignee: "Marc Vidal", createdAt: "hace 2 h" },
-  { code: "INC-1041", title: "Fuga de agua bajo el fregadero de la cocina", category: "PLUMBING", accommodation: "Villa Sant Jordi", status: "NEW", priority: null, assignee: null, createdAt: "hace 25 min" },
-  { code: "INC-1040", title: "Cerradura de la puerta principal atascada", category: "LOCKSMITH", accommodation: "Apto. Rambla 12", status: "ASSIGNED", priority: "HIGH", assignee: "Laura Puig", createdAt: "hace 4 h" },
-  { code: "INC-1039", title: "Wifi intermitente en las dos habitaciones", category: "CONNECTIVITY_TV", accommodation: "Apto. Marina 1A", status: "PAUSED", priority: "NORMAL", assignee: "Marc Vidal", createdAt: "ayer" },
-  { code: "INC-1038", title: "Bombilla fundida en el baño principal", category: "ELECTRICITY", accommodation: "Casa Tramuntana", status: "RESOLVED", priority: "LOW", assignee: "Núria Serra", createdAt: "ayer" },
-  { code: "INC-1037", title: "Persiana del salón bloqueada a media altura", category: "OTHERS", accommodation: "Apto. Rambla 7", status: "CLOSED", priority: "NORMAL", assignee: "Laura Puig", createdAt: "hace 3 d" },
-  { code: "INC-1036", title: "El cliente indica olor a gas en la cocina", category: "PLUMBING", accommodation: "Villa Cala Blanca", status: "REJECTED", priority: "URGENT", assignee: null, createdAt: "hace 3 d" },
-  { code: "INC-1035", title: "El lavavajillas no desagua correctamente", category: "APPLIANCES", accommodation: "Apto. Port 4C", status: "ASSIGNED", priority: "NORMAL", assignee: "Marc Vidal", createdAt: "hace 5 d" },
-  { code: "INC-1034", title: "Mando del televisor sin pilas", category: "CONNECTIVITY_TV", accommodation: "Apto. Marina 2C", status: "NEW", priority: null, assignee: null, createdAt: "hace 6 d" },
+  {
+    code: "INC-1042",
+    title: "El aire acondicionado del salón no enfría",
+    category: "CLIMATIZATION",
+    accommodation: "Apto. Marina 3B",
+    status: "IN_PROGRESS",
+    priority: "HIGH",
+    assignee: "Marc Vidal",
+    createdAt: "hace 2 h",
+  },
+  {
+    code: "INC-1041",
+    title: "Fuga de agua bajo el fregadero de la cocina",
+    category: "PLUMBING",
+    accommodation: "Villa Sant Jordi",
+    status: "NEW",
+    priority: null,
+    assignee: null,
+    createdAt: "hace 25 min",
+  },
+  {
+    code: "INC-1040",
+    title: "Cerradura de la puerta principal atascada",
+    category: "LOCKSMITH",
+    accommodation: "Apto. Rambla 12",
+    status: "ASSIGNED",
+    priority: "HIGH",
+    assignee: "Laura Puig",
+    createdAt: "hace 4 h",
+  },
+  {
+    code: "INC-1039",
+    title: "Wifi intermitente en las dos habitaciones",
+    category: "CONNECTIVITY_TV",
+    accommodation: "Apto. Marina 1A",
+    status: "PAUSED",
+    priority: "NORMAL",
+    assignee: "Marc Vidal",
+    createdAt: "ayer",
+  },
+  {
+    code: "INC-1038",
+    title: "Bombilla fundida en el baño principal",
+    category: "ELECTRICITY",
+    accommodation: "Casa Tramuntana",
+    status: "RESOLVED",
+    priority: "LOW",
+    assignee: "Núria Serra",
+    createdAt: "ayer",
+  },
+  {
+    code: "INC-1037",
+    title: "Persiana del salón bloqueada a media altura",
+    category: "OTHERS",
+    accommodation: "Apto. Rambla 7",
+    status: "CLOSED",
+    priority: "NORMAL",
+    assignee: "Laura Puig",
+    createdAt: "hace 3 d",
+  },
+  {
+    code: "INC-1036",
+    title: "El cliente indica olor a gas en la cocina",
+    category: "PLUMBING",
+    accommodation: "Villa Cala Blanca",
+    status: "REJECTED",
+    priority: "URGENT",
+    assignee: null,
+    createdAt: "hace 3 d",
+  },
+  {
+    code: "INC-1035",
+    title: "El lavavajillas no desagua correctamente",
+    category: "APPLIANCES",
+    accommodation: "Apto. Port 4C",
+    status: "ASSIGNED",
+    priority: "NORMAL",
+    assignee: "Marc Vidal",
+    createdAt: "hace 5 d",
+  },
+  {
+    code: "INC-1034",
+    title: "Mando del televisor sin pilas",
+    category: "CONNECTIVITY_TV",
+    accommodation: "Apto. Marina 2C",
+    status: "NEW",
+    priority: null,
+    assignee: null,
+    createdAt: "hace 6 d",
+  },
+];
+
+const MOCK_LODGINGS = [
+  { id: "lod-1", name: "Apto. Marina 3B" },
+  { id: "lod-2", name: "Villa Sant Jordi" },
+  { id: "lod-3", name: "Apto. Rambla 12" },
+];
+
+const MOCK_OPERATORS = [
+  { id: "op-1", name: "Marc Vidal" },
+  { id: "op-2", name: "Laura Puig" },
+  { id: "op-3", name: "Núria Serra" },
 ];
 
 /* Sandbox                                                             */
 
 export default function BackofficeSandbox() {
-  const [theme, setTheme] = useState(() =>
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light",
-  );
+  const [theme, setThemeState] = useState(getInitialTheme);
+
+  function toggleTheme() {
+    const next = theme === "dark" ? "light" : "dark";
+    setThemeState(next);
+    setTheme(next);
+  }
 
   const [activeItem, setActiveItem] = useState("incidents");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -198,7 +297,7 @@ export default function BackofficeSandbox() {
         </div>
 
         <button
-          onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+          onClick={toggleTheme}
           style={{
             padding: "8px 14px",
             borderRadius: "var(--radius-field)",
@@ -305,9 +404,7 @@ export default function BackofficeSandbox() {
         <StickyHero
           title="Incidencias"
           theme={theme}
-          onToggleTheme={() =>
-            setTheme((t) => (t === "dark" ? "light" : "dark"))
-          }
+          onToggleTheme={toggleTheme}
           onMenuClick={() => setMenuOpen(true)}
         />
         <SideBar
@@ -356,14 +453,9 @@ export default function BackofficeSandbox() {
 
       <DemoSection title="ToggleIncident · solo operarios">
         <Row label="Toggle">
-          <ToggleIncident
-            value={demoToggle}
-            onChange={setDemoToggle}
-          />
+          <ToggleIncident value={demoToggle} onChange={setDemoToggle} />
         </Row>
-        <Row label="Valor actual">
-          {demoToggle}
-        </Row>
+        <Row label="Valor actual">{demoToggle}</Row>
       </DemoSection>
 
       <DemoSection title="FilterBar">
@@ -439,9 +531,7 @@ export default function BackofficeSandbox() {
             title="Incidencias"
             subtitle="Listado operativo de mantenimiento"
             theme={theme}
-            onToggleTheme={() =>
-              setTheme((t) => (t === "dark" ? "light" : "dark"))
-            }
+            onToggleTheme={toggleTheme}
             onMenuClick={() => console.log("Abrir menú")}
           />
           <div
@@ -457,6 +547,14 @@ export default function BackofficeSandbox() {
             queda fijo arriba.
           </div>
         </div>
+      </DemoSection>
+
+      <DemoSection title="PhoneIncidentForm · B-A4">
+        <PhoneIncidentForm
+          lodgings={MOCK_LODGINGS}
+          operators={MOCK_OPERATORS}
+          onSubmit={(data) => console.log("Nueva incidencia telefónica", data)}
+        />
       </DemoSection>
     </main>
   );

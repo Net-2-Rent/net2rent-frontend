@@ -137,7 +137,7 @@ select {
 
   --shadow-card: #{vars.$shadow-backoffice-card-dark};
   --shadow-floating: #{vars.$shadow-backoffice-floating-dark};
-  --color-overlay: #{rgba(#000000, 0.62)};
+  --color-overlay: #{rgba(14,19,34,0.55)};
 
   @include emit-status-tokens(vars.$bo-status, "dark");
 }
@@ -222,7 +222,7 @@ select {
   --color-disabled-bg: #{vars.$color-fill-disabled};
   --color-disabled-text: #{vars.$color-text-faint};
 
-  --color-overlay: #{rgba(vars.$bo-navy-deep, 0.55)};
+  --color-overlay: #{rgba(14,19,34,0.55)};
   --shadow-card: #{vars.$shadow-backoffice-card};
   --shadow-floating: #{vars.$shadow-backoffice-floating};
 

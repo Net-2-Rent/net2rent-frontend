@@ -1,0 +1,24 @@
+@use "variables" as vars;
+
+.inline-error {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-danger);
+
+  &__icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: vars.weight("bold");
+    color: var(--color-danger);
+  }
+}

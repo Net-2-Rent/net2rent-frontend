@@ -1,0 +1,44 @@
+@use "mixins" as mix;
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+
+  @include mix.respond-to("desktop") {
+    flex-wrap: nowrap;
+  }
+
+  .input,
+  .dropdown-field,
+  .button {
+    height: 44px;
+    min-height: 44px;
+  }
+
+  &__search {
+    flex: 1 1 0;
+    min-width: 200px;
+  }
+
+  &__category {
+    width: 170px;
+  }
+
+  &__priority {
+    width: 136px;
+  }
+
+  &__reload {
+    width: 95px;
+    padding: 0 15px;
+    font-size: 13.5px;
+  }
+
+  &__create {
+    width: 153px;
+    padding: 0 17px;
+    font-size: 14px;
+  }
+}

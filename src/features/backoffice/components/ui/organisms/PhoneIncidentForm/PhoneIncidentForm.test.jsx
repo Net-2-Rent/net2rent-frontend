@@ -18,27 +18,32 @@ describe("PhoneIncidentForm", () => {
 
     expect(
       await screen.findByText("Selecciona un alojamiento", {
-        selector: '[role="alert"]',
+        selector: '[role="alert"] *',
       }),
     ).toBeInTheDocument();
     expect(
       screen.getByText("El nombre es obligatorio", {
-        selector: '[role="alert"]',
+        selector: '[role="alert"] *',
       }),
     ).toBeInTheDocument();
     expect(
       screen.getByText("El apellido es obligatorio", {
-        selector: '[role="alert"]',
+        selector: '[role="alert"] *',
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Selecciona una categoría", {
+        selector: '[role="alert"] *',
       }),
     ).toBeInTheDocument();
     expect(
       screen.getByText("El título es obligatorio", {
-        selector: '[role="alert"]',
+        selector: '[role="alert"] *',
       }),
     ).toBeInTheDocument();
     expect(
       screen.getByText("La descripción es obligatoria", {
-        selector: '[role="alert"]',
+        selector: '[role="alert"] *',
       }),
     ).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();
@@ -47,13 +52,13 @@ describe("PhoneIncidentForm", () => {
   it("updates the title counter as the user types", () => {
     renderPhoneIncidentForm();
 
-    expect(screen.getByText("0/150")).toBeInTheDocument();
+    expect(screen.getByText(/0\/150/)).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText("Título de la incidencia"), {
+    fireEvent.change(screen.getByLabelText(/Título de la incidencia/), {
       target: { value: "Fuga de agua" },
     });
 
-    expect(screen.getByText("12/150")).toBeInTheDocument();
+    expect(screen.getByText(/12\/150/)).toBeInTheDocument();
   });
 
   it("switches the notice text when an operator is selected", () => {
@@ -82,7 +87,7 @@ describe("PhoneIncidentForm", () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    fireEvent.change(screen.getByLabelText("Fecha de apertura"), {
+    fireEvent.change(screen.getByLabelText(/^Fecha de apertura/), {
       target: { value: tomorrow.toISOString().slice(0, 10) },
     });
     fireEvent.click(
@@ -91,7 +96,7 @@ describe("PhoneIncidentForm", () => {
 
     expect(
       await screen.findByText("No se admiten fechas ni horas futuras.", {
-        selector: '[role="alert"]',
+        selector: '[role="alert"] *',
       }),
     ).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();

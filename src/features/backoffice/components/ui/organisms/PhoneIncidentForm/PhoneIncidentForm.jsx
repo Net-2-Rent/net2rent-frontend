@@ -11,12 +11,17 @@ import {
   INCIDENT_CATEGORY_LABEL,
 } from "../../../../../../shared/constants/incidentCategory.js";
 import NoticeBox from "../../../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
+import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
 import "./PhoneIncidentForm.scss";
 
 const TITLE_MAX = 150;
 
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 export default function PhoneIncidentForm({
@@ -50,18 +55,16 @@ export default function PhoneIncidentForm({
 
   const titleLength = watch("title").length;
 
-  function describedBy(name, hasHint) {
-    if (errors[name]) return `${name}-error`;
-    if (hasHint) return `${name}-hint`;
-    return undefined;
-  }
-
   return (
     <form
       className="phone-incident-form"
       onSubmit={handleSubmit(onSubmit)}
       noValidate
     >
+      <NoticeBox tone="brand">
+        Registro por vía telefónica. Solo aparecen los alojamientos activos de
+        tu cuenta; el código de incidencia se genera al guardar.
+      </NoticeBox>
       {submitError && (
         <div className="phone-incident-form__alert" role="alert">
           {submitError}
@@ -73,12 +76,10 @@ export default function PhoneIncidentForm({
           id="lodgingId"
           label="Alojamiento (activos)"
           error={errors.lodgingId?.message}
+          required
         >
           <select
-            id="lodgingId"
             className="text-field"
-            aria-invalid={!!errors.lodgingId || undefined}
-            aria-describedby={describedBy("lodgingId", false)}
             {...register("lodgingId", {
               required: "Selecciona un alojamiento",
             })}
@@ -93,11 +94,7 @@ export default function PhoneIncidentForm({
         </FormField>
 
         <FormField id="operatorId" label="Operario asignado (opcional)">
-          <select
-            id="operatorId"
-            className="text-field"
-            {...register("operatorId")}
-          >
+          <select className="text-field" {...register("operatorId")}>
             <option value="">Sin asignar · va al pool</option>
             {operators.map((operator) => (
               <option key={operator.id} value={operator.id}>
@@ -113,13 +110,12 @@ export default function PhoneIncidentForm({
           id="openedDate"
           label="Fecha de apertura"
           error={errors.openedDate?.message}
+          required
         >
           <TextField
-            id="openedDate"
             type="date"
             max={today()}
             invalid={!!errors.openedDate}
-            aria-describedby={describedBy("openedDate", false)}
             {...register("openedDate", {
               required: "La fecha de apertura es obligatoria",
               validate: (date) => {
@@ -136,14 +132,13 @@ export default function PhoneIncidentForm({
         <FormField
           id="openedTime"
           label="Hora de apertura"
-          hint="Se admiten aperturas pasadas; no futuras."
+          helper="Se admiten aperturas pasadas; no futuras."
           error={errors.openedTime?.message}
+          required
         >
           <TextField
-            id="openedTime"
             type="time"
             invalid={!!errors.openedTime}
-            aria-describedby={describedBy("openedTime", true)}
             {...register("openedTime", {
               required: "La hora de apertura es obligatoria",
             })}
@@ -156,13 +151,12 @@ export default function PhoneIncidentForm({
           id="firstName"
           label="Nombre"
           error={errors.firstName?.message}
+          required
         >
           <TextField
-            id="firstName"
             placeholder="Nombre del reportante"
             invalid={!!errors.firstName}
             autoComplete="given-name"
-            aria-describedby={describedBy("firstName", false)}
             {...register("firstName", { required: "El nombre es obligatorio" })}
           />
         </FormField>
@@ -171,13 +165,12 @@ export default function PhoneIncidentForm({
           id="lastName"
           label="Apellido"
           error={errors.lastName?.message}
+          required
         >
           <TextField
-            id="lastName"
             placeholder="Apellido"
             invalid={!!errors.lastName}
             autoComplete="family-name"
-            aria-describedby={describedBy("lastName", false)}
             {...register("lastName", {
               required: "El apellido es obligatorio",
             })}
@@ -187,20 +180,22 @@ export default function PhoneIncidentForm({
 
       <div className="phone-incident-form__row">
         <FormField id="contact" label="Contacto (opcional)">
-          <TextField
-            id="contact"
-            placeholder="Email o teléfono"
-            {...register("contact")}
-          />
+          <TextField placeholder="Email o teléfono" {...register("contact")} />
         </FormField>
 
-        <FormField id="category" label="Categoría (opcional)">
+        <FormField
+          id="category"
+          label="Categoría"
+          error={errors.category?.message}
+          required
+        >
           <select
-            id="category"
             className="text-field"
-            {...register("category")}
+            {...register("category", {
+              required: "Selecciona una categoría",
+            })}
           >
-            <option value="">Sin categorizar</option>
+            <option value="">Selecciona una categoría</option>
             {Object.values(INCIDENT_CATEGORY).map((value) => (
               <option key={value} value={value}>
                 {INCIDENT_CATEGORY_LABEL[value]}
@@ -211,7 +206,7 @@ export default function PhoneIncidentForm({
       </div>
 
       <FormField id="priority" label="Prioridad">
-        <select id="priority" className="text-field" {...register("priority")}>
+        <select className="text-field" {...register("priority")}>
           {Object.values(INCIDENT_PRIORITY).map((value) => (
             <option key={value} value={value}>
               {INCIDENT_PRIORITY_LABEL[value]}
@@ -223,15 +218,13 @@ export default function PhoneIncidentForm({
 
       <FormField
         id="title"
-        label="Título de la incidencia"
+        label={`Título de la incidencia (${titleLength}/${TITLE_MAX})`}
         error={errors.title?.message}
-        counter={`${titleLength}/${TITLE_MAX}`}
+        required
       >
         <TextField
-          id="title"
           invalid={!!errors.title}
           placeholder="Resumen en una línea (3–150 caracteres)"
-          aria-describedby={describedBy("title", false)}
           {...register("title", {
             required: "El título es obligatorio",
             minLength: { value: 3, message: "Mínimo 3 caracteres" },
@@ -247,12 +240,11 @@ export default function PhoneIncidentForm({
         id="description"
         label="Descripción"
         error={errors.description?.message}
+        required
       >
         <TextArea
-          id="description"
           invalid={!!errors.description}
           placeholder="Qué ocurre, desde cuándo, qué ha intentado el cliente"
-          aria-describedby={describedBy("description", false)}
           {...register("description", {
             required: "La descripción es obligatoria",
           })}
@@ -268,10 +260,12 @@ export default function PhoneIncidentForm({
       </div>
 
       <div className="phone-incident-form__actions">
-        <button type="submit" disabled={isSubmitting}>
+        <Button type="submit" variant="primary" disabled={isSubmitting}>
           Registrar incidencia
-        </button>
-        <button type="button">Cancelar</button>
+        </Button>
+        <Button type="button" variant="secondary">
+          Cancelar
+        </Button>
       </div>
     </form>
   );

@@ -1,0 +1,24 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.avatar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: vars.weight("bold");
+  color: var(--color-brand-ink);
+  background: var(--color-brand-soft);
+
+  --avatar-size: 32px;
+  font-size: calc(var(--avatar-size) * 0.38);
+
+  &--sm { --avatar-size: 26px; font-size: 11px; }
+  &--md { --avatar-size: 34px; }
+  &--lg { --avatar-size: 40px; }
+  &--xl { --avatar-size: 52px; }
+
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+}

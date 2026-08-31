@@ -1,0 +1,40 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.status-badge-incident {
+  @include mix.button-reset;
+  @include mix.touch-target;
+  @include mix.focus-ring;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 14px;
+  min-height: 44px;
+  border-radius: 11px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    color vars.$transition-fast,
+    border-color vars.$transition-fast;
+
+  &:hover {
+    color: var(--color-text-strong);
+    border-color: var(--color-border-strong);
+  }
+
+  &--active {
+    border-color: var(--color-brand);
+  }
+
+  &__label,
+  &__count {
+    color: inherit;
+  }
+
+  &--all .status-dot {
+    background: #69727d;
+  }
+}

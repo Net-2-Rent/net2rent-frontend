@@ -1,0 +1,33 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.classification-card {
+  @include mix.surface-card;
+
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+  padding: vars.space(24);
+
+  &__title {
+    @include mix.text-style("block-eyebrow", "backoffice");
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  &__fields {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: vars.space(16);
+
+    @include mix.respond-to("tablet") {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    select { width: 100%; }
+  }
+
+  &__assign {
+    align-self: flex-start;
+  }
+}

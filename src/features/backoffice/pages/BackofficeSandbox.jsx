@@ -1,9 +1,12 @@
 //página de desarrollo - ELIMINAR ANTES DE ENTREGA
-
 import { useEffect, useState } from "react";
+import { UserPlus, Pause, Ban, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
-import { INCIDENT_STATUS, INCIDENT_STATUS_LABEL } from "../../../shared/constants/incidentStatus.js";
+import {
+  INCIDENT_STATUS,
+  INCIDENT_STATUS_LABEL,
+} from "../../../shared/constants/incidentStatus.js";
 import Spinner from "../../../shared/components/ui/atoms/Spinner/Spinner.jsx";
 import Button from "../../../shared/components/ui/atoms/Button/Button.jsx";
 import Input from "../../../shared/components/ui/atoms/Input/Input.jsx";
@@ -28,8 +31,23 @@ import ToggleIncident from "../components/ui/molecules/ToggleIncident/ToggleInci
 import PageButton from "../components/ui/atoms/PageButton/PageButton.jsx";
 import EmptyMessage from "../components/ui/atoms/EmptyMessage/EmptyMessage.jsx";
 import TableIncident from "../components/ui/organisms/TableIncident/TableIncident.jsx";
-import { INCIDENT_PRIORITY, INCIDENT_PRIORITY_LABEL } from "../../../shared/constants/incidentPriority.js";
+import {
+  INCIDENT_PRIORITY,
+  INCIDENT_PRIORITY_LABEL,
+} from "../../../shared/constants/incidentPriority.js";
 import { INCIDENT_CATEGORY_LABEL } from "../../../shared/constants/incidentCategory.js";
+// Componentes A3 (Vivi)
+import HeroIncidentCard from "../components/ui/molecules/HeroIncidentCard/HeroIncidentCard.jsx";
+import ActionsMenu from "../components/ui/molecules/ActionsMenu/ActionsMenu.jsx";
+import BackLink from "../components/ui/atoms/BackLink/BackLink.jsx";
+import ReporterCard from "../components/ui/organisms/ReporterCard/ReporterCard.jsx";
+import LodgingCard from "../components/ui/organisms/LodgingCard/LodgingCard.jsx";
+import ChecklistCard from "../components/ui/organisms/ChecklistCard/ChecklistCard.jsx";
+import CronologyCard from "../components/ui/organisms/CronologyCard/CronologyCard.jsx";
+import TimeAllocation from "../components/ui/organisms/TimeAllocation/TimeAllocation.jsx";
+import ResolutionModal from "../components/ui/organisms/ResolutionModal/ResolutionModal.jsx";
+import ConfirmationModal from "../components/ui/organisms/ConfirmationModal/ConfirmationModal.jsx";
+import ClassificationCard from "../components/ui/organisms/ClassificationCard/ClassificationCard.jsx";
 
 /* Helpers de la sandbox                                               */
 
@@ -132,15 +150,96 @@ const PRIORITY_OPTIONS = [
 ];
 
 const MOCK_TABLE_INCIDENTS = [
-  { code: "INC-1042", title: "El aire acondicionado del salón no enfría", category: "CLIMATIZATION", accommodation: "Apto. Marina 3B", status: "IN_PROGRESS", priority: "HIGH", assignee: "Marc Vidal", createdAt: "hace 2 h" },
-  { code: "INC-1041", title: "Fuga de agua bajo el fregadero de la cocina", category: "PLUMBING", accommodation: "Villa Sant Jordi", status: "NEW", priority: null, assignee: null, createdAt: "hace 25 min" },
-  { code: "INC-1040", title: "Cerradura de la puerta principal atascada", category: "LOCKSMITH", accommodation: "Apto. Rambla 12", status: "ASSIGNED", priority: "HIGH", assignee: "Laura Puig", createdAt: "hace 4 h" },
-  { code: "INC-1039", title: "Wifi intermitente en las dos habitaciones", category: "CONNECTIVITY_TV", accommodation: "Apto. Marina 1A", status: "PAUSED", priority: "NORMAL", assignee: "Marc Vidal", createdAt: "ayer" },
-  { code: "INC-1038", title: "Bombilla fundida en el baño principal", category: "ELECTRICITY", accommodation: "Casa Tramuntana", status: "RESOLVED", priority: "LOW", assignee: "Núria Serra", createdAt: "ayer" },
-  { code: "INC-1037", title: "Persiana del salón bloqueada a media altura", category: "OTHERS", accommodation: "Apto. Rambla 7", status: "CLOSED", priority: "NORMAL", assignee: "Laura Puig", createdAt: "hace 3 d" },
-  { code: "INC-1036", title: "El cliente indica olor a gas en la cocina", category: "PLUMBING", accommodation: "Villa Cala Blanca", status: "REJECTED", priority: "URGENT", assignee: null, createdAt: "hace 3 d" },
-  { code: "INC-1035", title: "El lavavajillas no desagua correctamente", category: "APPLIANCES", accommodation: "Apto. Port 4C", status: "ASSIGNED", priority: "NORMAL", assignee: "Marc Vidal", createdAt: "hace 5 d" },
-  { code: "INC-1034", title: "Mando del televisor sin pilas", category: "CONNECTIVITY_TV", accommodation: "Apto. Marina 2C", status: "NEW", priority: null, assignee: null, createdAt: "hace 6 d" },
+  {
+    code: "INC-1042",
+    title: "El aire acondicionado del salón no enfría",
+    category: "CLIMATIZATION",
+    accommodation: "Apto. Marina 3B",
+    status: "IN_PROGRESS",
+    priority: "HIGH",
+    assignee: "Marc Vidal",
+    createdAt: "hace 2 h",
+  },
+  {
+    code: "INC-1041",
+    title: "Fuga de agua bajo el fregadero de la cocina",
+    category: "PLUMBING",
+    accommodation: "Villa Sant Jordi",
+    status: "NEW",
+    priority: null,
+    assignee: null,
+    createdAt: "hace 25 min",
+  },
+  {
+    code: "INC-1040",
+    title: "Cerradura de la puerta principal atascada",
+    category: "LOCKSMITH",
+    accommodation: "Apto. Rambla 12",
+    status: "ASSIGNED",
+    priority: "HIGH",
+    assignee: "Laura Puig",
+    createdAt: "hace 4 h",
+  },
+  {
+    code: "INC-1039",
+    title: "Wifi intermitente en las dos habitaciones",
+    category: "CONNECTIVITY_TV",
+    accommodation: "Apto. Marina 1A",
+    status: "PAUSED",
+    priority: "NORMAL",
+    assignee: "Marc Vidal",
+    createdAt: "ayer",
+  },
+  {
+    code: "INC-1038",
+    title: "Bombilla fundida en el baño principal",
+    category: "ELECTRICITY",
+    accommodation: "Casa Tramuntana",
+    status: "RESOLVED",
+    priority: "LOW",
+    assignee: "Núria Serra",
+    createdAt: "ayer",
+  },
+  {
+    code: "INC-1037",
+    title: "Persiana del salón bloqueada a media altura",
+    category: "OTHERS",
+    accommodation: "Apto. Rambla 7",
+    status: "CLOSED",
+    priority: "NORMAL",
+    assignee: "Laura Puig",
+    createdAt: "hace 3 d",
+  },
+  {
+    code: "INC-1036",
+    title: "El cliente indica olor a gas en la cocina",
+    category: "PLUMBING",
+    accommodation: "Villa Cala Blanca",
+    status: "REJECTED",
+    priority: "URGENT",
+    assignee: null,
+    createdAt: "hace 3 d",
+  },
+  {
+    code: "INC-1035",
+    title: "El lavavajillas no desagua correctamente",
+    category: "APPLIANCES",
+    accommodation: "Apto. Port 4C",
+    status: "ASSIGNED",
+    priority: "NORMAL",
+    assignee: "Marc Vidal",
+    createdAt: "hace 5 d",
+  },
+  {
+    code: "INC-1034",
+    title: "Mando del televisor sin pilas",
+    category: "CONNECTIVITY_TV",
+    accommodation: "Apto. Marina 2C",
+    status: "NEW",
+    priority: null,
+    assignee: null,
+    createdAt: "hace 6 d",
+  },
 ];
 
 /* Sandbox                                                             */
@@ -161,6 +260,8 @@ export default function BackofficeSandbox() {
   const [demoReloading, setDemoReloading] = useState(false);
   const [demoTablePage, setDemoTablePage] = useState(1);
   const [demoToggle, setDemoToggle] = useState("ASSIGNED");
+  const [resolveOpen, setResolveOpen] = useState(false);
+  const [rejectOpen, setRejectOpen] = useState(false);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -356,14 +457,9 @@ export default function BackofficeSandbox() {
 
       <DemoSection title="ToggleIncident · solo operarios">
         <Row label="Toggle">
-          <ToggleIncident
-            value={demoToggle}
-            onChange={setDemoToggle}
-          />
+          <ToggleIncident value={demoToggle} onChange={setDemoToggle} />
         </Row>
-        <Row label="Valor actual">
-          {demoToggle}
-        </Row>
+        <Row label="Valor actual">{demoToggle}</Row>
       </DemoSection>
 
       <DemoSection title="FilterBar">
@@ -457,6 +553,207 @@ export default function BackofficeSandbox() {
             queda fijo arriba.
           </div>
         </div>
+      </DemoSection>
+
+      {/* ===== Componentes A3 (Vivi) ===== */}
+      <DemoSection title="HeroIncident Card">
+        <BackLink onClick={() => console.log("volver")}>
+          Volver al listado
+        </BackLink>
+        <HeroIncidentCard
+          code="INC-1042"
+          title="El aire acondicionado del salón no enfría"
+          status={INCIDENT_STATUS.IN_PROGRESS}
+          priority={INCIDENT_PRIORITY.HIGH}
+          actions={
+            <>
+              <Button variant="primary" onClick={() => setResolveOpen(true)}>
+                Resolver
+              </Button>
+              <ActionsMenu
+                items={[
+                  {
+                    id: "reassign",
+                    label: "Reasignar a otro operario",
+                    icon: UserPlus,
+                    onSelect: () => console.log("reasignar"),
+                  },
+                  {
+                    id: "pause",
+                    label: "Pausar trabajo",
+                    icon: Pause,
+                    onSelect: () => console.log("pausar"),
+                  },
+                  {
+                    id: "change",
+                    label: "Cambiar prioridad",
+                    icon: RefreshCw,
+                    onSelect: () => console.log("cambiar"),
+                  },
+                  {
+                    id: "reject",
+                    label: "Rechazar",
+                    icon: Ban,
+                    danger: true,
+                    onSelect: () => setRejectOpen(true),
+                  },
+                ]}
+              />
+              <ConfirmationModal
+                isOpen={rejectOpen}
+                onClose={() => setRejectOpen(false)}
+                onConfirm={() => {
+                  console.log("rechazada");
+                  setRejectOpen(false);
+                }}
+                title="Rechazar incidencia"
+                subtitle="INC-1042 · Apto. Marina 3B"
+                message="¿Seguro que quieres rechazar esta incidencia? Esta acción no se puede deshacer."
+                confirmLabel="Rechazar"
+                tone="danger"
+              />
+            </>
+          }
+        />
+      </DemoSection>
+
+      <DemoSection title="ClassificationCard">
+        <ClassificationCard
+          onChange={(c) => console.log("clasificación →", c)}
+          onAssign={(c) => console.log("asignar →", c)}
+        />
+      </DemoSection>
+
+      <DemoSection title="Reporter Card">
+        <ReporterCard
+          message="El equipo arranca pero expulsa aire templado desde ayer por la tarde. El mando muestra 18°C."
+          reporterName="Sophie Klein"
+          reporterContact="+34 611 204 887"
+          openedLabel="hace 2 h"
+          stayLabel="18–25 ago · 4 huéspedes"
+          hasPhoto
+          onViewPhoto={() => console.log("ver foto")}
+        />
+      </DemoSection>
+
+      <DemoSection title="Lodging Card">
+        <LodgingCard
+          name="Apto. Marina 2C"
+          address="Passeig Marítim 44, 2ºC, Palma"
+          reference="REF-0030"
+          owner="Inmobiliaria Illes SL"
+          coordinates="39.5696, 2.6502"
+          mapEmbedUrl="https://www.openstreetmap.org/export/embed.html?bbox=2.63%2C39.56%2C2.66%2C39.58&layer=mapnik&marker=39.57%2C2.65"
+          mapsUrl="https://www.google.com/maps?q=39.5696,2.6502"
+          accessNotes="Misma caja de llaves que el 3B (PIN 4821). Material de repuesto en el trastero -1, plaza 12."
+        />
+      </DemoSection>
+
+      <DemoSection title="Checklist Card">
+        <ChecklistCard
+          initialTasks={[
+            {
+              id: "t1",
+              text: "Comprobar filtros y limpiar rejillas",
+              done: true,
+            },
+            {
+              id: "t2",
+              text: "Medir temperatura de salida del split",
+              done: false,
+            },
+          ]}
+          onChange={(tasks) => console.log("autoguardar →", tasks)}
+        />
+      </DemoSection>
+
+<DemoSection title="Cronology Card">
+      <CronologyCard 
+        currentUser="Marc Vidal"
+        initialEntries={[
+          {
+            id: "e1",
+            title: "Incidencia creada por teléfono",
+            author: "Pau Roig",
+            atLabel: "10:12",
+            status: INCIDENT_STATUS.NEW,
+            description:
+              "El cliente indica que el equipo arranca pero expulsa aire templado desde ayer por la tarde.",
+          },
+          {
+            id: "e2",
+            title: "Asignada a Marc Vidal",
+            author: "Pau Roig",
+            atLabel: "10:20",
+            status: INCIDENT_STATUS.ASSIGNED,
+          },
+          {
+            id: "e3",
+            title: "Trabajo iniciado",
+            author: "Marc Vidal",
+            atLabel: "11:47",
+            status: INCIDENT_STATUS.IN_PROGRESS,
+          },
+          {
+            id: "e4",
+            title: "Comentario interno",
+            author: "Marc Vidal",
+            atLabel: "12:05",
+            description:
+              "Filtros muy saturados. Limpiados. Sigue sin enfriar, reviso circuito de gas.",
+          },
+          {
+            id: "e5",
+            title: "Trabajo pausado",
+            author: "Pau Roig",
+            atLabel: "ahora",
+            status: INCIDENT_STATUS.PAUSED,
+          },
+          {
+            id: "e6",
+            title: "Trabajo reanudado",
+            author: "Pau Roig",
+            atLabel: "ahora",
+            status: INCIDENT_STATUS.IN_PROGRESS,
+          },
+        ]}
+        onAddComment={(c) => console.log("comentario →", c)}
+      />
+      </DemoSection>
+
+      <DemoSection title="Time Allocation">
+        <TimeAllocation
+          currentOperator="Juan (operario)"
+          initialEntries={[
+            {
+              id: "a1",
+              operator: "Juan",
+              concept: "Revisión de gas refrigerante",
+              minutes: 30,
+            },
+            {
+              id: "a2",
+              operator: "Juan",
+              concept: "Cambio de filtro",
+              minutes: 45,
+            },
+          ]}
+          onImpute={(entry) => console.log("imputar →", entry)}
+        />
+      </DemoSection>
+
+      <DemoSection title="Resolution Modal">
+        <Button onClick={() => setResolveOpen(true)}>Resolver</Button>
+        <ResolutionModal
+          isOpen={resolveOpen}
+          onClose={() => setResolveOpen(false)}
+          incidentCode="INC-1042"
+          lodgingName="Apto. Marina 3B"
+          onResolve={(data) => {
+            console.log("resuelta →", data);
+            setResolveOpen(false);
+          }}
+        />
       </DemoSection>
     </main>
   );

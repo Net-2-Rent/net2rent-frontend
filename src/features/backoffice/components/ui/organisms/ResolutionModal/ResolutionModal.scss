@@ -1,0 +1,16 @@
+@use "variables" as vars;
+
+.resolution-modal {
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(16);
+  }
+
+  &__actions {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    gap: vars.space(12);
+  }
+}

@@ -1,0 +1,7 @@
+@use "variables" as vars;
+
+.skeleton {
+  display: inline-block;
+  background: var(--color-brand-soft);
+  animation: n2r-pulse 1.6s ease-in-out infinite;
+}

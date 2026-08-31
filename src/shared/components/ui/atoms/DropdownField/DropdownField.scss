@@ -1,0 +1,10 @@
+@use "mixins" as mix;
+
+.dropdown-field {
+  @include mix.field-base;
+  cursor: pointer;
+
+  &--error {
+    @include mix.field-error;
+  }
+}

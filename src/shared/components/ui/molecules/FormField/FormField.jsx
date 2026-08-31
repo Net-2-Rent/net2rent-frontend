@@ -1,39 +1,47 @@
+import { Children, cloneElement, isValidElement } from 'react';
+import InlineError from '../../atoms/InlineError/InlineError';
+import HelperText from '../../atoms/HelperText/HelperText';
 import './FormField.scss';
 
 export default function FormField({
-                                      id,
-                                      label,
-                                      error,
-                                      optional = false,
-                                      hint,
-                                      counter,
-                                      children,
-                                  }) {
-    return (
-        <div className="form-field">
-            <label className="form-field__label" htmlFor={id}>
-                {label}
-                {optional && <span className="form-field__optional"> (opcional)</span>}
-            </label>
+  id,
+  label,
+  error,
+  helper,
+  required = false,
+  className = '',
+  children,
+}) {
+  const fieldId = id;
+  const messageId = error || helper ? `${fieldId}-message` : undefined;
 
-            {children}
+  const control = Children.only(children);
+  const decorated = isValidElement(control)
+    ? cloneElement(control, {
+        id: fieldId,
+        'aria-invalid': error ? true : undefined,
+        'aria-describedby': messageId,
+      })
+    : control;
 
-            <div className="form-field__footer">
-                {error ? (
-                    <p className="form-field__error" id={`${id}-error`} role="alert">
-                        {error}
-                    </p>
-                ) : (
-                    hint && (
-                        <p className="form-field__hint" id={`${id}-hint`}>
-                            {hint}
-                        </p>
-                    )
-                )}
-                {counter != null && (
-                    <span className="form-field__counter">{counter}</span>
-                )}
-            </div>
-        </div>
-    );
+  const classes = ['form-field', error ? 'form-field--error' : '', className]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <div className={classes}>
+      {label && (
+        <label className="form-field__label" htmlFor={fieldId}>
+          {label}
+          {required && <span className="form-field__required" aria-hidden="true"> *</span>}
+        </label>
+      )}
+      <div className="form-field__control">{decorated}</div>
+      {error ? (
+        <InlineError id={messageId}>{error}</InlineError>
+      ) : helper ? (
+        <HelperText id={messageId}>{helper}</HelperText>
+      ) : null}
+    </div>
+  );
 }

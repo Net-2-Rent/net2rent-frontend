@@ -1,0 +1,72 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.notice-banner {
+  display: flex;
+  align-items: flex-start;
+  padding: vars.space(12) vars.space(16);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+
+  @include mix.motion-safe {
+    animation: n2r-slide-up vars.$transition-slow both;
+  }
+
+  &--error {
+    background: var(--color-danger-soft);
+    border-color: var(--color-danger);
+  }
+
+  &--info {
+    background: var(--color-brand-soft);
+    border-color: var(--color-border);
+  }
+
+  &__marker {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: vars.weight("bold");
+    color: var(--color-danger);
+  }
+
+  &--info &__marker {
+    background: var(--color-brand);
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__content {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-danger);
+  }
+
+  &__close {
+    @include mix.button-reset;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin: -4px -4px 0 0;
+    border-radius: var(--radius-field);
+    color: var(--color-danger);
+
+    @include mix.focus-ring;
+
+    &:hover {
+      background: var(--color-surface-subtle);
+    }
+  }
+}

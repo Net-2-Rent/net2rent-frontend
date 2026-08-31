@@ -1,0 +1,183 @@
+@use "../../../../../../styles/variables" as vars;
+@use "../../../../../../styles/mixins" as mix;
+
+.table-incident {
+  overflow: hidden;
+
+  // ── CARDS (mobile-first) ────────────────────────────────
+
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__card {
+    padding: 15px;
+    border-radius: 13px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__card-title {
+    font-size: 15.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-wrap: pretty;
+  }
+
+  &__card-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+
+  &__card-accommodation {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__card-date {
+    flex: 0 0 auto;
+  }
+
+  &__card-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  &__card-assignee {
+    font-size: 13px;
+    color: var(--color-text-soft);
+  }
+
+  // ── DESKTOP: tabla ──────────────────────────────────────
+
+  &__desktop {
+    display: none;
+  }
+
+  @include mix.respond-to("desktop") {
+    &__cards {
+      display: none;
+    }
+
+    &__desktop {
+      display: block;
+    }
+  }
+
+  // ── Tabla (desktop) ─────────────────────────────────────
+
+  &__scroll {
+    overflow-x: auto;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+  }
+
+  table {
+    width: 100%;
+    min-width: 820px;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: var(--color-surface-subtle);
+  }
+
+  th {
+    text-align: left;
+    padding: 13px 16px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &__th--right {
+    text-align: right;
+  }
+
+  tbody tr {
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+
+    &:hover {
+      background: var(--color-surface-subtle);
+    }
+  }
+
+  td {
+    padding: 14px 16px;
+  }
+
+  &__td--code {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  &__td--title {
+    font-size: 14.5px;
+    font-weight: 600;
+    max-width: 320px;
+  }
+
+  &__td--muted {
+    font-size: 13.5px;
+    color: var(--color-text-soft);
+  }
+
+  &__td--date {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  // ── Footer paginación ───────────────────────────────────
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 16px;
+    background: var(--color-surface-subtle);
+    flex-wrap: wrap;
+  }
+
+  &__info {
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+
+  &__pagination {
+    display: flex;
+    gap: 6px;
+  }
+}

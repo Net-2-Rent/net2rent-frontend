@@ -1,0 +1,84 @@
+@use "../../../../styles/variables" as vars;
+@use "../../../../styles/mixins" as mix;
+
+.reporter-card {
+  @include mix.surface-card;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: vars.space(24);
+  padding: vars.space(24);
+
+  @include mix.respond-to("tablet") {
+    grid-template-columns: 1.6fr 1fr;
+    gap: vars.space(40);
+  }
+
+  &__title {
+    @include mix.text-style("block-eyebrow", "backoffice");
+    margin: 0 0 vars.space(12);
+    color: var(--color-text-muted);
+  }
+
+  &__message {
+    @include mix.text-style("body", "backoffice");
+    margin: 0;
+    color: var(--color-text-strong);
+    white-space: pre-line;
+  }
+
+  &__photo {
+    @include mix.button-reset;
+    @include mix.text-style("field-label", "backoffice");
+
+    display: inline-flex;
+    align-items: center;
+    gap: vars.space(8);
+    margin-top: vars.space(16);
+    min-height: var(--touch-target-min);
+    padding-inline: vars.space(12);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-button);
+    color: var(--color-brand-ink);
+    transition:
+      background-color vars.$transition-fast,
+      border-color vars.$transition-fast;
+
+    &:hover {
+      background: var(--color-brand-soft);
+      border-color: var(--color-brand);
+    }
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  &__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: vars.space(16);
+    padding-block: vars.space(8);
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  &__label {
+    @include mix.text-style("field-label", "backoffice");
+    color: var(--color-text-muted);
+  }
+
+  &__value {
+    @include mix.text-style("body", "backoffice");
+    margin: 0;
+    color: var(--color-text-strong);
+    font-weight: vars.weight("semibold");
+    text-align: right;
+  }
+}

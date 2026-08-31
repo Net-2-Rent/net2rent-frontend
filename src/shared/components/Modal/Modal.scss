@@ -1,0 +1,78 @@
+@use "../../../styles/variables" as vars;
+@use "../../../styles/mixins" as mix;
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: vars.z("modal");
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: vars.space(20);
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--color-overlay);
+  animation: n2r-fade-in vars.$transition-base both;
+}
+
+.modal__dialog {
+  @include mix.surface-floating(var(--radius-modal));
+
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 460px;
+  max-height: calc(100dvh - #{vars.space(40)});
+  animation: n2r-slide-up vars.$transition-base both;
+}
+
+.modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: vars.space(16);
+  padding: vars.space(20) vars.space(24);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal__title {
+  @include mix.text-style("card-title", "backoffice");
+  margin: 0;
+  color: var(--color-text-strong);
+}
+
+.modal__close {
+  @include mix.button-reset;
+
+  display: inline-flex;
+  flex: none;
+  padding: vars.space(4);
+  border-radius: var(--radius-chip);
+  color: var(--color-text-muted);
+  transition:
+    color vars.$transition-fast,
+    background-color vars.$transition-fast;
+
+  &:hover {
+    color: var(--color-text-strong);
+    background: var(--color-surface-subtle);
+  }
+}
+
+.modal__body {
+  padding: vars.space(24);
+  overflow-y: auto;
+}
+
+.modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: vars.space(12);
+  padding: vars.space(16) vars.space(24) vars.space(24);
+}

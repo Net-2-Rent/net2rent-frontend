@@ -1,0 +1,16 @@
+@use "../../../styles/variables" as vars;
+@use "../../../styles/mixins" as mix;
+
+.priority-pill {
+  @include mix.badge-shape;
+
+  @each $key, $definition in vars.$bo-priority {
+    &--#{$key} {
+        background: var(--priority-#{$key}-bg);
+        color: var(--priority-#{$key}-fg);
+        border: 1px solid var(--priority-#{$key}-border);
+        border-style: var(--priority-#{$key}-border-style);
+        font-weight: var(--priority-#{$key}-weight);
+    }
+  }
+}

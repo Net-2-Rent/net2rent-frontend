@@ -1,0 +1,37 @@
+@use "../../../../styles/variables" as vars;
+@use "../../../../styles/mixins" as mix;
+
+.hero-incident {
+  @include mix.surface-card;
+
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+  padding: vars.space(24);
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: vars.space(8);
+  }
+
+  &__code {
+    @include mix.text-style("mono-data", "backoffice");
+    @include mix.mono-data;
+    color: var(--color-text-muted);
+  }
+
+  &__title {
+    @include mix.text-style("card-title", "backoffice");
+    margin: 0;
+    color: var(--color-text-strong);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: vars.space(12);
+    margin-top: vars.space(4);
+  }
+}

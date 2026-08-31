@@ -1,9 +1,9 @@
-import StatusBadge from "../../../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
+import StatusBadge from "../../../../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
 import PriorityBadge from "../../atoms/PriorityBadge/PriorityBadge.jsx";
-import Avatar from "../../../../../shared/components/atoms/Avatar/Avatar.jsx";
+import Avatar from "../../../../../../shared/components/ui/atoms/Avatar/Avatar.jsx";
 import PageButton from "../../atoms/PageButton/PageButton.jsx";
 import EmptyMessage from "../../atoms/EmptyMessage/EmptyMessage.jsx";
-import { INCIDENT_CATEGORY_LABEL } from "../../../../../shared/constants/incidentCategory.js";
+import { INCIDENT_CATEGORY_LABEL } from "../../../../../../shared/constants/incidentCategory.js";
 import "./TableIncident.scss";
 
 export default function TableIncident({

@@ -1,5 +1,5 @@
-import { INCIDENT_STATUS_LABEL, toStatusModifier } from "../../../../../shared/constants/incidentStatus.js";
-import { ALL_STATUS, STATUS_BADGE_LABEL } from "../../../../../shared/constants/statusBadgeIncident.js";
+import { INCIDENT_STATUS_LABEL, toStatusModifier } from "../../../../../../shared/constants/incidentStatus.js";
+import { ALL_STATUS, STATUS_BADGE_LABEL } from "../../../../../../shared/constants/statusBadgeIncident.js";
 import "./StatusBadgeIncident.scss";
 
 export default function StatusBadgeIncident({

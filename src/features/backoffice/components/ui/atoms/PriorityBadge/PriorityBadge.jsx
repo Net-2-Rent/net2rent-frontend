@@ -1,4 +1,4 @@
-import { INCIDENT_PRIORITY_LABEL, toPriorityModifier } from "../../../../../shared/constants/incidentPriority.js";
+import { INCIDENT_PRIORITY_LABEL, toPriorityModifier } from "../../../../../../shared/constants/incidentPriority.js";
 import "./PriorityBadge.scss";
 
 export default function PriorityBadge({ priority, className = "" }) {

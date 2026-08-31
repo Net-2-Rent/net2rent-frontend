@@ -1,9 +1,9 @@
-import Input from "../../../../../shared/components/atoms/Input/Input.jsx";
-import DropdownField from "../../../../../shared/components/atoms/DropdownField/DropdownField.jsx";
-import Button from "../../../../../shared/components/atoms/Button/Button.jsx";
-import Spinner from "../../../../../shared/components/atoms/Spinner/Spinner.jsx";
-import { INCIDENT_PRIORITY_LABEL } from "../../../../../shared/constants/incidentPriority.js";
-import { CATEGORY_FILTER_OPTIONS } from "../../../../../shared/constants/incidentCategory.js";
+import Input from "../../../../../../shared/components/ui/atoms/Input/Input.jsx";
+import DropdownField from "../../../../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx";
+import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
+import Spinner from "../../../../../../shared/components/ui/atoms/Spinner/Spinner.jsx";
+import { INCIDENT_PRIORITY_LABEL } from "../../../../../../shared/constants/incidentPriority.js";
+import { CATEGORY_FILTER_OPTIONS } from "../../../../../../shared/constants/incidentCategory.js";
 import "./FilterBar.scss";
 
 const PRIORITY_FILTER_OPTIONS = [

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { LogOut, X } from "lucide-react";
-import Avatar from "../../../../../shared/components/atoms/Avatar/Avatar";
-import Overlay from "../../../../../shared/components/atoms/Overlay/Overlay";
-import { NAV_BY_ROLE, ROLE_LABEL } from "../../../../../shared/constants/nav";
+import Avatar from "../../../../../../shared/components/ui/atoms/Avatar/Avatar";
+import Overlay from "../../../../../../shared/components/ui/atoms/Overlay/Overlay";
+import { NAV_BY_ROLE, ROLE_LABEL } from "../../../../../../shared/constants/nav";
 import "./SideBar.scss";
 
 export default function SideBar({

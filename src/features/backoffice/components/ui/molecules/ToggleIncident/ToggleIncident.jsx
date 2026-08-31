@@ -1,4 +1,4 @@
-import { INCIDENT_SCOPE } from "../../../../../shared/constants/incidentScope.js";
+import { INCIDENT_SCOPE } from "../../../../../../shared/constants/incidentScope.js";
 import "./ToggleIncident.scss";
 
 export default function ToggleIncident({

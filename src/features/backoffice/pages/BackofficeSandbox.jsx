@@ -4,30 +4,30 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
 import { INCIDENT_STATUS, INCIDENT_STATUS_LABEL } from "../../../shared/constants/incidentStatus.js";
-import Spinner from "../../../shared/components/atoms/Spinner/Spinner.jsx";
-import Button from "../../../shared/components/atoms/Button/Button.jsx";
-import Input from "../../../shared/components/atoms/Input/Input.jsx";
-import InlineError from "../../../shared/components/atoms/InlineError/InlineError.jsx";
-import HelperText from "../../../shared/components/atoms/HelperText/HelperText.jsx";
-import Avatar from "../../../shared/components/atoms/Avatar/Avatar.jsx";
-import Skeleton from "../../../shared/components/atoms/Skeleton/Skeleton.jsx";
-import FormField from "../../../shared/components/molecules/FormField/FormField.jsx";
-import SideBar from "../components/organisms/SideBar/SideBar.jsx";
+import Spinner from "../../../shared/components/ui/atoms/Spinner/Spinner.jsx";
+import Button from "../../../shared/components/ui/atoms/Button/Button.jsx";
+import Input from "../../../shared/components/ui/atoms/Input/Input.jsx";
+import InlineError from "../../../shared/components/ui/atoms/InlineError/InlineError.jsx";
+import HelperText from "../../../shared/components/ui/atoms/HelperText/HelperText.jsx";
+import Avatar from "../../../shared/components/ui/atoms/Avatar/Avatar.jsx";
+import Skeleton from "../../../shared/components/ui/atoms/Skeleton/Skeleton.jsx";
+import FormField from "../../../shared/components/ui/molecules/FormField/FormField.jsx";
+import SideBar from "../components/ui/organisms/SideBar/SideBar.jsx";
 import { ROLES } from "../../../shared/constants/nav";
-import NoticeBanner from "../../../shared/components/molecules/NoticeBanner/NoticeBanner.jsx";
-import StickyHero from "../components/organisms/StickyHero/StickyHero.jsx";
-import StatusBadgeIncident from "../components/molecules/StatusBadgeIncident/StatusBadgeIncident.jsx";
+import NoticeBanner from "../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner.jsx";
+import StickyHero from "../components/ui/organisms/StickyHero/StickyHero.jsx";
+import StatusBadgeIncident from "../components/ui/molecules/StatusBadgeIncident/StatusBadgeIncident.jsx";
 import {
   ALL_STATUS,
   STATUS_BADGE_LABEL,
   STATUS_BADGE_FILTERS,
 } from "../../../shared/constants/statusBadgeIncident.js";
-import DropdownField from "../../../shared/components/atoms/DropdownField/DropdownField.jsx";
-import FilterBar from "../components/molecules/FilterBar/FilterBar.jsx";
-import ToggleIncident from "../components/molecules/ToggleIncident/ToggleIncident.jsx";
-import PageButton from "../components/atoms/PageButton/PageButton.jsx";
-import EmptyMessage from "../components/atoms/EmptyMessage/EmptyMessage.jsx";
-import TableIncident from "../components/organisms/TableIncident/TableIncident.jsx";
+import DropdownField from "../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx";
+import FilterBar from "../components/ui/molecules/FilterBar/FilterBar.jsx";
+import ToggleIncident from "../components/ui/molecules/ToggleIncident/ToggleIncident.jsx";
+import PageButton from "../components/ui/atoms/PageButton/PageButton.jsx";
+import EmptyMessage from "../components/ui/atoms/EmptyMessage/EmptyMessage.jsx";
+import TableIncident from "../components/ui/organisms/TableIncident/TableIncident.jsx";
 import { INCIDENT_PRIORITY, INCIDENT_PRIORITY_LABEL } from "../../../shared/constants/incidentPriority.js";
 import { INCIDENT_CATEGORY_LABEL } from "../../../shared/constants/incidentCategory.js";
 

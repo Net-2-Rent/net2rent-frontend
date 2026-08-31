@@ -1,9 +1,10 @@
-import "./InlineError.scss";
+import './InlineError.scss';
 
-export default function InlineError({ children }) {
+export default function InlineError({ id, children }) {
   return (
-    <p className="inline-error" role="alert">
-      {children}
+    <p id={id} className="inline-error" role="alert">
+      <span className="inline-error__icon" aria-hidden="true">!</span>
+      <span>{children}</span>
     </p>
   );
 }

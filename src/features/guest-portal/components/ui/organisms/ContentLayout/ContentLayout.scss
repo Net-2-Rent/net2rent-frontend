@@ -1,0 +1,22 @@
+.content-layout {
+  width: 100%;
+
+  &__header {
+    padding: 20px 20px 30px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__header-inner {
+    width: 100%;
+    max-width: var(--layout-content-max);
+  }
+
+  &__body {
+    width: 100%;
+    max-width: var(--layout-content-max);
+    margin-inline: auto;
+    padding: 0 20px;
+    margin-top: -18px;
+  }
+}

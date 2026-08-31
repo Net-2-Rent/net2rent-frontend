@@ -1,0 +1,30 @@
+@use "../../../../../../styles/variables" as vars;
+@use "../../../../../../styles/mixins" as mix;
+
+.pin-input {
+  display: flex;
+  gap: 10px;
+
+  &__box {
+    width: 62px;
+    height: 62px;
+    text-align: center;
+    border: var(--field-border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-field);
+    background: var(--color-input-bg);
+    color: var(--color-text-strong);
+
+    @include mix.text-style("code-display", "guest");
+    @include mix.mono-data;
+
+    &--invalid {
+      @include mix.field-error;
+    }
+
+    &:disabled {
+      background: var(--color-disabled-bg);
+      color: var(--color-disabled-text);
+      cursor: not-allowed;
+    }
+  }
+}

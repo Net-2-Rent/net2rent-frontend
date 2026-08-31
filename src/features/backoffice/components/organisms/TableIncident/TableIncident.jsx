@@ -1,4 +1,4 @@
-import StatusBadge from "../../../../../shared/components/StatusBadge/StatusBadge.jsx";
+import StatusBadge from "../../../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
 import PriorityBadge from "../../atoms/PriorityBadge/PriorityBadge.jsx";
 import Avatar from "../../../../../shared/components/atoms/Avatar/Avatar.jsx";
 import PageButton from "../../atoms/PageButton/PageButton.jsx";

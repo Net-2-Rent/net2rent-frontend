@@ -291,55 +291,55 @@ $status-keys: (
         "rejected"
 );
 
-$bo-status: (
+$status-colors: (
         "new": (
                 "dot": #6b7280,
                 "bg": #eef0f3,
                 "fg": #4b5563,
                 "bg-dark": #333b4d,
-                "fg-dark": #e9ecf5,
+                "fg-dark": #cbd5e1,
         ),
         "assigned": (
-                "dot": #38bdf8,
-                "bg": #e2f4fd,
-                "fg": #0b6d94,
+                "dot": #3b82f6,
+                "bg": #dbeafe,
+                "fg": #1d4ed8,
                 "bg-dark": #12384a,
-                "fg-dark": #e9ecf5,
+                "fg-dark": #7dd3fc,
         ),
         "in-progress": (
                 "dot": #eab308,
-                "bg": #fdf5d3,
-                "fg": #8a6100,
+                "bg": #fef3c7,
+                "fg": #8a5a06,
                 "bg-dark": #463a10,
-                "fg-dark": #e9ecf5,
+                "fg-dark": #fcd34d,
         ),
         "paused": (
                 "dot": #f97316,
-                "bg": #feeddc,
+                "bg": #ffe6cc,
                 "fg": #9a4a09,
                 "bg-dark": #4a2a10,
-                "fg-dark": #e9ecf5,
+                "fg-dark": #fdba74,
         ),
         "resolved": (
                 "dot": #4ade80,
-                "bg": #dcf7e3,
-                "fg": #17743c,
+                "bg": #dcfce7,
+                "fg": #15803d,
                 "bg-dark": #173a26,
-                "fg-dark": #e9ecf5,
+                "fg-dark": #86efac,
         ),
         "closed": (
                 "dot": #15803d,
-                "bg": #d3ead9,
-                "fg": #0f5227,
-                "bg-dark": #123324,
-                "fg-dark": #e9ecf5,
+                "bg": #166534,
+                "fg": #ffffff,
+                "bg-dark": #14532d,
+                "fg-dark": #d1fae5,
         ),
         "rejected": (
                 "dot": #dc2626,
-                "bg": #fdecec,
+                "bg": #fee2e2,
                 "fg": #b91c1c,
                 "bg-dark": #3d1717,
-                "fg-dark": #e9ecf5,
+                "fg-dark": #fca5a5,
         ),
 );
 
@@ -422,37 +422,6 @@ $guest-dark-locked-text: #dfe4ec;
 
 $guest-disabled-bg-dark: #39424f;
 $guest-disabled-text-dark: #8e97a4;
-
-$guest-status: (
-        "new": (
-                "bg": #e9ecf1,
-                "fg": #4b5563,
-        ),
-        "assigned": (
-                "bg": #dbeafe,
-                "fg": #1d4ed8,
-        ),
-        "in-progress": (
-                "bg": #fef3c7,
-                "fg": #8a5a06,
-        ),
-        "paused": (
-                "bg": #ffe6cc,
-                "fg": #9a4a09,
-        ),
-        "resolved": (
-                "bg": #dcfce7,
-                "fg": #15803d,
-        ),
-        "closed": (
-                "bg": #166534,
-                "fg": #ffffff,
-        ),
-        "rejected": (
-                "bg": #fee2e2,
-                "fg": #b91c1c,
-        ),
-);
 
 $shadow-backoffice-card: 0 1px 2px rgba(23, 33, 84, 0.06),
 0 8px 24px rgba(23, 33, 84, 0.06);

@@ -139,7 +139,7 @@ select {
   --shadow-floating: #{vars.$shadow-backoffice-floating-dark};
   --color-overlay: #{rgba(14,19,34,0.55)};
 
-  @include emit-status-tokens(vars.$bo-status, "dark");
+  @include emit-status-tokens(vars.$status-colors, "dark");
 }
 
 @mixin guest-dark-tokens {
@@ -174,7 +174,7 @@ select {
   --shadow-floating: 0 18px 44px rgba(0, 0, 0, 0.55);
   --color-overlay: #{rgba(#000000, 0.6)};
 
-  @include emit-status-tokens(vars.$guest-status, "dark");
+  @include emit-status-tokens(vars.$status-colors, "dark");
 }
 
 :root[data-app="backoffice"] {
@@ -247,7 +247,7 @@ select {
   --badge-font-size: 11.5px;
   --badge-padding-inline: #{vars.space(8)};
 
-  @include emit-status-tokens(vars.$bo-status, "light");
+  @include emit-status-tokens(vars.$status-colors, "light");
   @include emit-priority-tokens;
 
   @include mix.respond-to("desktop") {
@@ -326,6 +326,7 @@ select {
   --radius-button: #{vars.radius-guest("button")};
   --radius-list-item: #{vars.radius-guest("list-item")};
   --radius-card: #{vars.radius-guest("card")};
+  --radius-card-auth: 20px;
   --radius-modal: #{vars.radius-guest("card")};
   --radius-pill: #{vars.radius-guest("pill")};
 
@@ -343,7 +344,7 @@ select {
   --touch-target-min: #{vars.$layout-guest-touch-min};
   --touch-target-action: #{vars.$layout-guest-touch-min};
 
-  @include emit-status-tokens(vars.$guest-status, "light");
+  @include emit-status-tokens(vars.$status-colors, "light");
 
   &[data-theme="dark"] {
     @include guest-dark-tokens;
@@ -411,7 +412,7 @@ pre,
   border-radius: 50%;
   flex: none;
 
-  @each $key, $definition in vars.$bo-status {
+  @each $key, $definition in vars.$status-colors {
     &--#{$key} {
       background: var(--status-#{$key}-dot);
     }

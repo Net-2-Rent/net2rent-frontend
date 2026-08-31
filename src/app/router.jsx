@@ -6,7 +6,7 @@ import NewGuestIncidentPage from "../features/guest-portal/pages/NewGuestInciden
 import ConfirmationPage from "../features/guest-portal/pages/ConfirmationPage";
 import IncidentDetailGuestPage from "../features/guest-portal/pages/IncidentDetailGuestPage";
 import GuestSandbox from "../features/guest-portal/pages/GuestSandbox";
-import BackofficeSandbox from "../features/backoffice/pages/BackofficeSandBox";
+import BackofficeSandbox from "../features/backoffice/pages/BackofficeSandbox.jsx";
 
 const router = createBrowserRouter([
   {

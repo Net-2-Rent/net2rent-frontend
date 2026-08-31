@@ -1,10 +1,9 @@
-import './PrivateNote.scss'
+import './PrivateNotes.scss'
 
 export default function PrivateNotes({
     title = 'Notas privadas de acceso - Uso interno',
     children,
     className = '',
-    accessNotes,
 }) {
     const classes = ['private-notes', className].filter(Boolean).join(' ');
 

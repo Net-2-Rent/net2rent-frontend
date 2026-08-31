@@ -4,8 +4,7 @@ import { UserPlus, Pause, Ban, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
 import {
-  INCIDENT_STATUS,
-  INCIDENT_STATUS_LABEL,
+  INCIDENT_STATUS
 } from "../../../shared/constants/incidentStatus.js";
 import Spinner from "../../../shared/components/ui/atoms/Spinner/Spinner.jsx";
 import Button from "../../../shared/components/ui/atoms/Button/Button.jsx";
@@ -35,7 +34,6 @@ import {
   INCIDENT_PRIORITY,
   INCIDENT_PRIORITY_LABEL,
 } from "../../../shared/constants/incidentPriority.js";
-import { INCIDENT_CATEGORY_LABEL } from "../../../shared/constants/incidentCategory.js";
 // Componentes A3 (Vivi)
 import HeroIncidentCard from "../components/ui/molecules/HeroIncidentCard/HeroIncidentCard.jsx";
 import ActionsMenu from "../components/ui/molecules/ActionsMenu/ActionsMenu.jsx";
@@ -48,6 +46,8 @@ import TimeAllocation from "../components/ui/organisms/TimeAllocation/TimeAlloca
 import ResolutionModal from "../components/ui/organisms/ResolutionModal/ResolutionModal.jsx";
 import ConfirmationModal from "../components/ui/organisms/ConfirmationModal/ConfirmationModal.jsx";
 import ClassificationCard from "../components/ui/organisms/ClassificationCard/ClassificationCard.jsx";
+import PhoneIncidentForm from "../components/ui/organisms/PhoneIncidentForm/PhoneIncidentForm.jsx";
+import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
 
 /* Helpers de la sandbox                                               */
 
@@ -242,14 +242,28 @@ const MOCK_TABLE_INCIDENTS = [
   },
 ];
 
+const MOCK_LODGINGS = [
+  { id: "lod-1", name: "Apto. Marina 3B" },
+  { id: "lod-2", name: "Villa Sant Jordi" },
+  { id: "lod-3", name: "Apto. Rambla 12" },
+];
+
+const MOCK_OPERATORS = [
+  { id: "op-1", name: "Marc Vidal" },
+  { id: "op-2", name: "Laura Puig" },
+  { id: "op-3", name: "Núria Serra" },
+];
+
 /* Sandbox                                                             */
 
 export default function BackofficeSandbox() {
-  const [theme, setTheme] = useState(() =>
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light",
-  );
+  const [theme, setThemeState] = useState(getInitialTheme);
+
+  function toggleTheme() {
+    const next = theme === "dark" ? "light" : "dark";
+    setThemeState(next);
+    setTheme(next);
+  }
 
   const [activeItem, setActiveItem] = useState("incidents");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -299,7 +313,7 @@ export default function BackofficeSandbox() {
         </div>
 
         <button
-          onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+          onClick={toggleTheme}
           style={{
             padding: "8px 14px",
             borderRadius: "var(--radius-field)",
@@ -406,9 +420,7 @@ export default function BackofficeSandbox() {
         <StickyHero
           title="Incidencias"
           theme={theme}
-          onToggleTheme={() =>
-            setTheme((t) => (t === "dark" ? "light" : "dark"))
-          }
+          onToggleTheme={toggleTheme}
           onMenuClick={() => setMenuOpen(true)}
         />
         <SideBar
@@ -535,9 +547,7 @@ export default function BackofficeSandbox() {
             title="Incidencias"
             subtitle="Listado operativo de mantenimiento"
             theme={theme}
-            onToggleTheme={() =>
-              setTheme((t) => (t === "dark" ? "light" : "dark"))
-            }
+            onToggleTheme={toggleTheme}
             onMenuClick={() => console.log("Abrir menú")}
           />
           <div
@@ -753,6 +763,14 @@ export default function BackofficeSandbox() {
             console.log("resuelta →", data);
             setResolveOpen(false);
           }}
+      />
+      </DemoSection>
+
+      <DemoSection title="PhoneIncidentForm · B-A4">
+        <PhoneIncidentForm
+          lodgings={MOCK_LODGINGS}
+          operators={MOCK_OPERATORS}
+          onSubmit={(data) => console.log("Nueva incidencia telefónica", data)}
         />
       </DemoSection>
     </main>

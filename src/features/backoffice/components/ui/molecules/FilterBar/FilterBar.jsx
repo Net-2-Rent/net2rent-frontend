@@ -3,8 +3,19 @@ import DropdownField from "../../../../../../shared/components/ui/atoms/Dropdown
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
 import Spinner from "../../../../../../shared/components/ui/atoms/Spinner/Spinner.jsx";
 import { INCIDENT_PRIORITY_LABEL } from "../../../../../../shared/constants/incidentPriority.js";
-import { CATEGORY_FILTER_OPTIONS } from "../../../../../../shared/constants/incidentCategory.js";
+import {
+  INCIDENT_CATEGORY,
+  INCIDENT_CATEGORY_LABEL,
+} from "../../../../../../shared/constants/incidentCategory.js";
 import "./FilterBar.scss";
+
+const CATEGORY_FILTER_OPTIONS = [
+  { value: "ALL", label: "Todas las categorías" },
+  ...Object.values(INCIDENT_CATEGORY).map((value) => ({
+    value,
+    label: INCIDENT_CATEGORY_LABEL[value],
+  })),
+];
 
 const PRIORITY_FILTER_OPTIONS = [
   { value: "ALL", label: "Toda prioridad" },

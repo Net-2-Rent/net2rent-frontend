@@ -5,7 +5,7 @@ import PrimaryButton from "../components/ui/atoms/PrimaryButton/PrimaryButton.js
 import TextButton from "../components/ui/atoms/TextButton/TextButton.jsx";
 import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
 import { INCIDENT_STATUS } from "../../../shared/constants/incidentStatus";
-import NoticeBox from "../components/ui/molecules/NoticeBox/NoticeBox.jsx";
+import NoticeBox from "../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
 import DetailRow from "../components/ui/molecules/DetailRow/DetailRow.jsx";
 import LodgingCard from "../components/ui/molecules/LodgingCard/LodgingCard.jsx";
 import EmptyState from "../components/ui/organisms/EmptyState/EmptyState.jsx";
@@ -25,7 +25,6 @@ import Card from "../components/ui/atoms/Card/Card.jsx";
 import PageHeader from "../components/ui/molecules/PageHeader/PageHeader.jsx";
 import AuthLayout from "../components/ui/organisms/AuthLayout/AuthLayout.jsx";
 import ContentLayout from "../components/ui/organisms/ContentLayout/ContentLayout.jsx";
-
 
 export default function GuestSandbox() {
   const {
@@ -66,6 +65,20 @@ export default function GuestSandbox() {
       <h1>Sandbox · G3 y G4</h1>
 
       <h2>GP — Base y layout</h2>
+
+      <button
+        onClick={toggleTheme}
+        style={{
+          padding: "8px 14px",
+          borderRadius: "var(--radius-field)",
+          background: "var(--color-surface)",
+          border: "1px solid var(--color-border-strong)",
+          color: "var(--color-text-strong)",
+          cursor: "pointer",
+        }}
+      >
+        Tema: {theme}
+      </button>
 
       <div style={{ display: "flex", flexDirection: "column", gap: ".75rem" }}>
         <GradientBackground

@@ -1,0 +1,11 @@
+@use "../../../../../../styles/variables" as vars;
+@use "../../../../../../styles/mixins" as mix;
+
+.pin-badge {
+  @include mix.badge-shape;
+  @include mix.mono-data;
+
+  background: var(--color-surface-subtle);
+  color: var(--color-text-strong);
+  border: 1px solid var(--color-border);
+}

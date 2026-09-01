@@ -1,0 +1,43 @@
+@use "mixins" as mix;
+
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+
+  @include mix.respond-to("desktop") {
+    flex-wrap: nowrap;
+  }
+
+  .input,
+  .button {
+    height: 44px;
+    min-height: 44px;
+  }
+
+  &__field {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 200px;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  &__search.input {
+    width: 100%;
+    padding-left: 40px;
+  }
+
+  &__create {
+    padding: 0 17px;
+    font-size: 14px;
+  }
+}

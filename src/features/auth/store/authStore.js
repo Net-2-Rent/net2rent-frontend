@@ -14,7 +14,7 @@ export const useAuthStore = create((set) => ({
     set({ status: 'loading', error: null });
     try {
       const data = await loginRequest({ email, password });
-      const user = { email: data.email, firstName: data.firstName, role: data.role };
+      const user = { email: data.email, firstName: data.firstName, lastName: data.lastName, role: data.role };
       saveSession({ token: data.token, user }); // persistimos en localStorage
       set({ token: data.token, user, status: 'idle', error: null });
       return { ok: true };

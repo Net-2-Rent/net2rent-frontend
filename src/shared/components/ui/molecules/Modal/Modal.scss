@@ -6,9 +6,13 @@
   inset: 0;
   z-index: vars.z("modal");
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  padding: vars.space(20);
+
+  @include mix.respond-to("desktop") {
+    align-items: center;
+    padding: vars.space(20);
+  }
 }
 
 .modal__heading {
@@ -41,7 +45,12 @@
   width: 100%;
   max-width: 460px;
   max-height: calc(100dvh - #{vars.space(40)});
+  border-radius: var(--radius-modal) var(--radius-modal) 0 0;
   animation: n2r-slide-up vars.$transition-base both;
+
+  @include mix.respond-to("desktop") {
+    border-radius: var(--radius-modal);
+  }
 }
 
 .modal__header {

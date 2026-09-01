@@ -1,0 +1,47 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.lodging-modal {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(20);
+  }
+
+  &__alert {
+    padding: vars.space(12) vars.space(16);
+    border: 1px solid var(--color-danger);
+    border-radius: var(--radius-field);
+    color: var(--color-danger);
+    background: var(--color-danger-soft);
+  }
+
+  &__pin-field {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(8);
+    margin-block: vars.space(12);
+  }
+
+  &__pin-label {
+    @include mix.text-style("field-label", "backoffice");
+    margin: 0;
+    color: var(--color-text-strong);
+  }
+
+  &__notes {
+    @include mix.surface-note;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: vars.space(12);
+  }
+
+  &--pin-only {
+    @include mix.respond-to("desktop") {
+      max-width: 420px;
+    }
+  }
+}

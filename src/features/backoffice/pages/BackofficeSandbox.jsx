@@ -51,6 +51,9 @@ import EditUserModal from "../components/ui/organisms/EditUserModal/EditUserModa
 import ClassificationCard from "../components/ui/organisms/ClassificationCard/ClassificationCard.jsx";
 import PhoneIncidentForm from "../components/ui/organisms/PhoneIncidentForm/PhoneIncidentForm.jsx";
 import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
+import SearchBar from "../components/ui/molecules/SearchBar/SearchBar.jsx";
+import LodgingRow from "../components/ui/molecules/LodgingRow/LodgingRow.jsx";
+import LodgingModal from "../components/ui/organisms/LodgingModal/LodgingModal.jsx";
 
 /* Helpers de la sandbox                                               */
 
@@ -264,6 +267,14 @@ const ROLE_FILTER_OPTIONS = [
   { value: ROLES.COORDINATOR, label: ROLE_LABEL[ROLES.COORDINATOR] },
   { value: ROLES.OPERATOR, label: ROLE_LABEL[ROLES.OPERATOR] },
 ];
+const DEMO_LODGING = {
+  name: "Apto. Marina 3B",
+  address: "Passeig Marítim 44, 3B, Palma",
+  pin: "4821",
+  reference: "REF-0031",
+  notes:
+    "Caja de llaves a la izquierda del portal. El ascensor requiere la llave magnética del llavero verde.",
+};
 
 /* Sandbox                                                             */
 
@@ -290,6 +301,9 @@ export default function BackofficeSandbox() {
   const [editUser, setEditUser] = useState(null);
   const [deactivateUser, setDeactivateUser] = useState(null);
   const [rejectOpen, setRejectOpen] = useState(false);
+  const [demoLodgingActive, setDemoLodgingActive] = useState(true);
+  const [confirmDeactivate, setConfirmDeactivate] = useState(false);
+  const [lodgingModalMode, setLodgingModalMode] = useState(null);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -899,6 +913,33 @@ export default function BackofficeSandbox() {
           onSubmit={(data) => console.log("Nueva incidencia telefónica", data)}
         />
       </DemoSection>
+
+      <DemoSection title="SearchBar">
+        <SearchBar
+          search={demoSearch}
+          onSearchChange={(e) => setDemoSearch(e.target.value)}
+          onCreate={() => setLodgingModalMode("create")}
+        />
+
+        <LodgingRow
+          {...DEMO_LODGING}
+          active={demoLodgingActive}
+          onEdit={() => setLodgingModalMode("edit")}
+          onChangePin={() => setLodgingModalMode("pin")}
+          onToggleActive={() => setConfirmDeactivate(true)}
+        />
+      </DemoSection>
+      <LodgingModal
+        key={lodgingModalMode}
+        isOpen={lodgingModalMode !== null}
+        onClose={() => setLodgingModalMode(null)}
+        mode={lodgingModalMode ?? "create"}
+        defaultValues={lodgingModalMode === "create" ? undefined : DEMO_LODGING}
+        onSubmit={(data) => {
+          console.log("Guardar alojamiento →", lodgingModalMode, data);
+          setLodgingModalMode(null);
+        }}
+      />
     </main>
   );
 }

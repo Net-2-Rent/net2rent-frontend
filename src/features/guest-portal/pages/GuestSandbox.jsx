@@ -16,7 +16,7 @@ import { useState } from "react";
 import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
 import NewIncidentForm from "../components/ui/organisms/NewIncidentForm/NewIncidentForm.jsx";
 import ReadonlyField from "../../../shared/components/ui/molecules/ReadonlyField/ReadonlyField.jsx";
-import PinInput from "../components/ui/atoms/PinInput/PinInput.jsx";
+import PinInput from "../../../shared/components/ui/atoms/PinInput/PinInput.jsx";
 import InlineError from "../../../shared/components/ui/atoms/InlineError/InlineError.jsx";
 
 import GradientBackground from "../components/ui/atoms/GradientBackground/GradientBackground.jsx";

@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 import { UserPlus, Pause, Ban, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
-import {
-  INCIDENT_STATUS
-} from "../../../shared/constants/incidentStatus.js";
+import { INCIDENT_STATUS } from "../../../shared/constants/incidentStatus.js";
 import Spinner from "../../../shared/components/ui/atoms/Spinner/Spinner.jsx";
 import Button from "../../../shared/components/ui/atoms/Button/Button.jsx";
 import Input from "../../../shared/components/ui/atoms/Input/Input.jsx";
@@ -48,6 +46,9 @@ import ConfirmationModal from "../components/ui/organisms/ConfirmationModal/Conf
 import ClassificationCard from "../components/ui/organisms/ClassificationCard/ClassificationCard.jsx";
 import PhoneIncidentForm from "../components/ui/organisms/PhoneIncidentForm/PhoneIncidentForm.jsx";
 import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
+import SearchBar from "../components/ui/molecules/SearchBar/SearchBar.jsx";
+import LodgingRow from "../components/ui/molecules/LodgingRow/LodgingRow.jsx";
+import LodgingModal from "../components/ui/organisms/LodgingModal/LodgingModal.jsx";
 
 /* Helpers de la sandbox                                               */
 
@@ -254,6 +255,15 @@ const MOCK_OPERATORS = [
   { id: "op-3", name: "Núria Serra" },
 ];
 
+const DEMO_LODGING = {
+  name: "Apto. Marina 3B",
+  address: "Passeig Marítim 44, 3B, Palma",
+  pin: "4821",
+  reference: "REF-0031",
+  notes:
+    "Caja de llaves a la izquierda del portal. El ascensor requiere la llave magnética del llavero verde.",
+};
+
 /* Sandbox                                                             */
 
 export default function BackofficeSandbox() {
@@ -276,6 +286,9 @@ export default function BackofficeSandbox() {
   const [demoToggle, setDemoToggle] = useState("ASSIGNED");
   const [resolveOpen, setResolveOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
+  const [demoLodgingActive, setDemoLodgingActive] = useState(true);
+  const [confirmDeactivate, setConfirmDeactivate] = useState(false);
+  const [lodgingModalMode, setLodgingModalMode] = useState(null);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -677,58 +690,58 @@ export default function BackofficeSandbox() {
         />
       </DemoSection>
 
-<DemoSection title="Cronology Card">
-      <CronologyCard 
-        currentUser="Marc Vidal"
-        initialEntries={[
-          {
-            id: "e1",
-            title: "Incidencia creada por teléfono",
-            author: "Pau Roig",
-            atLabel: "10:12",
-            status: INCIDENT_STATUS.NEW,
-            description:
-              "El cliente indica que el equipo arranca pero expulsa aire templado desde ayer por la tarde.",
-          },
-          {
-            id: "e2",
-            title: "Asignada a Marc Vidal",
-            author: "Pau Roig",
-            atLabel: "10:20",
-            status: INCIDENT_STATUS.ASSIGNED,
-          },
-          {
-            id: "e3",
-            title: "Trabajo iniciado",
-            author: "Marc Vidal",
-            atLabel: "11:47",
-            status: INCIDENT_STATUS.IN_PROGRESS,
-          },
-          {
-            id: "e4",
-            title: "Comentario interno",
-            author: "Marc Vidal",
-            atLabel: "12:05",
-            description:
-              "Filtros muy saturados. Limpiados. Sigue sin enfriar, reviso circuito de gas.",
-          },
-          {
-            id: "e5",
-            title: "Trabajo pausado",
-            author: "Pau Roig",
-            atLabel: "ahora",
-            status: INCIDENT_STATUS.PAUSED,
-          },
-          {
-            id: "e6",
-            title: "Trabajo reanudado",
-            author: "Pau Roig",
-            atLabel: "ahora",
-            status: INCIDENT_STATUS.IN_PROGRESS,
-          },
-        ]}
-        onAddComment={(c) => console.log("comentario →", c)}
-      />
+      <DemoSection title="Cronology Card">
+        <CronologyCard
+          currentUser="Marc Vidal"
+          initialEntries={[
+            {
+              id: "e1",
+              title: "Incidencia creada por teléfono",
+              author: "Pau Roig",
+              atLabel: "10:12",
+              status: INCIDENT_STATUS.NEW,
+              description:
+                "El cliente indica que el equipo arranca pero expulsa aire templado desde ayer por la tarde.",
+            },
+            {
+              id: "e2",
+              title: "Asignada a Marc Vidal",
+              author: "Pau Roig",
+              atLabel: "10:20",
+              status: INCIDENT_STATUS.ASSIGNED,
+            },
+            {
+              id: "e3",
+              title: "Trabajo iniciado",
+              author: "Marc Vidal",
+              atLabel: "11:47",
+              status: INCIDENT_STATUS.IN_PROGRESS,
+            },
+            {
+              id: "e4",
+              title: "Comentario interno",
+              author: "Marc Vidal",
+              atLabel: "12:05",
+              description:
+                "Filtros muy saturados. Limpiados. Sigue sin enfriar, reviso circuito de gas.",
+            },
+            {
+              id: "e5",
+              title: "Trabajo pausado",
+              author: "Pau Roig",
+              atLabel: "ahora",
+              status: INCIDENT_STATUS.PAUSED,
+            },
+            {
+              id: "e6",
+              title: "Trabajo reanudado",
+              author: "Pau Roig",
+              atLabel: "ahora",
+              status: INCIDENT_STATUS.IN_PROGRESS,
+            },
+          ]}
+          onAddComment={(c) => console.log("comentario →", c)}
+        />
       </DemoSection>
 
       <DemoSection title="Time Allocation">
@@ -763,7 +776,7 @@ export default function BackofficeSandbox() {
             console.log("resuelta →", data);
             setResolveOpen(false);
           }}
-      />
+        />
       </DemoSection>
 
       <DemoSection title="PhoneIncidentForm · B-A4">
@@ -773,6 +786,33 @@ export default function BackofficeSandbox() {
           onSubmit={(data) => console.log("Nueva incidencia telefónica", data)}
         />
       </DemoSection>
+
+      <DemoSection title="SearchBar">
+        <SearchBar
+          search={demoSearch}
+          onSearchChange={(e) => setDemoSearch(e.target.value)}
+          onCreate={() => setLodgingModalMode("create")}
+        />
+
+        <LodgingRow
+          {...DEMO_LODGING}
+          active={demoLodgingActive}
+          onEdit={() => setLodgingModalMode("edit")}
+          onChangePin={() => setLodgingModalMode("pin")}
+          onToggleActive={() => setConfirmDeactivate(true)}
+        />
+      </DemoSection>
+      <LodgingModal
+        key={lodgingModalMode}
+        isOpen={lodgingModalMode !== null}
+        onClose={() => setLodgingModalMode(null)}
+        mode={lodgingModalMode ?? "create"}
+        defaultValues={lodgingModalMode === "create" ? undefined : DEMO_LODGING}
+        onSubmit={(data) => {
+          console.log("Guardar alojamiento →", lodgingModalMode, data);
+          setLodgingModalMode(null);
+        }}
+      />
     </main>
   );
 }

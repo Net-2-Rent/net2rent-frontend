@@ -7,16 +7,25 @@ import {
 } from 'lucide-react';
 
 export const ROLES = {
-  ADMIN: 'ADMIN',
-  COORDINATOR: 'COORDINATOR',
-  OPERATOR: 'OPERATOR',
+  ADMIN: "ADMIN",
+  COORDINATOR: "COORDINATOR",
+  OPERATOR: "OPERATOR",
 };
 
+export const ALL_ROLES = "ALL";
+
 export const ROLE_LABEL = {
-  [ROLES.ADMIN]: 'Administrador',
-  [ROLES.COORDINATOR]: 'Coordinador',
-  [ROLES.OPERATOR]: 'Operario',
+  [ROLES.ADMIN]: "Administrador",
+  [ROLES.COORDINATOR]: "Coordinador",
+  [ROLES.OPERATOR]: "Operario",
 };
+
+export const ROLE_FILTER_OPTIONS = [
+  { value: ALL_ROLES, label: "Todos" },
+  { value: ROLES.ADMIN, label: ROLE_LABEL[ROLES.ADMIN] },
+  { value: ROLES.COORDINATOR, label: ROLE_LABEL[ROLES.COORDINATOR] },
+  { value: ROLES.OPERATOR, label: ROLE_LABEL[ROLES.OPERATOR] },
+];
 
 export const NAV_BY_ROLE = {
   [ROLES.ADMIN]: [

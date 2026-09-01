@@ -13,7 +13,7 @@ import Avatar from "../../../shared/components/ui/atoms/Avatar/Avatar.jsx";
 import Skeleton from "../../../shared/components/ui/atoms/Skeleton/Skeleton.jsx";
 import FormField from "../../../shared/components/ui/molecules/FormField/FormField.jsx";
 import SideBar from "../components/ui/organisms/SideBar/SideBar.jsx";
-import { ROLES } from "../../../shared/constants/nav";
+import { ROLES, ALL_ROLES, ROLE_LABEL } from "../../../shared/constants/nav"; // ⟵ NUEVO: ALL_ROLES, ROLE_LABEL
 import NoticeBanner from "../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner.jsx";
 import StickyHero from "../components/ui/organisms/StickyHero/StickyHero.jsx";
 import StatusBadgeIncident from "../components/ui/molecules/StatusBadgeIncident/StatusBadgeIncident.jsx";
@@ -28,6 +28,10 @@ import ToggleIncident from "../components/ui/molecules/ToggleIncident/ToggleInci
 import PageButton from "../components/ui/atoms/PageButton/PageButton.jsx";
 import EmptyMessage from "../components/ui/atoms/EmptyMessage/EmptyMessage.jsx";
 import TableIncident from "../components/ui/organisms/TableIncident/TableIncident.jsx";
+import RoleFilter from "../components/ui/molecules/RoleFilter/RoleFilter.jsx";
+import UserCard from "../components/ui/molecules/UserCard/UserCard.jsx";
+import ProfileCard from "../components/ui/molecules/ProfileCard/ProfileCard.jsx";
+import ChangePasswordForm from "../components/ui/organisms/ChangePasswordForm/ChangePasswordForm.jsx";
 import {
   INCIDENT_PRIORITY,
   INCIDENT_PRIORITY_LABEL,
@@ -43,6 +47,7 @@ import CronologyCard from "../components/ui/organisms/CronologyCard/CronologyCar
 import TimeAllocation from "../components/ui/organisms/TimeAllocation/TimeAllocation.jsx";
 import ResolutionModal from "../components/ui/organisms/ResolutionModal/ResolutionModal.jsx";
 import ConfirmationModal from "../components/ui/organisms/ConfirmationModal/ConfirmationModal.jsx";
+import EditUserModal from "../components/ui/organisms/EditUserModal/EditUserModal.jsx";
 import ClassificationCard from "../components/ui/organisms/ClassificationCard/ClassificationCard.jsx";
 import PhoneIncidentForm from "../components/ui/organisms/PhoneIncidentForm/PhoneIncidentForm.jsx";
 import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
@@ -255,6 +260,13 @@ const MOCK_OPERATORS = [
   { id: "op-3", name: "Núria Serra" },
 ];
 
+// ⟵ NUEVO: opciones del filtro de rol reutilizando nav.js (singular)
+const ROLE_FILTER_OPTIONS = [
+  { value: ALL_ROLES, label: "Todos" },
+  { value: ROLES.ADMIN, label: ROLE_LABEL[ROLES.ADMIN] },
+  { value: ROLES.COORDINATOR, label: ROLE_LABEL[ROLES.COORDINATOR] },
+  { value: ROLES.OPERATOR, label: ROLE_LABEL[ROLES.OPERATOR] },
+];
 const DEMO_LODGING = {
   name: "Apto. Marina 3B",
   address: "Passeig Marítim 44, 3B, Palma",
@@ -284,7 +296,10 @@ export default function BackofficeSandbox() {
   const [demoReloading, setDemoReloading] = useState(false);
   const [demoTablePage, setDemoTablePage] = useState(1);
   const [demoToggle, setDemoToggle] = useState("ASSIGNED");
+  const [demoRoleFilter, setDemoRoleFilter] = useState(ALL_ROLES);
   const [resolveOpen, setResolveOpen] = useState(false);
+  const [editUser, setEditUser] = useState(null);
+  const [deactivateUser, setDeactivateUser] = useState(null);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [demoLodgingActive, setDemoLodgingActive] = useState(true);
   const [confirmDeactivate, setConfirmDeactivate] = useState(false);
@@ -485,6 +500,118 @@ export default function BackofficeSandbox() {
           <ToggleIncident value={demoToggle} onChange={setDemoToggle} />
         </Row>
         <Row label="Valor actual">{demoToggle}</Row>
+      </DemoSection>
+
+      {/* ⟵ NUEVO: DemoSection de RoleFilter */}
+      <DemoSection title="RoleFilter · filtro de rol">
+        <RoleFilter
+          value={demoRoleFilter}
+          onChange={setDemoRoleFilter}
+          options={ROLE_FILTER_OPTIONS}
+          counts={{
+            [ALL_ROLES]: 6,
+            [ROLES.ADMIN]: 2,
+            [ROLES.COORDINATOR]: 3,
+            [ROLES.OPERATOR]: 1,
+          }}
+        />
+        <Row label="Filtro actual">
+          {ROLE_FILTER_OPTIONS.find((o) => o.value === demoRoleFilter)?.label ??
+            demoRoleFilter}
+        </Row>
+      </DemoSection>
+
+      <DemoSection title="UserCard · listado usuarios">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+            width: "100%",
+          }}
+        >
+          <UserCard
+            name="Elena Ferrer"
+            email="elena.ferrer@net2rent.com"
+            role={ROLES.ADMIN}
+            onEdit={() =>
+              setEditUser({
+                name: "Elena Ferrer",
+                email: "elena.ferrer@net2rent.com",
+                role: ROLES.ADMIN,
+              })
+            }
+            onDeactivate={() =>
+              setDeactivateUser({
+                name: "Elena Ferrer",
+                email: "elena.ferrer@net2rent.com",
+              })
+            }
+          />
+          <UserCard
+            name="Marc Vidal"
+            email="marc.vidal@net2rent.com"
+            role={ROLES.OPERATOR}
+            onEdit={() =>
+              setEditUser({
+                name: "Marc Vidal",
+                email: "marc.vidal@net2rent.com",
+                role: ROLES.OPERATOR,
+              })
+            }
+            onDeactivate={() =>
+              setDeactivateUser({
+                name: "Marc Vidal",
+                email: "marc.vidal@net2rent.com",
+              })
+            }
+          />
+
+          <EditUserModal
+            key={editUser?.email ?? "closed"}
+            isOpen={!!editUser}
+            user={editUser}
+            onClose={() => setEditUser(null)}
+            onSave={(data) => {
+              console.log("Guardar usuario →", data);
+              setEditUser(null);
+            }}
+          />
+
+          <ConfirmationModal
+            isOpen={!!deactivateUser}
+            onClose={() => setDeactivateUser(null)}
+            onConfirm={() => {
+              console.log("Desactivar usuario →", deactivateUser?.email);
+              setDeactivateUser(null);
+            }}
+            title="¿Desactivar este usuario?"
+            subtitle={deactivateUser?.email}
+            message="Perderá el acceso a la consola de inmediato. Sus incidencias asignadas quedarán sin asignar."
+            confirmLabel="Desactivar"
+            cancelLabel="Cancelar"
+            tone="danger"
+          />
+        </div>
+      </DemoSection>
+
+      <DemoSection title="ProfileCard">
+        <ProfileCard
+          name="Elena Ferrer"
+          email="elena.ferrer@net2rent.com"
+          role={ROLES.ADMIN}
+        />
+        <ProfileCard
+          name="Marc Vidal"
+          email="marc.vidal@net2rent.com"
+          role={ROLES.OPERATOR}
+        />
+      </DemoSection>
+
+      <DemoSection title="ChangePasswordForm">
+        <ChangePasswordForm
+          onSubmit={(d) => console.log("Cambiar contraseña →", d)}
+        />
       </DemoSection>
 
       <DemoSection title="FilterBar">

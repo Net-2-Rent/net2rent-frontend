@@ -48,6 +48,7 @@ import PhoneIncidentForm from "../components/ui/organisms/PhoneIncidentForm/Phon
 import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
 import SearchBar from "../components/ui/molecules/SearchBar/SearchBar.jsx";
 import LodgingRow from "../components/ui/molecules/LodgingRow/LodgingRow.jsx";
+import LodgingModal from "../components/ui/organisms/LodgingModal/LodgingModal.jsx";
 
 /* Helpers de la sandbox                                               */
 
@@ -254,6 +255,15 @@ const MOCK_OPERATORS = [
   { id: "op-3", name: "Núria Serra" },
 ];
 
+const DEMO_LODGING = {
+  name: "Apto. Marina 3B",
+  address: "Passeig Marítim 44, 3B, Palma",
+  pin: "4821",
+  reference: "REF-0031",
+  notes:
+    "Caja de llaves a la izquierda del portal. El ascensor requiere la llave magnética del llavero verde.",
+};
+
 /* Sandbox                                                             */
 
 export default function BackofficeSandbox() {
@@ -278,6 +288,7 @@ export default function BackofficeSandbox() {
   const [rejectOpen, setRejectOpen] = useState(false);
   const [demoLodgingActive, setDemoLodgingActive] = useState(true);
   const [confirmDeactivate, setConfirmDeactivate] = useState(false);
+  const [lodgingModalMode, setLodgingModalMode] = useState(null);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -780,44 +791,28 @@ export default function BackofficeSandbox() {
         <SearchBar
           search={demoSearch}
           onSearchChange={(e) => setDemoSearch(e.target.value)}
-          onCreate={() => console.log("Nuevo alojamiento")}
+          onCreate={() => setLodgingModalMode("create")}
         />
-      </DemoSection>
 
-      <DemoSection title="LodgingRow">
         <LodgingRow
-          name="Apto. Marina 3B"
-          address="Passeig Marítim 44, 3B, Palma"
-          pin="4821"
-          reference="REF-0031"
+          {...DEMO_LODGING}
           active={demoLodgingActive}
-          notes="Caja de llaves a la izquierda del portal. El ascensor requiere la llave magnética del llavero verde."
-          onEdit={() => console.log("Editar")}
-          onChangePin={() => console.log("Cambiar PIN")}
+          onEdit={() => setLodgingModalMode("edit")}
+          onChangePin={() => setLodgingModalMode("pin")}
           onToggleActive={() => setConfirmDeactivate(true)}
         />
-
-        <ConfirmationModal
-          isOpen={confirmDeactivate}
-          onClose={() => setConfirmDeactivate(false)}
-          onConfirm={() => {
-            setDemoLodgingActive((v) => !v);
-            setConfirmDeactivate(false);
-          }}
-          title={
-            demoLodgingActive
-              ? "¿Desactivar alojamiento?"
-              : "¿Activar alojamiento?"
-          }
-          message={
-            demoLodgingActive
-              ? "Se bloquearán nuevos reportes de huéspedes y se ocultará del selector telefónico. Las incidencias previas se conservan."
-              : "El alojamiento volverá a admitir el acceso de huéspedes."
-          }
-          confirmLabel={demoLodgingActive ? "Desactivar" : "Activar"}
-          tone={demoLodgingActive ? "danger" : "default"}
-        />
       </DemoSection>
+      <LodgingModal
+        key={lodgingModalMode}
+        isOpen={lodgingModalMode !== null}
+        onClose={() => setLodgingModalMode(null)}
+        mode={lodgingModalMode ?? "create"}
+        defaultValues={lodgingModalMode === "create" ? undefined : DEMO_LODGING}
+        onSubmit={(data) => {
+          console.log("Guardar alojamiento →", lodgingModalMode, data);
+          setLodgingModalMode(null);
+        }}
+      />
     </main>
   );
 }

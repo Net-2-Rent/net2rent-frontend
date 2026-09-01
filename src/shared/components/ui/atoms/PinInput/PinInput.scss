@@ -1,21 +1,27 @@
-@use "../../../../../../styles/variables" as vars;
-@use "../../../../../../styles/mixins" as mix;
+@use "../../../../../styles/variables" as vars;
+@use "../../../../../styles/mixins" as mix;
 
 .pin-input {
   display: flex;
   gap: 10px;
 
   &__box {
-    width: 62px;
-    height: 62px;
+    width: var(--field-height);
+    height: var(--field-height);
     text-align: center;
     border: var(--field-border-width) solid var(--color-border-strong);
     border-radius: var(--radius-field);
     background: var(--color-input-bg);
     color: var(--color-text-strong);
 
-    @include mix.text-style("code-display", "guest");
+    @include mix.text-style("mono-data", "backoffice");
     @include mix.mono-data;
+
+    @include mix.when-guest {
+      width: 62px;
+      height: 62px;
+      @include mix.text-style("code-display", "guest");
+    }
 
     &--invalid {
       @include mix.field-error;

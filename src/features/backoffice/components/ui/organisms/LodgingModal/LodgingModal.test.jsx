@@ -20,7 +20,7 @@ describe("LodgingModal", () => {
   it("shows required field errors when creating with an empty form", async () => {
     const { handleSubmit } = renderModal({ mode: "create" });
 
-    fireEvent.click(screen.getByRole("button", { name: "Crear alojamiento" }));
+    fireEvent.click(screen.getByRole("button", { name: "Guardar" }));
 
     expect(
       await screen.findByText("El nombre es obligatorio", {
@@ -55,7 +55,7 @@ describe("LodgingModal", () => {
       },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Guardar cambios" }));
+    fireEvent.click(screen.getByRole("button", { name: "Guardar" }));
 
     await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
   });
@@ -66,7 +66,7 @@ describe("LodgingModal", () => {
     fireEvent.change(screen.getByLabelText("Dígito 1 de 4"), {
       target: { value: "5" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Crear alojamiento" }));
+    fireEvent.click(screen.getByRole("button", { name: "Guardar" }));
 
     expect(
       await screen.findByText("El código debe tener 4 dígitos", {

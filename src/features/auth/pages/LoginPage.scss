@@ -1,0 +1,104 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.login-page {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--color-page-bg);
+
+  @include mix.respond-to("tablet") {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  // Contenedor de la tarjeta 
+  &__form-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: vars.space(24);
+  }
+
+  // Tarjeta de login
+  &__card {
+
+    --color-input-bg: #{vars.$bo-navy-deep};
+    --color-border: #{rgba(#ffffff, 0.12)};
+    --color-border-strong: #{rgba(#ffffff, 0.16)};
+    --color-text-strong: #ffffff;
+    --color-text-soft: #{rgba(#ffffff, 0.72)};
+    --color-text-muted: #{rgba(#ffffff, 0.6)};
+    --color-text-faint: #{rgba(#ffffff, 0.45)};
+    --color-focus-ring: #{rgba(vars.$bo-brand, 0.45)};
+
+    width: 100%;
+    max-width: 420px;
+    padding: vars.space(40);
+    background: #{vars.$bo-navy};
+    border-radius: var(--radius-modal);
+    box-shadow: var(--shadow-floating);
+  }
+
+  &__brand {
+    display: flex;
+    justify-content: center;
+    margin-bottom: vars.space(24);
+  }
+
+  &__logo {
+    height: 36px;
+    width: auto;
+  }
+
+  &__title {
+    margin: 0 0 vars.space(8);
+    text-align: center;
+    color: var(--color-text-strong);
+    @include mix.text-style("card-title");
+  }
+
+  &__subtitle {
+    margin: 0 0 vars.space(32);
+    text-align: center;
+    color: var(--color-text-soft);
+    @include mix.text-style("body");
+  }
+
+  // Derecha: panel blanco de marca
+  &__brand-panel {
+    display: none;
+    padding: vars.space(56);
+    align-items: flex-end;
+    background: #{vars.$bo-navy};
+
+    @include mix.respond-to("tablet") {
+      display: flex;
+    }
+  }
+
+  &__brand-panel-inner {
+    max-width: 460px;
+  }
+
+  &__accent {
+    display: block;
+    width: 40px;
+    height: 4px;
+    border-radius: vars.space(2);
+    background: var(--color-brand);
+    margin-bottom: vars.space(20);
+  }
+
+  &__tagline {
+    margin: 0 0 vars.space(16);
+    color: #ffffff;
+    @include mix.text-style("section-title");
+  }
+
+  &__panel-meta {
+    margin: 0;
+    color: var(--color-surface);
+    @include mix.text-style("body");
+    font-size: 13px;
+  }
+}

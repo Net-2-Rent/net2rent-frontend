@@ -1,0 +1,26 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.login-form {
+  @include mix.flex(column, vars.space(16));
+
+  &__forgot-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: calc(-1 * #{vars.space(8)});
+  }
+
+  &__forgot {
+    @include mix.button-reset;
+    color: var(--color-surface);
+    @include mix.text-style("field-label");
+    @include mix.focus-ring;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  &__submit {
+    margin-top: vars.space(4);
+    width: 100%;
+  }
+}

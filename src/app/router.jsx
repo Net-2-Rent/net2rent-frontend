@@ -6,7 +6,9 @@ import NewGuestIncidentPage from "../features/guest-portal/pages/NewGuestInciden
 import ConfirmationPage from "../features/guest-portal/pages/ConfirmationPage";
 import IncidentDetailGuestPage from "../features/guest-portal/pages/IncidentDetailGuestPage";
 import GuestSandbox from "../features/guest-portal/pages/GuestSandbox";
-import BackofficeSandbox from "../features/backoffice/pages/BackofficeSandbox.jsx";
+import BackofficeSandbox from "../features/backoffice/pages/BackofficeSandbox";
+import LoginPage from "../features/auth/pages/LoginPage";
+import ProtectedRoute from "../features/auth/components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -15,18 +17,23 @@ const router = createBrowserRouter([
       { path: "/", element: <IdentificationPage /> },
       { path: "/alojamiento", element: <MyLodgingPage /> },
       { path: "/incidencias/nueva", element: <NewGuestIncidentPage /> },
-      {
-        path: "/incidencias/confirmacion/:code",
-        element: <ConfirmationPage />,
-      },
+      { path: "/incidencias/confirmacion/:code", element: <ConfirmationPage /> },
       { path: "/incidencias/:id", element: <IncidentDetailGuestPage /> },
       { path: "/sandbox", element: <GuestSandbox /> },
     ],
   },
   {
-    path: "/sandbox/backoffice",
     element: <AppScope app="backoffice" />,
-    children: [{ index: true, element: <BackofficeSandbox /> }],
+    children: [
+      { path: "/login", element: <LoginPage /> },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          { path: "/backoffice", element: <BackofficeSandbox /> },
+        ],
+      },
+      { path: "/sandbox/backoffice", element: <BackofficeSandbox /> },
+    ],
   },
 ]);
 

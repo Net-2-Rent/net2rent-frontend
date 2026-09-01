@@ -1,0 +1,33 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.edit-user-modal {
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(12);
+    width: 100%;
+    margin-top: vars.space(4);
+
+    .button {
+      width: 100%;
+      height: 48px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
+
+  &__cancel.button {
+    color: var(--color-text-muted);
+  }
+
+  @include mix.respond-to("desktop") {
+  .edit-user-modal__actions {
+    flex-direction: row;
+  }
+}
+}

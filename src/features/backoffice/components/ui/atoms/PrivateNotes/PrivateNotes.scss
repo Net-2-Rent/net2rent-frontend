@@ -1,0 +1,33 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.private-notes {
+  @include mix.surface-note;
+
+  padding: vars.space(12);
+  margin: 12px;
+
+  &__title {
+    @include mix.text-style("block-eyebrow", "backoffice");
+
+    display: flex;
+    align-items: center;
+    gap: vars.space(8);
+    margin: 0 0 vars.space(8);
+    color: var(--color-note-ink);
+  }
+
+  &__dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  &__body {
+    @include mix.text-style("body", "backoffice");
+    color: var(--color-note-ink);
+    white-space: pre-line;
+  }
+}

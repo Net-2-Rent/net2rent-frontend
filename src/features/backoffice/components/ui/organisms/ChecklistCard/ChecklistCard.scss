@@ -1,0 +1,152 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.checklist {
+  @include mix.surface-card;
+
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+  padding: vars.space(24);
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: vars.space(8);
+  }
+
+  &__title {
+    @include mix.text-style("block-eyebrow", "backoffice");
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  &__progress {
+    @include mix.text-style("field-label", "backoffice");
+    margin: 0;
+    color: var(--color-text-soft);
+  }
+
+  &__bar {
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-subtle);
+    overflow: hidden;
+  }
+
+  &__bar-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--color-brand);
+    transition: width vars.$transition-base;
+  }
+
+  &__empty {
+    @include mix.text-style("body", "backoffice");
+    margin: 0;
+    padding-block: vars.space(16);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: vars.space(12);
+    padding-block: vars.space(12);
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child { border-bottom: 0; }
+  }
+
+  &__check {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: vars.space(12);
+    cursor: pointer;
+
+    input {
+      flex: none;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-brand);
+      cursor: pointer;
+    }
+  }
+
+  &__text {
+    @include mix.text-style("body", "backoffice");
+    color: var(--color-text-strong);
+
+    &--done {
+      color: var(--color-text-muted);
+      text-decoration: line-through;
+    }
+  }
+
+  &__remove {
+    @include mix.button-reset;
+
+    display: inline-flex;
+    padding: vars.space(4);
+    border-radius: var(--radius-chip);
+    color: var(--color-text-faint);
+    transition:
+      color vars.$transition-fast,
+      background-color vars.$transition-fast;
+
+    &:hover {
+      color: var(--color-danger);
+      background: var(--color-danger-soft);
+    }
+  }
+
+    &__controls {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: vars.space(4);
+  }
+
+  &__move {
+    @include mix.button-reset;
+
+    display: inline-flex;
+    padding: vars.space(4);
+    border-radius: var(--radius-chip);
+    color: var(--color-text-faint);
+    transition:
+      color vars.$transition-fast,
+      background-color vars.$transition-fast;
+
+    &:hover:not(:disabled) {
+      color: var(--color-text-strong);
+      background: var(--color-surface-subtle);
+    }
+
+    &:disabled {
+      color: var(--color-border-strong);   // apagado cuando no se puede mover
+      cursor: not-allowed;
+    }
+  }
+
+  &__add {
+    display: flex;
+    gap: vars.space(8);
+  }
+
+  &__input {
+    flex: 1;
+  }
+}

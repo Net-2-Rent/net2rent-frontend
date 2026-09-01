@@ -1,0 +1,88 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.time-allocation {
+  @include mix.surface-card;
+
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+  padding: vars.space(24);
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: vars.space(8);
+  }
+
+  &__title {
+    @include mix.text-style("block-eyebrow", "backoffice");
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  &__total {
+    @include mix.text-style("card-title", "backoffice");
+    margin: 0;
+    color: var(--color-brand);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: vars.space(16);
+    padding-block: vars.space(12);
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child { border-bottom: 0; }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(2);
+    min-width: 0;
+  }
+
+  &__operator {
+    @include mix.text-style("body", "backoffice");
+    color: var(--color-text-strong);
+    font-weight: vars.weight("semibold");
+  }
+
+  &__concept {
+    @include mix.text-style("field-label", "backoffice");
+    font-weight: vars.weight("regular");
+    color: var(--color-text-muted);
+  }
+
+  &__minutes {
+    @include mix.text-style("body", "backoffice");
+    flex: none;
+    color: var(--color-text-strong);
+    font-weight: vars.weight("bold");
+  }
+
+  &__add {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: vars.space(12);
+
+    input { width: 100%; }
+  }
+
+  &__field-concept { flex: 1 1 160px; min-width: 0; }
+  &__field-minutes { flex: 0 0 110px; }
+}

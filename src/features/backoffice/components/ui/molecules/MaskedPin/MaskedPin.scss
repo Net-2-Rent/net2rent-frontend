@@ -1,0 +1,25 @@
+@use "mixins" as mix;
+
+.masked-pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  &__label {
+    @include mix.text-style("body", "backoffice");
+    color: var(--color-text-muted);
+  }
+
+  &__toggle {
+    @include mix.button-reset;
+    @include mix.touch-target;
+    @include mix.focus-ring;
+
+    border-radius: 999px;
+    color: var(--color-text-muted);
+
+    &:hover {
+      color: var(--color-text-strong);
+    }
+  }
+}

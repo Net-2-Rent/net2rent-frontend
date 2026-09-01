@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 import { UserPlus, Pause, Ban, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
-import {
-  INCIDENT_STATUS
-} from "../../../shared/constants/incidentStatus.js";
+import { INCIDENT_STATUS } from "../../../shared/constants/incidentStatus.js";
 import Spinner from "../../../shared/components/ui/atoms/Spinner/Spinner.jsx";
 import Button from "../../../shared/components/ui/atoms/Button/Button.jsx";
 import Input from "../../../shared/components/ui/atoms/Input/Input.jsx";
@@ -48,6 +46,8 @@ import ConfirmationModal from "../components/ui/organisms/ConfirmationModal/Conf
 import ClassificationCard from "../components/ui/organisms/ClassificationCard/ClassificationCard.jsx";
 import PhoneIncidentForm from "../components/ui/organisms/PhoneIncidentForm/PhoneIncidentForm.jsx";
 import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
+import SearchBar from "../components/ui/molecules/SearchBar/SearchBar.jsx";
+import LodgingRow from "../components/ui/molecules/LodgingRow/LodgingRow.jsx";
 
 /* Helpers de la sandbox                                               */
 
@@ -276,6 +276,8 @@ export default function BackofficeSandbox() {
   const [demoToggle, setDemoToggle] = useState("ASSIGNED");
   const [resolveOpen, setResolveOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
+  const [demoLodgingActive, setDemoLodgingActive] = useState(true);
+  const [confirmDeactivate, setConfirmDeactivate] = useState(false);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -677,58 +679,58 @@ export default function BackofficeSandbox() {
         />
       </DemoSection>
 
-<DemoSection title="Cronology Card">
-      <CronologyCard 
-        currentUser="Marc Vidal"
-        initialEntries={[
-          {
-            id: "e1",
-            title: "Incidencia creada por teléfono",
-            author: "Pau Roig",
-            atLabel: "10:12",
-            status: INCIDENT_STATUS.NEW,
-            description:
-              "El cliente indica que el equipo arranca pero expulsa aire templado desde ayer por la tarde.",
-          },
-          {
-            id: "e2",
-            title: "Asignada a Marc Vidal",
-            author: "Pau Roig",
-            atLabel: "10:20",
-            status: INCIDENT_STATUS.ASSIGNED,
-          },
-          {
-            id: "e3",
-            title: "Trabajo iniciado",
-            author: "Marc Vidal",
-            atLabel: "11:47",
-            status: INCIDENT_STATUS.IN_PROGRESS,
-          },
-          {
-            id: "e4",
-            title: "Comentario interno",
-            author: "Marc Vidal",
-            atLabel: "12:05",
-            description:
-              "Filtros muy saturados. Limpiados. Sigue sin enfriar, reviso circuito de gas.",
-          },
-          {
-            id: "e5",
-            title: "Trabajo pausado",
-            author: "Pau Roig",
-            atLabel: "ahora",
-            status: INCIDENT_STATUS.PAUSED,
-          },
-          {
-            id: "e6",
-            title: "Trabajo reanudado",
-            author: "Pau Roig",
-            atLabel: "ahora",
-            status: INCIDENT_STATUS.IN_PROGRESS,
-          },
-        ]}
-        onAddComment={(c) => console.log("comentario →", c)}
-      />
+      <DemoSection title="Cronology Card">
+        <CronologyCard
+          currentUser="Marc Vidal"
+          initialEntries={[
+            {
+              id: "e1",
+              title: "Incidencia creada por teléfono",
+              author: "Pau Roig",
+              atLabel: "10:12",
+              status: INCIDENT_STATUS.NEW,
+              description:
+                "El cliente indica que el equipo arranca pero expulsa aire templado desde ayer por la tarde.",
+            },
+            {
+              id: "e2",
+              title: "Asignada a Marc Vidal",
+              author: "Pau Roig",
+              atLabel: "10:20",
+              status: INCIDENT_STATUS.ASSIGNED,
+            },
+            {
+              id: "e3",
+              title: "Trabajo iniciado",
+              author: "Marc Vidal",
+              atLabel: "11:47",
+              status: INCIDENT_STATUS.IN_PROGRESS,
+            },
+            {
+              id: "e4",
+              title: "Comentario interno",
+              author: "Marc Vidal",
+              atLabel: "12:05",
+              description:
+                "Filtros muy saturados. Limpiados. Sigue sin enfriar, reviso circuito de gas.",
+            },
+            {
+              id: "e5",
+              title: "Trabajo pausado",
+              author: "Pau Roig",
+              atLabel: "ahora",
+              status: INCIDENT_STATUS.PAUSED,
+            },
+            {
+              id: "e6",
+              title: "Trabajo reanudado",
+              author: "Pau Roig",
+              atLabel: "ahora",
+              status: INCIDENT_STATUS.IN_PROGRESS,
+            },
+          ]}
+          onAddComment={(c) => console.log("comentario →", c)}
+        />
       </DemoSection>
 
       <DemoSection title="Time Allocation">
@@ -763,7 +765,7 @@ export default function BackofficeSandbox() {
             console.log("resuelta →", data);
             setResolveOpen(false);
           }}
-      />
+        />
       </DemoSection>
 
       <DemoSection title="PhoneIncidentForm · B-A4">
@@ -771,6 +773,49 @@ export default function BackofficeSandbox() {
           lodgings={MOCK_LODGINGS}
           operators={MOCK_OPERATORS}
           onSubmit={(data) => console.log("Nueva incidencia telefónica", data)}
+        />
+      </DemoSection>
+
+      <DemoSection title="SearchBar">
+        <SearchBar
+          search={demoSearch}
+          onSearchChange={(e) => setDemoSearch(e.target.value)}
+          onCreate={() => console.log("Nuevo alojamiento")}
+        />
+      </DemoSection>
+
+      <DemoSection title="LodgingRow">
+        <LodgingRow
+          name="Apto. Marina 3B"
+          address="Passeig Marítim 44, 3B, Palma"
+          pin="4821"
+          reference="REF-0031"
+          active={demoLodgingActive}
+          notes="Caja de llaves a la izquierda del portal. El ascensor requiere la llave magnética del llavero verde."
+          onEdit={() => console.log("Editar")}
+          onChangePin={() => console.log("Cambiar PIN")}
+          onToggleActive={() => setConfirmDeactivate(true)}
+        />
+
+        <ConfirmationModal
+          isOpen={confirmDeactivate}
+          onClose={() => setConfirmDeactivate(false)}
+          onConfirm={() => {
+            setDemoLodgingActive((v) => !v);
+            setConfirmDeactivate(false);
+          }}
+          title={
+            demoLodgingActive
+              ? "¿Desactivar alojamiento?"
+              : "¿Activar alojamiento?"
+          }
+          message={
+            demoLodgingActive
+              ? "Se bloquearán nuevos reportes de huéspedes y se ocultará del selector telefónico. Las incidencias previas se conservan."
+              : "El alojamiento volverá a admitir el acceso de huéspedes."
+          }
+          confirmLabel={demoLodgingActive ? "Desactivar" : "Activar"}
+          tone={demoLodgingActive ? "danger" : "default"}
         />
       </DemoSection>
     </main>

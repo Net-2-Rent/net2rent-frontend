@@ -1,0 +1,110 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.cronology {
+  @include mix.surface-card;
+
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+  padding: vars.space(24);
+
+  &__title {
+    @include mix.text-style("block-eyebrow", "backoffice");
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  &__empty {
+    @include mix.text-style("body", "backoffice");
+    margin: 0;
+    padding-block: vars.space(16);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    position: relative;
+    display: flex;
+    gap: vars.space(12);
+    padding-bottom: vars.space(16);
+
+    &:last-child { padding-bottom: 0; }
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-border);
+    }
+    &:first-child::before { top: 9px; }
+    &:last-child::before { bottom: calc(100% - 9px); }
+  }
+
+  &__dot {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    width: 10px;
+    height: 10px;
+    margin-top: 4px;
+    border-radius: 50%;
+    background: var(--color-border-strong);
+  }
+
+  @each $key in vars.$status-keys {
+    &__dot--#{$key} {
+      background: var(--status-#{$key}-dot);
+    }
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: vars.space(2) vars.space(8);
+    margin: 0;
+  }
+
+  &__event {
+    @include mix.text-style("body", "backoffice");
+    color: var(--color-text-strong);
+    font-weight: vars.weight("bold");
+  }
+
+  &__meta {
+    @include mix.text-style("field-label", "backoffice");
+    font-weight: vars.weight("regular");
+    color: var(--color-text-faint);
+  }
+
+  &__text {
+    @include mix.text-style("body", "backoffice");
+    margin: vars.space(2) 0 0;
+    color: var(--color-text-soft);
+  }
+
+  &__add {
+    display: flex;
+    gap: vars.space(12);
+    align-items: stretch;
+  }
+
+  &__input { flex: 1; }
+}

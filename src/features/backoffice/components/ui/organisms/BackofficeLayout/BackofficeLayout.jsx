@@ -10,7 +10,6 @@ import {
 import { NAV_BY_ROLE } from "../../../../../../shared/constants/nav.js";
 import "./BackofficeLayout.scss";
 
-// ruta → key de navegación
 const ROUTE_TO_KEY = {
   "/backoffice": "incidents",
   "/backoffice/incidencias": "incidents",
@@ -20,7 +19,6 @@ const ROUTE_TO_KEY = {
   "/backoffice/perfil": "profile",
 };
 
-// key → path, derivado de NAV_BY_ROLE (fuente única)
 const KEY_TO_PATH = Object.values(NAV_BY_ROLE)
   .flat()
   .reduce((acc, item) => {
@@ -37,15 +35,14 @@ export default function BackofficeLayout() {
   const [theme, setThemeState] = useState(getInitialTheme);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const sessionUser = user ?? {
-    firstName: "Laura",
-    lastName: "Pérez",
-    role: "ADMIN",
-  };
-
-  const items = NAV_BY_ROLE[sessionUser.role] || [];
+  const items = NAV_BY_ROLE[user.role] || [];
   const activeKey = ROUTE_TO_KEY[location.pathname] ?? "";
   const activeItem = items.find((i) => i.key === activeKey);
+
+  const userName = `${user.firstName} ${user.lastName}`.trim();
+
+  // MOCK: sustituir por el nº real de incidencias nuevas cuando exista la API
+  const newIncidentsCount = 2;
 
   function toggleTheme() {
     const next = theme === "dark" ? "light" : "dark";
@@ -59,11 +56,6 @@ export default function BackofficeLayout() {
     setMenuOpen(false);
   }
 
-  const userName = `${sessionUser.firstName} ${sessionUser.lastName}`.trim();
-
-  // MOCK: sustituir por el nº real de incidencias nuevas cuando exista la API
-  const newIncidentsCount = 2;
-
   function handleLogout() {
     logout();
     navigate("/login");
@@ -72,7 +64,7 @@ export default function BackofficeLayout() {
   return (
     <div className="backoffice-layout">
       <SideBar
-        role={sessionUser.role}
+        role={user.role}
         activeItem={activeKey}
         onSelect={handleSelect}
         userName={userName}

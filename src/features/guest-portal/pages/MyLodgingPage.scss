@@ -1,0 +1,52 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.my-lodging-page {
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+
+  &__section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: vars.space(8);
+  }
+
+  &__section-title {
+    @include mix.text-style("section-title", "guest");
+
+    margin: 0;
+    color: var(--color-text-strong);
+  }
+
+  &__new-link {
+    @include mix.text-style("body", "guest");
+
+    color: var(--color-primary);
+    font-weight: vars.weight("bold");
+    text-decoration: none;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(12);
+    padding: 0;
+    margin: 0;
+  }
+
+  &__status {
+    color: var(--color-text-muted);
+  }
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: vars.space(12);
+    padding: vars.space(24);
+    text-align: center;
+    color: var(--color-text-strong);
+  }
+}

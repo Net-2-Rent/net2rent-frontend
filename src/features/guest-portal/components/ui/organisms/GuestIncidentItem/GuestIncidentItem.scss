@@ -49,9 +49,22 @@
     color: var(--color-text-strong);
   }
 
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: vars.space(8);
+  }
+
   &__date {
     @include mix.text-style("meta", "guest");
 
     color: var(--color-text-muted);
+  }
+
+  &__closed {
+    @include mix.text-style("meta", "guest");
+
+    color: var(--color-text-strong);
   }
 }

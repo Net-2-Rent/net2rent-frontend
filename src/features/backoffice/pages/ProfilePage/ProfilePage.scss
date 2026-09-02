@@ -6,43 +6,7 @@
   width: 100%;
   max-width: 520px;
   margin-inline: auto;
-  padding: vars.space(24) vars.space(16);
 
   @include mix.respond-to("tablet") {
-    padding: vars.space(32) vars.space(24);
-  }
-
-  &__header {
-    @include mix.flex(column, vars.space(4));
-  }
-
-  &__title {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--color-text-strong);
-  }
-
-  &__subtitle {
-    margin: 0;
-    font-size: 13px;
-    color: var(--color-text-muted);
-  }
-
-  &__feedback {
-    margin: 0;
-    padding: vars.space(12) vars.space(16);
-    border-radius: var(--radius-field);
-    font-size: 14px;
-
-    &--ok {
-      background: var(--color-success-soft);
-      color: var(--color-success-ink);
-    }
-
-    &--error {
-      background: var(--color-danger-soft);
-      color: var(--color-danger);
-    }
   }
 }

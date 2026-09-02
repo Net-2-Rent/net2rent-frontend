@@ -17,6 +17,11 @@
     border-color: var(--color-danger);
   }
 
+  &--error ::selection {
+    background: var(--color-danger);
+    color: #ffffff;
+  }
+
   &--info {
     background: var(--color-brand-soft);
     border-color: var(--color-border);
@@ -32,7 +37,7 @@
   }
 
   &--success &__content {
-    color: var(--color-success-ink);   // verde oscuro legible (dark-safe)
+    color: var(--color-success-ink);
   }
 
   &--success &__close {

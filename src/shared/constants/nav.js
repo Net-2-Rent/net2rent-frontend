@@ -29,20 +29,20 @@ export const ROLE_FILTER_OPTIONS = [
 
 export const NAV_BY_ROLE = {
   [ROLES.ADMIN]: [
-    { key: 'incidents',    label: 'Incidencias',      icon: ClipboardList },
-    { key: 'new-incident', label: 'Nueva incidencia', icon: FilePlus },
-    { key: 'lodgings',     label: 'Alojamientos',     icon: Home },
-    { key: 'users',        label: 'Usuarios',         icon: Users },
-    { key: 'profile',      label: 'Mi perfil',        icon: User },
+    { key: 'incidents',    label: 'Incidencias',      icon: ClipboardList, path: '/backoffice/incidencias',      subtitle: 'Listado operativo de mantenimiento' },
+    { key: 'new-incident', label: 'Nueva incidencia', icon: FilePlus,      path: '/backoffice/nueva-incidencia', subtitle: 'Registro telefónico' },
+    { key: 'lodgings',     label: 'Alojamientos',     icon: Home,          path: '/backoffice/alojamientos',     subtitle: 'Fichas, PINs y estado' },
+    { key: 'users',        label: 'Usuarios',         icon: Users,         path: '/backoffice/usuarios',         subtitle: 'Cuentas de la empresa' },
+    { key: 'profile',      label: 'Mi perfil',        icon: User,          path: '/backoffice/perfil',           subtitle: 'Datos de acceso' },
   ],
   [ROLES.COORDINATOR]: [
-    { key: 'incidents',    label: 'Incidencias',      icon: ClipboardList },
-    { key: 'new-incident', label: 'Nueva incidencia', icon: FilePlus },
-    { key: 'lodgings',     label: 'Alojamientos',     icon: Home },
-    { key: 'profile',      label: 'Mi perfil',        icon: User },
+    { key: 'incidents',    label: 'Incidencias',      icon: ClipboardList, path: '/backoffice/incidencias',      subtitle: 'Listado operativo de mantenimiento' },
+    { key: 'new-incident', label: 'Nueva incidencia', icon: FilePlus,      path: '/backoffice/nueva-incidencia', subtitle: 'Registro telefónico' },
+    { key: 'lodgings',     label: 'Alojamientos',     icon: Home,          path: '/backoffice/alojamientos',     subtitle: 'Fichas, PINs y estado' },
+    { key: 'profile',      label: 'Mi perfil',        icon: User,          path: '/backoffice/perfil',           subtitle: 'Datos de acceso' },
   ],
   [ROLES.OPERATOR]: [
-    { key: 'incidents', label: 'Incidencias', icon: ClipboardList },
-    { key: 'profile',   label: 'Mi perfil',   icon: User },
+    { key: 'incidents', label: 'Incidencias', icon: ClipboardList, path: '/backoffice/incidencias', subtitle: 'Listado operativo de mantenimiento' },
+    { key: 'profile',   label: 'Mi perfil',   icon: User,          path: '/backoffice/perfil',      subtitle: 'Datos de acceso' },
   ],
 };

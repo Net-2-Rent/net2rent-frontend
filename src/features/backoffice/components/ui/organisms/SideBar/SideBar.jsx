@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { LogOut, X } from "lucide-react";
 import Avatar from "../../../../../../shared/components/ui/atoms/Avatar/Avatar";
 import Overlay from "../../../../../../shared/components/ui/atoms/Overlay/Overlay";
-import { NAV_BY_ROLE, ROLE_LABEL } from "../../../../../../shared/constants/nav";
+import {
+  NAV_BY_ROLE,
+  ROLE_LABEL,
+} from "../../../../../../shared/constants/nav";
 import "./SideBar.scss";
 
 export default function SideBar({
@@ -13,6 +16,7 @@ export default function SideBar({
   onLogout,
   open = false,
   onClose,
+  newIncidentsCount = 0,
 }) {
   const items = NAV_BY_ROLE[role] || [];
 
@@ -42,11 +46,16 @@ export default function SideBar({
     <>
       {open && <Overlay onClose={onClose} />}
       <aside
-        className={["sidebar", open ? "sidebar--open" : ""].filter(Boolean).join(" ")}
+        className={["sidebar", open ? "sidebar--open" : ""]
+          .filter(Boolean)
+          .join(" ")}
       >
         <div className="sidebar__brand">
-          <span className="sidebar__logo" aria-hidden="true" />
-          <span className="sidebar__title">net2Rent</span>
+          <img
+            src="/images/logo-r.png"
+            alt="net2Rent"
+            className="sidebar__logo"
+          />
           <button
             type="button"
             className="sidebar__close"
@@ -76,7 +85,15 @@ export default function SideBar({
                     onClick={() => select(item.key)}
                   >
                     <Icon size={18} aria-hidden="true" />
-                    <span>{item.label}</span>
+                    <span className="sidebar__item-label">{item.label}</span>
+                                        {item.key === "incidents" && newIncidentsCount > 0 && (
+                      <span
+                        className="sidebar__badge"
+                        aria-label={`${newIncidentsCount} incidencias nuevas`}
+                      >
+                        {newIncidentsCount}
+                      </span>
+                    )}
                   </button>
                 </li>
               );

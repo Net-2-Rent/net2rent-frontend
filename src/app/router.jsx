@@ -8,6 +8,11 @@ import IncidentDetailGuestPage from "../features/guest-portal/pages/IncidentDeta
 import GuestSandbox from "../features/guest-portal/pages/GuestSandbox";
 import BackofficeSandbox from "../features/backoffice/pages/BackofficeSandbox";
 import LoginPage from "../features/auth/pages/LoginPage";
+import BackofficeLayout from "../features/backoffice/components/ui/organisms/BackofficeLayout/BackofficeLayout";
+import {
+  BackofficeIndexPage,
+  Placeholder,
+} from "../features/backoffice/pages/BackofficePlaceholders.jsx";
 import ProtectedRoute from "../features/auth/components/ProtectedRoute";
 import ProfilePage from "../features/backoffice/pages/ProfilePage/ProfilePage.jsx";
 
@@ -18,25 +23,33 @@ const router = createBrowserRouter([
       { path: "/", element: <IdentificationPage /> },
       { path: "/alojamiento", element: <MyLodgingPage /> },
       { path: "/incidencias/nueva", element: <NewGuestIncidentPage /> },
-      { path: "/incidencias/confirmacion/:code", element: <ConfirmationPage /> },
+      {
+        path: "/incidencias/confirmacion/:code",
+        element: <ConfirmationPage />,
+      },
       { path: "/incidencias/:id", element: <IncidentDetailGuestPage /> },
       { path: "/sandbox", element: <GuestSandbox /> },
     ],
   },
   {
-    element: <AppScope app="backoffice" />,
-    children: [
-      { path: "/login", element: <LoginPage /> },
-      {
-        element: <ProtectedRoute />,
-        children: [
-          { path: "/backoffice", element: <BackofficeSandbox /> },
-          { path: "/perfil", element: <ProfilePage /> },
-        ],
-      },
-      { path: "/sandbox/backoffice", element: <BackofficeSandbox /> },
-    ],
-  },
+  element: <AppScope app="backoffice" />,
+  children: [
+    { path: "/login", element: <LoginPage /> },
+    {
+      path: "/backoffice",
+      element: <BackofficeLayout />,
+      children: [
+        { index: true, element: <BackofficeIndexPage /> },
+        { path: "incidencias", element: <Placeholder title="Incidencias" /> },
+        { path: "nueva-incidencia", element: <Placeholder /> },
+        { path: "alojamientos", element: <Placeholder /> },
+        { path: "usuarios", element: <Placeholder /> },
+        { path: "perfil", element: <Placeholder /> },
+      ],
+    },
+    { path: "/sandbox/backoffice", element: <BackofficeSandbox /> },
+  ],
+},
 ]);
 
 export default router;

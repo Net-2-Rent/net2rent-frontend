@@ -32,24 +32,32 @@ const router = createBrowserRouter([
     ],
   },
   {
-  element: <AppScope app="backoffice" />,
-  children: [
-    { path: "/login", element: <LoginPage /> },
-    {
-      path: "/backoffice",
-      element: <BackofficeLayout />,
-      children: [
-        { index: true, element: <BackofficeIndexPage /> },
-        { path: "incidencias", element: <Placeholder title="Incidencias" /> },
-        { path: "nueva-incidencia", element: <Placeholder /> },
-        { path: "alojamientos", element: <Placeholder /> },
-        { path: "usuarios", element: <Placeholder /> },
-        { path: "perfil", element: <Placeholder /> },
-      ],
-    },
-    { path: "/sandbox/backoffice", element: <BackofficeSandbox /> },
-  ],
-},
+    element: <AppScope app="backoffice" />,
+    children: [
+      { path: "/login", element: <LoginPage /> },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "/backoffice",
+            element: <BackofficeLayout />,
+            children: [
+              { index: true, element: <BackofficeIndexPage /> },
+              {
+                path: "incidencias",
+                element: <Placeholder title="Incidencias" />,
+              },
+              { path: "nueva-incidencia", element: <Placeholder /> },
+              { path: "alojamientos", element: <Placeholder /> },
+              { path: "usuarios", element: <Placeholder /> },
+              { path: "perfil", element: <ProfilePage /> },
+            ],
+          },
+        ],
+      },
+      { path: "/sandbox/backoffice", element: <BackofficeSandbox /> },
+    ],
+  },
 ]);
 
 export default router;

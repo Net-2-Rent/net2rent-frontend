@@ -5,7 +5,7 @@ import MyLodgingPage from "../features/guest-portal/pages/MyLodgingPage";
 import NewGuestIncidentPage from "../features/guest-portal/pages/NewGuestIncidentPage";
 import ConfirmationPage from "../features/guest-portal/pages/ConfirmationPage";
 import IncidentDetailGuestPage from "../features/guest-portal/pages/IncidentDetailGuestPage";
-import GuestSandbox from "../features/guest-portal/pages/GuestSandbox";
+import GuestRoute from "../features/guest-portal/components/GuestRoute";
 import BackofficeSandbox from "../features/backoffice/pages/BackofficeSandbox";
 import LoginPage from "../features/auth/pages/LoginPage";
 import BackofficeLayout from "../features/backoffice/components/ui/organisms/BackofficeLayout/BackofficeLayout";
@@ -21,14 +21,18 @@ const router = createBrowserRouter([
     element: <AppScope app="guest" />,
     children: [
       { path: "/", element: <IdentificationPage /> },
-      { path: "/alojamiento", element: <MyLodgingPage /> },
-      { path: "/incidencias/nueva", element: <NewGuestIncidentPage /> },
       {
-        path: "/incidencias/confirmacion/:code",
-        element: <ConfirmationPage />,
+        element: <GuestRoute />,
+        children: [
+          { path: "/alojamiento", element: <MyLodgingPage /> },
+          { path: "/incidencias/nueva", element: <NewGuestIncidentPage /> },
+          {
+            path: "/incidencias/confirmacion/:code",
+            element: <ConfirmationPage />,
+          },
+          { path: "/incidencias/:id", element: <IncidentDetailGuestPage /> },
+        ],
       },
-      { path: "/incidencias/:id", element: <IncidentDetailGuestPage /> },
-      { path: "/sandbox", element: <GuestSandbox /> },
     ],
   },
   {

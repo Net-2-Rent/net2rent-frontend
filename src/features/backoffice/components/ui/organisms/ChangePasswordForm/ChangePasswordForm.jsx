@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Input from "../../../../../../shared/components/ui/atoms/Input/Input.jsx";
+import PasswordInput from "../../../../../../shared/components/ui/molecules/PasswordInput/PasswordInput.jsx";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
 import "./ChangePasswordForm.scss";
@@ -36,9 +36,8 @@ export default function ChangePasswordForm({ onSubmit, submitting = false }) {
     <form className="change-password-form" onSubmit={handleSubmit} noValidate>
       <div className="change-password-form__title">Cambiar contraseña</div>
 
-      <FormField label="Contraseña actual" error={errCurrent}>
-        <Input
-          type="password"
+      <FormField id="current-password" label="Contraseña actual" error={errCurrent}>
+        <PasswordInput
           value={current}
           invalid={!!errCurrent}
           placeholder="••••••••"
@@ -47,26 +46,35 @@ export default function ChangePasswordForm({ onSubmit, submitting = false }) {
       </FormField>
 
       <FormField
+        id="new-password"
         label="Nueva contraseña"
         error={errNext}
         helper="Mínimo 8 caracteres, con al menos una letra y un número"
       >
-        <Input
-          type="password"
+        <PasswordInput
           value={next}
           invalid={!!errNext}
           placeholder="Mínimo 8 caracteres"
-          onChange={(e) => setNext(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setNext(value);
+            if (repeat) {
+              setErrRepeat(value !== repeat ? "Las contraseñas no coinciden." : null);
+            }
+          }}
         />
       </FormField>
 
-      <FormField label="Repetir nueva contraseña" error={errRepeat}>
-        <Input
-          type="password"
+      <FormField id="repeat-password" label="Repetir nueva contraseña" error={errRepeat}>
+        <PasswordInput
           value={repeat}
           invalid={!!errRepeat}
           placeholder="••••••••"
-          onChange={(e) => setRepeat(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setRepeat(value);
+            setErrRepeat(value && value !== next ? "Las contraseñas no coinciden." : null);
+          }}
         />
       </FormField>
 

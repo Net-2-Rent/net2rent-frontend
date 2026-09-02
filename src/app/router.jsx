@@ -9,6 +9,7 @@ import GuestSandbox from "../features/guest-portal/pages/GuestSandbox";
 import BackofficeSandbox from "../features/backoffice/pages/BackofficeSandbox";
 import LoginPage from "../features/auth/pages/LoginPage";
 import ProtectedRoute from "../features/auth/components/ProtectedRoute";
+import ProfilePage from "../features/backoffice/pages/ProfilePage/ProfilePage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           { path: "/backoffice", element: <BackofficeSandbox /> },
+          { path: "/perfil", element: <ProfilePage /> },
         ],
       },
       { path: "/sandbox/backoffice", element: <BackofficeSandbox /> },

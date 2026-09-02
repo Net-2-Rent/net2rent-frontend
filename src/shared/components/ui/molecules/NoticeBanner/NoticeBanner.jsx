@@ -12,7 +12,7 @@ export default function NoticeBanner({
   return (
     <div role={tone === 'error' ? 'alert' : 'status'} className={classes}>
       <span className="notice-banner__marker" aria-hidden="true">
-        {tone === 'error' ? '!' : 'i'}
+        {tone === 'error' ? '!' : tone === 'success' ? '✓' : 'i'}
       </span>
       <div className="notice-banner__body">
         <div className="notice-banner__content">{children}</div>

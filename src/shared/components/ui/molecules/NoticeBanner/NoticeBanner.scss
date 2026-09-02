@@ -22,6 +22,23 @@
     border-color: var(--color-border);
   }
 
+    &--success {
+    background: var(--color-success-soft);
+    border-color: var(--color-success);
+  }
+
+  &--success &__marker {
+    color: var(--color-success);
+  }
+
+  &--success &__content {
+    color: var(--color-success-ink);   // verde oscuro legible (dark-safe)
+  }
+
+  &--success &__close {
+    color: var(--color-success);
+  }
+
   &__marker {
     display: inline-flex;
     flex: none;

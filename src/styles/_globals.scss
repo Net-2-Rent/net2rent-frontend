@@ -119,6 +119,8 @@ select {
   --color-nav-bg-active: #{vars.$bo-sidebar-hover-dark};
   --color-navy: #{vars.$bo-navy-dark};
   --color-navy-deep: #{vars.$bo-navy-deep-dark};
+  --color-nav-badge-bg: rgba(255, 255, 255, 0.12);
+  --color-nav-badge-bg-active: #{vars.$bo-brand-dark};
 
   --color-note-bg: #{vars.$bo-note-bg-dark};
   --color-note-border: #{vars.$bo-note-border-dark};
@@ -137,7 +139,7 @@ select {
 
   --shadow-card: #{vars.$shadow-backoffice-card-dark};
   --shadow-floating: #{vars.$shadow-backoffice-floating-dark};
-  --color-overlay: #{rgba(14,19,34,0.55)};
+  --color-overlay: #{rgba(14, 19, 34, 0.55)};
 
   @include emit-status-tokens(vars.$status-colors, "dark");
 }
@@ -193,6 +195,8 @@ select {
   --color-navy-deep: #{vars.$bo-navy-deep};
   --color-nav-text: #ffffff;
   --color-nav-text-muted: #{rgba(#ffffff, 0.68)};
+  --color-nav-badge-bg: rgba(255, 255, 255, 0.12);
+  --color-nav-badge-bg-active: #{vars.$bo-brand};
 
   --color-page-bg: #{vars.$bo-page-bg};
   --color-app-bg: #{vars.$bo-app-bg};
@@ -222,7 +226,7 @@ select {
   --color-disabled-bg: #{vars.$color-fill-disabled};
   --color-disabled-text: #{vars.$color-text-faint};
 
-  --color-overlay: #{rgba(14,19,34,0.55)};
+  --color-overlay: #{rgba(14, 19, 34, 0.55)};
   --shadow-card: #{vars.$shadow-backoffice-card};
   --shadow-floating: #{vars.$shadow-backoffice-floating};
 
@@ -272,9 +276,9 @@ select {
   --gradient-background: #{vars.$guest-gradient-background};
   --gradient-cta: #{vars.$guest-gradient-cta};
   --gradient-accent: linear-gradient(
-          135deg,
-          #{vars.$guest-accent-bright},
-          #{vars.$guest-accent-bright-end}
+    135deg,
+    #{vars.$guest-accent-bright},
+    #{vars.$guest-accent-bright-end}
   );
 
   --color-brand: #{vars.$guest-cta-start};
@@ -366,8 +370,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition: background-color vars.$transition-base, color
-  vars.$transition-base;
+  transition:
+    background-color vars.$transition-base,
+    color vars.$transition-base;
 }
 
 :root[data-app="backoffice"] body {

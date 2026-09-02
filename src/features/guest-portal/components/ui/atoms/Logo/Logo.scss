@@ -1,11 +1,9 @@
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: var(--color-text-on-brand);
 
-  &__label {
-    font-size: 18px;
-    font-weight: 800;
+  &__image {
+    height: 32px;
+    width: auto;
   }
 }

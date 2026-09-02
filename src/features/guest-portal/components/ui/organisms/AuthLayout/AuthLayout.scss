@@ -1,10 +1,17 @@
 .auth-layout {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 24px;
   padding: var(--layout-screen-padding);
+
+  &__logo {
+    color: #ffffff;
+  }
 
   &__card {
     max-width: var(--layout-auth-max);
+    width: 100%;
   }
 }

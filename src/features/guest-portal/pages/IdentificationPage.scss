@@ -1,0 +1,36 @@
+@use "variables" as vars;
+
+.identification-page {
+  &__title {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--color-text-strong);
+  }
+
+  &__subtitle {
+    margin: 0 0 24px;
+    font-size: 14px;
+    color: var(--color-text-soft);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(20);
+  }
+
+  &__form .form-field__label {
+    font-weight: 700;
+  }
+
+  &__form .pin-input {
+    justify-content: center;
+  }
+
+  &__form .pin-input__box {
+    width: 62px;
+    height: 62px;
+  }
+}

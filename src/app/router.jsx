@@ -13,6 +13,8 @@ import {
   BackofficeIndexPage,
   Placeholder,
 } from "../features/backoffice/pages/BackofficePlaceholders.jsx";
+import ProtectedRoute from "../features/auth/components/ProtectedRoute";
+import ProfilePage from "../features/backoffice/pages/ProfilePage/ProfilePage.jsx";
 
 const router = createBrowserRouter([
   {

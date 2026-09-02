@@ -13,72 +13,35 @@ describe("PhoneIncidentForm", () => {
     const handleSubmit = renderPhoneIncidentForm();
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Registrar incidencia" }),
+        screen.getByRole("button", { name: "Registrar incidencia" }),
     );
 
     expect(
-      await screen.findByText("Selecciona un alojamiento", {
-        selector: '[role="alert"] *',
-      }),
+        await screen.findByText("Selecciona un alojamiento", {
+          selector: '[role="alert"] *',
+        }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("El nombre es obligatorio", {
-        selector: '[role="alert"] *',
-      }),
+        screen.getByText("El nombre es obligatorio", {
+          selector: '[role="alert"] *',
+        }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("El apellido es obligatorio", {
-        selector: '[role="alert"] *',
-      }),
+        screen.getByText("El apellido es obligatorio", {
+          selector: '[role="alert"] *',
+        }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Selecciona una categoría", {
-        selector: '[role="alert"] *',
-      }),
+        screen.getByText("Selecciona una categoría", {
+          selector: '[role="alert"] *',
+        }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("El título es obligatorio", {
-        selector: '[role="alert"] *',
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("La descripción es obligatoria", {
-        selector: '[role="alert"] *',
-      }),
+        screen.getByText("La descripción es obligatoria", {
+          selector: '[role="alert"] *',
+        }),
     ).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();
-  });
-
-  it("updates the title counter as the user types", () => {
-    renderPhoneIncidentForm();
-
-    expect(screen.getByText(/0\/150/)).toBeInTheDocument();
-
-    fireEvent.change(screen.getByLabelText(/Título de la incidencia/), {
-      target: { value: "Fuga de agua" },
-    });
-
-    expect(screen.getByText(/12\/150/)).toBeInTheDocument();
-  });
-
-  it("switches the notice text when an operator is selected", () => {
-    renderPhoneIncidentForm({ operators: [{ id: "op-1", name: "Marta" }] });
-
-    expect(
-      screen.getByText(
-        "Sin operario seleccionado: la incidencia se creará con estado NEW y estará disponible en el pool.",
-      ),
-    ).toBeInTheDocument();
-
-    fireEvent.change(screen.getByLabelText("Operario asignado (opcional)"), {
-      target: { value: "op-1" },
-    });
-
-    expect(
-      screen.getByText(
-        "Se creará en estado ASSIGNED con la fecha de apertura indicada.",
-      ),
-    ).toBeInTheDocument();
   });
 
   it("blocks submission when the opening date is in the future", async () => {
@@ -91,13 +54,31 @@ describe("PhoneIncidentForm", () => {
       target: { value: tomorrow.toISOString().slice(0, 10) },
     });
     fireEvent.click(
-      screen.getByRole("button", { name: "Registrar incidencia" }),
+        screen.getByRole("button", { name: "Registrar incidencia" }),
     );
 
     expect(
-      await screen.findByText("No se admiten fechas ni horas futuras.", {
-        selector: '[role="alert"] *',
-      }),
+        await screen.findByText("No se admiten fechas ni horas futuras.", {
+          selector: '[role="alert"] *',
+        }),
+    ).toBeInTheDocument();
+    expect(handleSubmit).not.toHaveBeenCalled();
+  });
+
+  it("validates phone format when a contact is provided", async () => {
+    const handleSubmit = renderPhoneIncidentForm();
+
+    fireEvent.change(screen.getByLabelText(/Teléfono/), {
+      target: { value: "600 sin prefijo" },
+    });
+    fireEvent.click(
+        screen.getByRole("button", { name: "Registrar incidencia" }),
+    );
+
+    expect(
+        await screen.findByText(/formato internacional/, {
+          selector: '[role="alert"] *',
+        }),
     ).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();
   });

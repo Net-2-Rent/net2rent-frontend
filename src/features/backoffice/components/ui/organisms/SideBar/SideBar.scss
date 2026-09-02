@@ -23,7 +23,10 @@
   }
 
   @include mix.respond-to("desktop") {
-    position: static;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
     transform: none;
     width: var(--layout-sidebar-width);
     max-width: none;

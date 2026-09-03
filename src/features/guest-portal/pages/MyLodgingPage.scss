@@ -6,6 +6,11 @@
   flex-direction: column;
   gap: vars.space(16);
 
+  &__logo {
+    color: #ffffff;
+    margin-bottom: vars.space(14);
+  }
+
   &__section-head {
     display: flex;
     align-items: center;

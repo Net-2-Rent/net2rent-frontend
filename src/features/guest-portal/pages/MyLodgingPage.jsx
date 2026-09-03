@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 import ContentLayout from '../components/ui/organisms/ContentLayout/ContentLayout.jsx';
 import PageHeader from '../components/ui/molecules/PageHeader/PageHeader.jsx';
-import LodgingCard from '../components/ui/molecules/LodgingCard/LodgingCard.jsx';
+import Logo from '../components/ui/atoms/Logo/Logo.jsx';
 import GuestIncidentItem from '../components/ui/organisms/GuestIncidentItem/GuestIncidentItem.jsx';
 import EmptyState from '../components/ui/organisms/EmptyState/EmptyState.jsx';
 import PrimaryButton from '../components/ui/atoms/PrimaryButton/PrimaryButton.jsx';
@@ -15,6 +15,7 @@ import './MyLodgingPage.scss';
 
 export default function MyLodgingPage() {
   const lodgingName = useGuestAuthStore((state) => state.lodgingName);
+  const lodgingRef = useGuestAuthStore((state) => state.lodgingRef);
   const [incidents, setIncidents] = useState([]);
   const [status, setStatus] = useState('loading'); // loading | error | success
   const [error, setError] = useState('');
@@ -25,10 +26,7 @@ export default function MyLodgingPage() {
     fetchGuestIncidents()
       .then((data) => {
         if (!active) return;
-        const sorted = [...data].sort(
-          (a, b) => new Date(b.openedAt) - new Date(a.openedAt)
-        );
-        setIncidents(sorted);
+        setIncidents(data);
         setStatus('success');
       })
       .catch((err) => {
@@ -50,10 +48,7 @@ export default function MyLodgingPage() {
     setError('');
     fetchGuestIncidents()
       .then((data) => {
-        const sorted = [...data].sort(
-          (a, b) => new Date(b.openedAt) - new Date(a.openedAt)
-        );
-        setIncidents(sorted);
+        setIncidents(data);
         setStatus('success');
       })
       .catch((err) => {
@@ -68,15 +63,17 @@ export default function MyLodgingPage() {
   return (
     <ContentLayout
       header={
-        <PageHeader
-          eyebrow="Tu alojamiento"
-          title={lodgingName ?? 'Mi alojamiento'}
-        />
+        <>
+          <Logo className="my-lodging-page__logo" />
+          <PageHeader
+            eyebrow="Tu alojamiento"
+            title={lodgingName ?? 'Mi alojamiento'}
+            reference={lodgingRef ?? ''}
+          />
+        </>
       }
     >
       <div className="my-lodging-page">
-        <LodgingCard name={lodgingName ?? 'Mi alojamiento'} reference="" />
-
         <div className="my-lodging-page__section-head">
           <h2 className="my-lodging-page__section-title">Incidencias</h2>
           <Link to="/incidencias/nueva" className="my-lodging-page__new-link">

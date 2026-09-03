@@ -8,6 +8,7 @@ export const useGuestAuthStore = create((set) => ({
   token: initial?.token ?? null,
   lodgingId: initial?.lodgingId ?? null,
   lodgingName: initial?.lodgingName ?? null,
+  lodgingRef: initial?.lodgingRef ?? null,
   status: "idle",
   error: null,
 
@@ -15,7 +16,7 @@ export const useGuestAuthStore = create((set) => ({
     set({ status: "loading", error: null });
     try {
       const data = await requestGuestAccess(ref, pin);
-      const session = { token: data.token, lodgingId: data.lodgingId, lodgingName: data.lodgingName };
+      const session = { token: data.token, lodgingId: data.lodgingId, lodgingName: data.lodgingName, lodgingRef: data.lodgingRef };
       saveGuestSession(session);
       set({ ...session, status: "idle", error: null });
       return { ok: true };
@@ -28,7 +29,7 @@ export const useGuestAuthStore = create((set) => ({
 
   logout() {
     clearGuestSession();
-    set({ token: null, lodgingId: null, lodgingName: null, status: "idle", error: null });
+    set({ token: null, lodgingId: null, lodgingName: null, lodgingRef: null, status: "idle", error: null });
   },
 }));
 

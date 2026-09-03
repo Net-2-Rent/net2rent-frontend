@@ -8,6 +8,7 @@ export const useGuestAuthStore = create((set) => ({
   token: initial?.token ?? null,
   lodgingId: initial?.lodgingId ?? null,
   lodgingName: initial?.lodgingName ?? null,
+  lodgingAddress: initial?.lodgingAddress ?? null,
   status: "idle",
   error: null,
 
@@ -15,12 +16,19 @@ export const useGuestAuthStore = create((set) => ({
     set({ status: "loading", error: null });
     try {
       const data = await requestGuestAccess(ref, pin);
-      const session = { token: data.token, lodgingId: data.lodgingId, lodgingName: data.lodgingName };
+      const session = {
+        token: data.token,
+        lodgingId: data.lodgingId,
+        lodgingName: data.lodgingName,
+        lodgingAddress: data.lodgingAddress,
+      };
       saveGuestSession(session);
       set({ ...session, status: "idle", error: null });
       return { ok: true };
     } catch (err) {
-      const message = err.response?.data?.message ?? "Ha ocurrido un error inesperado. Inténtalo de nuevo.";
+      const message =
+        err.response?.data?.message ??
+        "Ha ocurrido un error inesperado. Inténtalo de nuevo.";
       set({ status: "error", error: message });
       return { ok: false, message };
     }
@@ -28,7 +36,14 @@ export const useGuestAuthStore = create((set) => ({
 
   logout() {
     clearGuestSession();
-    set({ token: null, lodgingId: null, lodgingName: null, status: "idle", error: null });
+    set({
+      token: null,
+      lodgingId: null,
+      lodgingName: null,
+      lodgingAddres: null,
+      status: "idle",
+      error: null,
+    });
   },
 }));
 

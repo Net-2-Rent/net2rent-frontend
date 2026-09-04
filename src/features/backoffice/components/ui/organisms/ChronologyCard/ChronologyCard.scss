@@ -1,7 +1,7 @@
 @use "variables" as vars;
 @use "mixins" as mix;
 
-.cronology {
+.chronology {
   @include mix.surface-card;
 
   display: flex;
@@ -104,7 +104,19 @@
     display: flex;
     gap: vars.space(12);
     align-items: stretch;
+
+    @include mix.respond-below("phone-large") {
+      flex-direction: column;
+    }
   }
 
-  &__input { flex: 1; }
+  &__input {
+    flex: 1;
+  }
+
+  &__error {
+    @include mix.text-style("field-label", "backoffice");
+    margin: 0;
+    color: var(--color-danger, #b3261e);
+  }
 }

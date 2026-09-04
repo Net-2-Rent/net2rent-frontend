@@ -32,3 +32,13 @@ export async function createPhoneIncident(values) {
     const { data } = await httpClient.post("/incidents", toCreatePayload(values));
     return data;
 }
+
+export async function getIncidentTimeline(incidentId) {
+    const { data } = await httpClient.get(`/incidents/${incidentId}/timeline`);
+    return data;
+}
+
+export async function addIncidentComment(incidentId, text) {
+    const { data } = await httpClient.post(`/incidents/${incidentId}/comments`, { text });
+    return data;
+}

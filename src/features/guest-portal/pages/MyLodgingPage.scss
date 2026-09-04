@@ -8,12 +8,17 @@
 
   &__logo {
     color: #ffffff;
-    margin-bottom: vars.space(14);
+    margin-bottom: vars.space(40);
+  }
+
+  &__report {
+    width: 100%;
+    margin-top: -25px;
   }
 
   &__section-head {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
     margin-top: vars.space(8);
   }
@@ -25,12 +30,10 @@
     color: var(--color-text-strong);
   }
 
-  &__new-link {
-    @include mix.text-style("body", "guest");
+  &__count {
+    @include mix.text-style("meta", "guest");
 
-    color: var(--color-primary);
-    font-weight: vars.weight("bold");
-    text-decoration: none;
+    color: var(--color-text-muted);
   }
 
   &__list {

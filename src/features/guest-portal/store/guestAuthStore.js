@@ -16,7 +16,12 @@ export const useGuestAuthStore = create((set) => ({
     set({ status: "loading", error: null });
     try {
       const data = await requestGuestAccess(ref, pin);
-      const session = { token: data.token, lodgingId: data.lodgingId, lodgingName: data.lodgingName, lodgingRef: data.lodgingRef };
+      const session = {
+        token: data.token,
+        lodgingId: data.lodgingId,
+        lodgingName: data.lodgingName,
+        lodgingRef: ref,
+      };
       saveGuestSession(session);
       set({ ...session, status: "idle", error: null });
       return { ok: true };

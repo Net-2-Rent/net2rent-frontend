@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 import ContentLayout from '../components/ui/organisms/ContentLayout/ContentLayout.jsx';
 import PageHeader from '../components/ui/molecules/PageHeader/PageHeader.jsx';
@@ -7,7 +7,6 @@ import Logo from '../components/ui/atoms/Logo/Logo.jsx';
 import GuestIncidentItem from '../components/ui/organisms/GuestIncidentItem/GuestIncidentItem.jsx';
 import EmptyState from '../components/ui/organisms/EmptyState/EmptyState.jsx';
 import PrimaryButton from '../components/ui/atoms/PrimaryButton/PrimaryButton.jsx';
-import TextButton from '../components/ui/atoms/TextButton/TextButton.jsx';
 import NoticeBox from '../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx';
 import { useGuestAuthStore } from '../store/guestAuthStore.js';
 import { fetchGuestIncidents } from '../services/guestApi.js';
@@ -19,6 +18,7 @@ export default function MyLodgingPage() {
   const [incidents, setIncidents] = useState([]);
   const [status, setStatus] = useState('loading'); // loading | error | success
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     let active = true;
@@ -62,6 +62,7 @@ export default function MyLodgingPage() {
 
   return (
     <ContentLayout
+      contained={false}
       header={
         <>
           <Logo className="my-lodging-page__logo" />
@@ -74,11 +75,20 @@ export default function MyLodgingPage() {
       }
     >
       <div className="my-lodging-page">
+        <PrimaryButton
+          className="my-lodging-page__report"
+          onClick={() => navigate('/incidencias/nueva')}
+        >
+          Reportar incidencia
+        </PrimaryButton>
+
         <div className="my-lodging-page__section-head">
-          <h2 className="my-lodging-page__section-title">Incidencias</h2>
-          <Link to="/incidencias/nueva" className="my-lodging-page__new-link">
-            Reportar
-          </Link>
+          <h2 className="my-lodging-page__section-title">Tus incidencias</h2>
+          {status === 'success' && (
+            <span className="my-lodging-page__count">
+              {incidents.length} incidencias
+            </span>
+          )}
         </div>
 
         {status === 'loading' && (
@@ -97,11 +107,6 @@ export default function MyLodgingPage() {
           <EmptyState
             icon={CheckCircle2}
             title="Todo en orden"
-            action={
-              <TextButton to="/incidencias/nueva">
-                Reportar una incidencia
-              </TextButton>
-            }
           >
             No hay incidencias en tu alojamiento.
           </EmptyState>
@@ -122,6 +127,7 @@ export default function MyLodgingPage() {
                   title={incident.description}
                   status={incident.status}
                   openedAt={incident.openedAt}
+                  resolvedAt={incident.resolvedAt}
                   closedAt={incident.closedAt}
                 />
               ))}

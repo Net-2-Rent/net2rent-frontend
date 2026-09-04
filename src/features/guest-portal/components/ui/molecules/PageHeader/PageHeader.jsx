@@ -1,7 +1,7 @@
 import { ArrowLeft } from 'lucide-react'
 import './PageHeader.scss'
 
-export default function PageHeader({ backLabel, onBack, eyebrow, title }) {
+export default function PageHeader({ backLabel, onBack, eyebrow, title, reference }) {
   return (
     <header className="page-header">
       {onBack && (
@@ -12,6 +12,11 @@ export default function PageHeader({ backLabel, onBack, eyebrow, title }) {
       )}
       {eyebrow && <p className="page-header__eyebrow">{eyebrow}</p>}
       <h1 className="page-header__title">{title}</h1>
+      {reference && (
+        <p className="page-header__reference">
+          Referencia <span className="page-header__reference-value">{reference}</span>
+        </p>
+      )}
     </header>
   )
 }

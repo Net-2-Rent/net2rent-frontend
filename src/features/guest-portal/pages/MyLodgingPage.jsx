@@ -1,8 +1,140 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { CheckCircle2, AlertCircle } from 'lucide-react';
+import ContentLayout from '../components/ui/organisms/ContentLayout/ContentLayout.jsx';
+import PageHeader from '../components/ui/molecules/PageHeader/PageHeader.jsx';
+import Logo from '../components/ui/atoms/Logo/Logo.jsx';
+import GuestIncidentItem from '../components/ui/organisms/GuestIncidentItem/GuestIncidentItem.jsx';
+import EmptyState from '../components/ui/organisms/EmptyState/EmptyState.jsx';
+import PrimaryButton from '../components/ui/atoms/PrimaryButton/PrimaryButton.jsx';
+import NoticeBox from '../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx';
+import { useGuestAuthStore } from '../store/guestAuthStore.js';
+import { fetchGuestIncidents } from '../services/guestApi.js';
+import './MyLodgingPage.scss';
 
-function MyLodgingPage () {
+export default function MyLodgingPage() {
+  const lodgingName = useGuestAuthStore((state) => state.lodgingName);
+  const lodgingRef = useGuestAuthStore((state) => state.lodgingRef);
+  const [incidents, setIncidents] = useState([]);
+  const [status, setStatus] = useState('loading'); // loading | error | success
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let active = true;
+
+    fetchGuestIncidents()
+      .then((data) => {
+        if (!active) return;
+        setIncidents(data);
+        setStatus('success');
+      })
+      .catch((err) => {
+        if (!active) return;
+        setError(
+          err.response?.data?.message ??
+          'No se pudieron cargar las incidencias. Inténtalo de nuevo.'
+        );
+        setStatus('error');
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleRetry = () => {
+    setStatus('loading');
+    setError('');
+    fetchGuestIncidents()
+      .then((data) => {
+        setIncidents(data);
+        setStatus('success');
+      })
+      .catch((err) => {
+        setError(
+          err.response?.data?.message ??
+          'No se pudieron cargar las incidencias. Inténtalo de nuevo.'
+        );
+        setStatus('error');
+      });
+  };
+
   return (
-    <div>MyLodgingPage</div>
-  )
-}
+    <ContentLayout
+      contained={false}
+      header={
+        <>
+          <Logo className="my-lodging-page__logo" />
+          <PageHeader
+            eyebrow="Tu alojamiento"
+            title={lodgingName ?? 'Mi alojamiento'}
+            reference={lodgingRef ?? ''}
+          />
+        </>
+      }
+    >
+      <div className="my-lodging-page">
+        <PrimaryButton
+          className="my-lodging-page__report"
+          onClick={() => navigate('/incidencias/nueva')}
+        >
+          Reportar incidencia
+        </PrimaryButton>
 
-export default MyLodgingPage
+        <div className="my-lodging-page__section-head">
+          <h2 className="my-lodging-page__section-title">Tus incidencias</h2>
+          {status === 'success' && (
+            <span className="my-lodging-page__count">
+              {incidents.length} incidencias
+            </span>
+          )}
+        </div>
+
+        {status === 'loading' && (
+          <p className="my-lodging-page__status">Cargando…</p>
+        )}
+
+        {status === 'error' && (
+          <div className="my-lodging-page__error">
+            <AlertCircle size={24} aria-hidden="true" />
+            <p>{error}</p>
+            <PrimaryButton onClick={handleRetry}>Reintentar</PrimaryButton>
+          </div>
+        )}
+
+        {status === 'success' && incidents.length === 0 && (
+          <EmptyState
+            icon={CheckCircle2}
+            title="Todo en orden"
+          >
+            No hay incidencias en tu alojamiento.
+          </EmptyState>
+        )}
+
+        {status === 'success' && incidents.length > 0 && (
+          <>
+            <NoticeBox>
+              Para incidencias urgentes como una fuga de agua o un corte de luz,
+              llama directamente al teléfono de emergencias del alojamiento.
+            </NoticeBox>
+            <ul className="my-lodging-page__list">
+              {incidents.map((incident) => (
+                <GuestIncidentItem
+                  key={incident.id}
+                  to={`/incidencias/${incident.id}`}
+                  code={incident.code}
+                  title={incident.description}
+                  status={incident.status}
+                  openedAt={incident.openedAt}
+                  resolvedAt={incident.resolvedAt}
+                  closedAt={incident.closedAt}
+                />
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
+    </ContentLayout>
+  );
+}

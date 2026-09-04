@@ -13,15 +13,11 @@ import Avatar from "../../../shared/components/ui/atoms/Avatar/Avatar.jsx";
 import Skeleton from "../../../shared/components/ui/atoms/Skeleton/Skeleton.jsx";
 import FormField from "../../../shared/components/ui/molecules/FormField/FormField.jsx";
 import SideBar from "../components/ui/organisms/SideBar/SideBar.jsx";
-import { ROLES, ALL_ROLES, ROLE_LABEL } from "../../../shared/constants/nav"; // ⟵ NUEVO: ALL_ROLES, ROLE_LABEL
+import { ROLES, ALL_ROLES, ROLE_LABEL } from "../../../shared/constants/nav";
 import NoticeBanner from "../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner.jsx";
 import StickyHero from "../components/ui/organisms/StickyHero/StickyHero.jsx";
 import StatusBadgeIncident from "../components/ui/molecules/StatusBadgeIncident/StatusBadgeIncident.jsx";
-import {
-  ALL_STATUS,
-  STATUS_BADGE_LABEL,
-  STATUS_BADGE_FILTERS,
-} from "../../../shared/constants/statusBadgeIncident.js";
+import { ALL_STATUS, STATUS_BADGE_LABEL, STATUS_BADGE_FILTERS } from "../../../shared/constants/statusBadgeIncident.js";
 import DropdownField from "../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx";
 import FilterBar from "../components/ui/molecules/FilterBar/FilterBar.jsx";
 import ToggleIncident from "../components/ui/molecules/ToggleIncident/ToggleIncident.jsx";
@@ -32,18 +28,14 @@ import RoleFilter from "../components/ui/molecules/RoleFilter/RoleFilter.jsx";
 import UserCard from "../components/ui/molecules/UserCard/UserCard.jsx";
 import ProfileCard from "../components/ui/molecules/ProfileCard/ProfileCard.jsx";
 import ChangePasswordForm from "../components/ui/organisms/ChangePasswordForm/ChangePasswordForm.jsx";
-import {
-  INCIDENT_PRIORITY,
-  INCIDENT_PRIORITY_LABEL,
-} from "../../../shared/constants/incidentPriority.js";
-// Componentes A3 (Vivi)
+import { INCIDENT_PRIORITY, INCIDENT_PRIORITY_LABEL } from "../../../shared/constants/incidentPriority.js";
 import HeroIncidentCard from "../components/ui/molecules/HeroIncidentCard/HeroIncidentCard.jsx";
 import ActionsMenu from "../components/ui/molecules/ActionsMenu/ActionsMenu.jsx";
 import BackLink from "../components/ui/atoms/BackLink/BackLink.jsx";
 import ReporterCard from "../components/ui/organisms/ReporterCard/ReporterCard.jsx";
 import LodgingCard from "../components/ui/organisms/LodgingCard/LodgingCard.jsx";
 import ChecklistCard from "../components/ui/organisms/ChecklistCard/ChecklistCard.jsx";
-import CronologyCard from "../components/ui/organisms/CronologyCard/CronologyCard.jsx";
+import ChronologyCard from "../components/ui/organisms/ChronologyCard/ChronologyCard.jsx";
 import TimeAllocation from "../components/ui/organisms/TimeAllocation/TimeAllocation.jsx";
 import ResolutionModal from "../components/ui/organisms/ResolutionModal/ResolutionModal.jsx";
 import ConfirmationModal from "../components/ui/organisms/ConfirmationModal/ConfirmationModal.jsx";
@@ -54,6 +46,7 @@ import { getInitialTheme, setTheme } from "../../../shared/utils/theme.js";
 import SearchBar from "../components/ui/molecules/SearchBar/SearchBar.jsx";
 import LodgingRow from "../components/ui/molecules/LodgingRow/LodgingRow.jsx";
 import LodgingModal from "../components/ui/organisms/LodgingModal/LodgingModal.jsx";
+import {useIncidentTimeline} from "../hooks/useIncidentTimeline.js";
 
 /* Helpers de la sandbox                                               */
 
@@ -129,6 +122,19 @@ function DemoLoadingButton() {
       {loading && <Spinner size="sm" tone="on-brand" />}
       Guardar incidencia
     </Button>
+  );
+}
+
+function TimelineDemo({ incidentId }) {
+  const { entries, loading, error, submitting, addComment } = useIncidentTimeline(incidentId);
+  return (
+      <ChronologyCard
+          entries={entries}
+          loading={loading}
+          error={error}
+          submitting={submitting}
+          onAddComment={addComment}
+      />
   );
 }
 
@@ -817,58 +823,8 @@ export default function BackofficeSandbox() {
         />
       </DemoSection>
 
-      <DemoSection title="Cronology Card">
-        <CronologyCard
-          currentUser="Marc Vidal"
-          initialEntries={[
-            {
-              id: "e1",
-              title: "Incidencia creada por teléfono",
-              author: "Pau Roig",
-              atLabel: "10:12",
-              status: INCIDENT_STATUS.NEW,
-              description:
-                "El cliente indica que el equipo arranca pero expulsa aire templado desde ayer por la tarde.",
-            },
-            {
-              id: "e2",
-              title: "Asignada a Marc Vidal",
-              author: "Pau Roig",
-              atLabel: "10:20",
-              status: INCIDENT_STATUS.ASSIGNED,
-            },
-            {
-              id: "e3",
-              title: "Trabajo iniciado",
-              author: "Marc Vidal",
-              atLabel: "11:47",
-              status: INCIDENT_STATUS.IN_PROGRESS,
-            },
-            {
-              id: "e4",
-              title: "Comentario interno",
-              author: "Marc Vidal",
-              atLabel: "12:05",
-              description:
-                "Filtros muy saturados. Limpiados. Sigue sin enfriar, reviso circuito de gas.",
-            },
-            {
-              id: "e5",
-              title: "Trabajo pausado",
-              author: "Pau Roig",
-              atLabel: "ahora",
-              status: INCIDENT_STATUS.PAUSED,
-            },
-            {
-              id: "e6",
-              title: "Trabajo reanudado",
-              author: "Pau Roig",
-              atLabel: "ahora",
-              status: INCIDENT_STATUS.IN_PROGRESS,
-            },
-          ]}
-          onAddComment={(c) => console.log("comentario →", c)}
-        />
+      <DemoSection title="Chronology Card">
+        <TimelineDemo incidentId={1} />
       </DemoSection>
 
       <DemoSection title="Time Allocation">

@@ -9,6 +9,7 @@ export const useGuestAuthStore = create((set) => ({
   lodgingId: initial?.lodgingId ?? null,
   lodgingName: initial?.lodgingName ?? null,
   lodgingRef: initial?.lodgingRef ?? null,
+  lodgingAddress: initial?.lodgingAddress ?? null,
   status: "idle",
   error: null,
 
@@ -21,20 +22,31 @@ export const useGuestAuthStore = create((set) => ({
         lodgingId: data.lodgingId,
         lodgingName: data.lodgingName,
         lodgingRef: ref,
+        lodgingAddress: data.lodgingAddress,
       };
       saveGuestSession(session);
       set({ ...session, status: "idle", error: null });
       return { ok: true };
     } catch (err) {
-      const message = err.response?.data?.message ?? "Ha ocurrido un error inesperado. Inténtalo de nuevo.";
+      const message =
+        err.response?.data?.message ??
+        "Ha ocurrido un error inesperado. Inténtalo de nuevo.";
       set({ status: "error", error: message });
       return { ok: false, message };
     }
   },
 
-  logout() {
+    logout() {
     clearGuestSession();
-    set({ token: null, lodgingId: null, lodgingName: null, lodgingRef: null, status: "idle", error: null });
+    set({
+      token: null,
+      lodgingId: null,
+      lodgingName: null,
+      lodgingRef: null,
+      lodgingAddress: null,
+      status: "idle",
+      error: null,
+    });
   },
 }));
 

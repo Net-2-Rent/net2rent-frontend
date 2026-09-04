@@ -31,6 +31,7 @@
   &__value {
     min-width: 0;
     line-height: 1.4;
+    overflow-wrap: break-word;
   }
 
   &__tag {

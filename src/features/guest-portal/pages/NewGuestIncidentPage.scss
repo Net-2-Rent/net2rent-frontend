@@ -1,0 +1,7 @@
+@use "variables" as vars;
+
+.new-guest-incident-page {
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(20);
+}

@@ -1,7 +1,10 @@
 import guestHttpClient from "./guestHttpClient";
 
 export async function requestGuestAccess(ref, pin) {
-  const { data } = await guestHttpClient.post("/api/guest/access", { ref, pin });
+  const { data } = await guestHttpClient.post("/api/guest/access", {
+    ref,
+    pin,
+  });
   return data;
 }
 
@@ -15,4 +18,21 @@ export async function fetchGuestIncidents() {
 export async function fetchGuestIncidentDetail(id) {
   const { data } = await guestHttpClient.get(`/api/incidents/guest/${id}`);
   return data; // { code, description, status, openedAt, closedAt }
+}
+function toCreatePayload(values) {
+  return {
+    firstName: values.firstName.trim(),
+    lastName: values.lastName.trim(),
+    contact: values.contact?.trim() || null,
+    category: values.category || null,
+    description: values.description,
+  };
+}
+
+export async function createGuestIncident(values) {
+  const { data } = await guestHttpClient.post(
+    "/api/guest/incidents",
+    toCreatePayload(values),
+  );
+  return data;
 }

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import TextField from "../../../../../../shared/components/ui/atoms/TextField/TextField.jsx";
 import TextArea from "../../../../../../shared/components/ui/atoms/TextArea/TextArea.jsx";
@@ -17,7 +18,7 @@ import "./NewIncidentForm.scss";
 const DESCRIPTION_MIN = 10;
 const DESCRIPTION_MAX = 2000;
 
-export default function NewIncidentForm({ onSubmit, submitError }) {
+export default function NewIncidentForm({ onSubmit }) {
   const {
     register,
     handleSubmit,
@@ -36,6 +37,8 @@ export default function NewIncidentForm({ onSubmit, submitError }) {
     },
   });
 
+  const [submitError, setSubmitError] = useState(null);
+
   const descriptionValue = watch("description");
   const descriptionLength = descriptionValue.length;
   const titlePreview = descriptionValue.trim().slice(0, 80);
@@ -46,10 +49,29 @@ export default function NewIncidentForm({ onSubmit, submitError }) {
     return undefined;
   }
 
+  async function submit(values) {
+    setSubmitError(null);
+    try {
+      await onSubmit(values);
+    } catch (err) {
+      const fieldErrors = err.response?.data?.errors;
+      if (fieldErrors?.length) {
+        fieldErrors.forEach(({ field, message }) => {
+          setError(field, { type: "server", message });
+        });
+      } else {
+        setSubmitError(
+          err.response?.data?.message ??
+            "No se pudo enviar la incidencia. Inténtalo de nuevo.",
+        );
+      }
+    }
+  }
+
   return (
     <form
       className="new-incident-form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(submit)}
       noValidate
     >
       {submitError && (

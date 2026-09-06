@@ -3,7 +3,7 @@ import Card from '../../atoms/Card/Card'
 import ThemeToggle from '../../atoms/ThemeToggle/ThemeToggle'
 import './ContentLayout.scss'
 
-export default function ContentLayout({ header, children }) {
+export default function ContentLayout({ header, children, contained = true }) {
   return (
     <div className="content-layout">
       <GradientBackground fullHeight={false} className="content-layout__header">
@@ -12,7 +12,11 @@ export default function ContentLayout({ header, children }) {
       </GradientBackground>
 
       <div className="content-layout__body">
-        <Card variant="content">{children}</Card>
+        {contained ? (
+          <Card variant="content">{children}</Card>
+        ) : (
+          <div className="content-layout__plain">{children}</div>
+        )}
       </div>
     </div>
   )

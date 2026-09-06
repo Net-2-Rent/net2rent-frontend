@@ -13,8 +13,8 @@
   color: inherit;
   text-decoration: none;
   transition:
-          transform vars.$transition-fast,
-          box-shadow vars.$transition-base;
+    transform vars.$transition-fast,
+    box-shadow vars.$transition-base;
 
   &__wrapper {
     list-style: none;
@@ -49,9 +49,34 @@
     color: var(--color-text-strong);
   }
 
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: vars.space(8);
+  }
+
   &__date {
     @include mix.text-style("meta", "guest");
 
     color: var(--color-text-muted);
+  }
+
+  &__resolved {
+    @include mix.text-style("meta", "guest");
+
+    color: var(--color-text-muted);
+  }
+
+  &__sep {
+    @include mix.text-style("meta", "guest");
+
+    color: var(--color-text-muted);
+  }
+
+  &__closed {
+    @include mix.text-style("meta", "guest");
+
+    color: var(--color-text-strong);
   }
 }

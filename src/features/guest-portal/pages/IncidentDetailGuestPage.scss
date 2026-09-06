@@ -1,0 +1,105 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.incident-detail-guest {
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+
+  &__card {
+    background: var(--color-surface);
+    border-radius: 20px;
+    padding: 22px 20px;
+    box-shadow: rgba(20, 40, 80, 0.12) 0 14px 34px;
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(20);
+    margin-top: -25px;
+  }
+
+  &__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: vars.space(12);
+    flex-wrap: wrap;
+  }
+
+  &__dates {
+    display: flex;
+    gap: vars.space(24);
+    flex-direction: column;
+
+    @include mix.respond-to("desktop") {
+      flex-direction: row;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(6);
+
+    &--right {
+      text-align: right;
+    }
+  }
+
+  &__label {
+    @include mix.text-style("eyebrow", "guest");
+
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  &__date {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text-strong);
+  }
+
+  &__divider {
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  &__desc {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(7);
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-text-strong);
+    text-wrap: pretty;
+  }
+
+  &__note {
+    background: rgb(241, 243, 246);
+    border-radius: 13px;
+    padding: 14px 15px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  &__status {
+    color: var(--color-text-muted);
+  }
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: vars.space(12);
+    padding: vars.space(24);
+    text-align: center;
+    color: var(--color-text-strong);
+  }
+}

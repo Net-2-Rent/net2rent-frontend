@@ -7,11 +7,16 @@ export default function PhotoUploadList({
   maxFiles = 3,
 }) {
   const slots = value.length < maxFiles ? [...value, null] : value;
+  const remaining = maxFiles - value.length;
 
-  function handleSlotChange(index, file) {
+  function handleSlotChange(index, fileOrFiles) {
+    if (Array.isArray(fileOrFiles)) {
+      onChange([...value, ...fileOrFiles].slice(0, maxFiles));
+      return;
+    }
     const next = [...value];
-    if (file) {
-      next[index] = file;
+    if (fileOrFiles) {
+      next[index] = fileOrFiles;
     } else {
       next.splice(index, 1);
     }
@@ -26,6 +31,7 @@ export default function PhotoUploadList({
           id={`photo-${index}`}
           value={file}
           accept="image/jpeg,image/png"
+          multiple={file === null && remaining > 1}
           onChange={(selected) => handleSlotChange(index, selected)}
         />
       ))}

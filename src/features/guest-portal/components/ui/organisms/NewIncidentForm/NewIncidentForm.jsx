@@ -10,6 +10,8 @@ import {
   INCIDENT_CATEGORY_LABEL,
 } from "../../../../../../shared/constants/incidentCategory.js";
 import ReadonlyField from "../../../../../../shared/components/ui/molecules/ReadonlyField/ReadonlyField.jsx";
+import PhoneField from "../../../../../../shared/components/ui/molecules/PhoneField/PhoneField.jsx";
+import { isPossiblePhoneNumber } from "react-phone-number-input";
 import "./NewIncidentForm.scss";
 
 const DESCRIPTION_MIN = 10;
@@ -99,14 +101,21 @@ export default function NewIncidentForm({ onSubmit, submitError }) {
         error={errors.contact?.message}
         hint="Por si necesitamos contactarte sobre la incidencia."
       >
-        <TextField
-          id="contact"
-          invalid={!!errors.contact}
-          autoComplete="email"
-          aria-describedby={describedBy("contact", true)}
-          {...register("contact", {
-            maxLength: { value: 120, message: "Máximo 120 caracteres" },
-          })}
+        <Controller
+          name="contact"
+          control={control}
+          rules={{
+            validate: (v) =>
+              !v || isPossiblePhoneNumber(v) || "Introduce un teléfono válido",
+          }}
+          render={({ field }) => (
+            <PhoneField
+              id="contact"
+              invalid={!!errors.contact}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
         />
       </FormField>
 
@@ -137,7 +146,7 @@ export default function NewIncidentForm({ onSubmit, submitError }) {
           </span>
         )}
       </ReadonlyField>
-      
+
       <FormField
         id="description"
         label="Descripción del problema"

@@ -145,6 +145,24 @@ export default function IncidentDetailGuestPage() {
               </p>
             </div>
 
+            {incident.images?.length > 0 && (
+              <div className="incident-detail-guest__images">
+                <span className="incident-detail-guest__label">
+                  Fotos adjuntas
+                </span>
+                <div className="incident-detail-guest__images-list">
+                  {incident.images.map((src, index) => (
+                    <img
+                      key={index}
+                      src={src}
+                      alt={`Foto adjunta ${index + 1} de la incidencia`}
+                      className="incident-detail-guest__image"
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            
             {showNote && (
               <div className="incident-detail-guest__note">
                 Te avisaremos aquí cuando el estado cambie. No hace falta volver

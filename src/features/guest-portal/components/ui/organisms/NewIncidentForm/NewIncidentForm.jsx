@@ -3,7 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import TextField from "../../../../../../shared/components/ui/atoms/TextField/TextField.jsx";
 import TextArea from "../../../../../../shared/components/ui/atoms/TextArea/TextArea.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
-import FileUpload from "../../../../../../shared/components/ui/molecules/FileUpload/FileUpload.jsx";
+import PhotoUploadList from "../PhotoUploadList/PhotoUploadList.jsx";
 import PrimaryButton from "../../atoms/PrimaryButton/PrimaryButton.jsx";
 import DropdownField from "../../../../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx";
 import {
@@ -33,7 +33,7 @@ export default function NewIncidentForm({ onSubmit }) {
       contact: "",
       description: "",
       category: "",
-      photo: null,
+      images: [],
     },
   });
 
@@ -194,22 +194,21 @@ export default function NewIncidentForm({ onSubmit }) {
         />
       </FormField>
 
-      <div className="new-incident-form__field">
-        <label className="new-incident-form__label" htmlFor="photo">
-          Foto <span className="new-incident-form__optional">(opcional)</span>
-        </label>
+      <fieldset className="new-incident-form__field new-incident-form__fieldset">
+        <legend className="new-incident-form__label">
+          Fotos{" "}
+          <span className="new-incident-form__optional">
+            (opcional, máx. 3)
+          </span>
+        </legend>
         <Controller
-          name="photo"
+          name="images"
           control={control}
           render={({ field }) => (
-            <FileUpload
-              id="photo"
-              value={field.value}
-              onChange={field.onChange}
-            />
+            <PhotoUploadList value={field.value} onChange={field.onChange} />
           )}
         />
-      </div>
+      </fieldset>
 
       <PrimaryButton type="submit" isLoading={isSubmitting}>
         Enviar incidencia

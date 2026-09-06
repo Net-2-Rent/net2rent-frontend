@@ -22,6 +22,12 @@
     gap: vars.space(8);
   }
 
+  &__fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
   &__label {
     color: var(--color-text-strong);
     @include mix.text-style("field-label", "guest");

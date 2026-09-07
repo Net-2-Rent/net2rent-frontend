@@ -196,8 +196,20 @@ export default function IncidentDetailPage() {
       />
 
       <LodgingCard
+        name={incident.lodgingName}
+        address={incident.lodgingAddress}
         reference={incident.lodgingRef}
         accessNotes={incident.lodgingAccessNotes}
+        mapEmbedUrl={
+          incident.lodgingAddress
+            ? `https://maps.google.com/maps?q=${encodeURIComponent(incident.lodgingAddress)}&output=embed`
+            : undefined
+        }
+        mapsUrl={
+          incident.lodgingAddress
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(incident.lodgingAddress)}`
+            : undefined
+        }
       />
 
       <ChecklistCard

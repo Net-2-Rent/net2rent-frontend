@@ -1,16 +1,20 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
+import { Pencil } from "lucide-react";
 import HeroIncidentCard from "../../components/ui/molecules/HeroIncidentCard/HeroIncidentCard";
 import ClassificationCard from "../../components/ui/organisms/ClassificationCard/ClassificationCard";
 import ChecklistCard from "../../components/ui/organisms/ChecklistCard/ChecklistCard";
+import IncidentEditForm from "../../components/ui/organisms/IncidentEditForm/IncidentEditForm";
 import Button from "../../../../shared/components/ui/atoms/Button/Button";
 import Spinner from "../../../../shared/components/ui/atoms/Spinner/Spinner";
-import { getIncidentById, classifyIncident } from "../../services/incidentApi";
+import {
+  getIncidentById,
+  classifyIncident,
+  correctIncidentText,
+} from "../../services/incidentApi";
 import { useIncidentChecklist } from "../../hooks/useIncidentChecklist";
 import { useAuthStore } from "../../../auth/store/authStore";
 import { ROLES } from "../../../../shared/constants/nav";
-import { INCIDENT_CATEGORY_LABEL } from "../../../../shared/constants/incidentCategory";
-import { INCIDENT_PRIORITY_LABEL } from "../../../../shared/constants/incidentPriority";
 import { INCIDENT_STATUS } from "../../../../shared/constants/incidentStatus";
 import "./IncidentDetailPage.scss";
 
@@ -79,6 +83,43 @@ export default function IncidentDetailPage() {
     }
   }
 
+  async function handleEdit(values) {
+    setSaving(true);
+    setSaveError(null);
+    setSaved(false);
+    try {
+      let updated = incident;
+
+      if (values.title !== incident.title) {
+        updated = await correctIncidentText(id, {
+          title: values.title,
+          description: incident.description,
+        });
+      }
+
+      if (
+        values.category !== incident.category ||
+        values.priority !== incident.priority
+      ) {
+        updated = await classifyIncident(id, {
+          category: values.category,
+          priority: values.priority,
+        });
+      }
+
+      setIncident(updated);
+      setSaved(true);
+      setEditing(false);
+    } catch (err) {
+      setSaveError(
+        err.response?.data?.message ??
+          "No se pudieron guardar los cambios. Inténtalo de nuevo.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
   if (loading) return <Spinner />;
   if (loadError) return <p role="alert">{loadError}</p>;
   if (!incident) return null;
@@ -87,6 +128,21 @@ export default function IncidentDetailPage() {
   const isTerminal =
     incident.status === INCIDENT_STATUS.CLOSED ||
     incident.status === INCIDENT_STATUS.REJECTED;
+
+  const heroActions =
+    canTriage && !isUnclassified && !editing ? (
+      <Button
+        variant="secondary"
+        aria-label="Editar incidencia"
+        onClick={() => {
+          setSaved(false);
+          setSaveError(null);
+          setEditing(true);
+        }}
+      >
+        <Pencil size={18} aria-hidden="true" />
+      </Button>
+    ) : null;
 
   return (
     <section className="incident-detail">
@@ -99,43 +155,35 @@ export default function IncidentDetailPage() {
         title={incident.title}
         status={incident.status}
         priority={incident.priority}
+        category={incident.category}
+        actions={heroActions}
       />
 
-      {canTriage && (isUnclassified || editing) && (
-        <ClassificationCard
-          key={editing ? "edit" : "new"} // remonta con los valores correctos
-          initialCategory={isUnclassified ? "" : incident.category}
-          initialPriority={isUnclassified ? "" : incident.priority}
-          onSubmit={handleClassify}
-          primaryLabel={
-            isUnclassified ? "Guardar clasificación" : "Guardar cambios"
-          }
+      {canTriage &&
+        (isUnclassified || editing) &&
+        !isUnclassified === false && (
+          <ClassificationCard
+            onSubmit={handleClassify}
+            primaryLabel={
+              isUnclassified ? "Guardar clasificación" : "Guardar cambios"
+            }
+            saving={saving}
+            error={saveError}
+            saved={saved}
+          />
+        )}
+
+      {canTriage && !isUnclassified && editing && (
+        <IncidentEditForm
+          initialTitle={incident.title}
+          initialCategory={incident.category}
+          initialPriority={incident.priority}
+          onSubmit={handleEdit}
+          onCancel={() => setEditing(false)}
           saving={saving}
           error={saveError}
           saved={saved}
         />
-      )}
-
-      {canTriage && !isUnclassified && !editing && (
-        <section className="classification-summary">
-          <h2 className="classification-summary__title">Clasificación</h2>
-          <p className="classification-summary__row">
-            <span>Categoría:</span> {INCIDENT_CATEGORY_LABEL[incident.category]}
-          </p>
-          <p className="classification-summary__row">
-            <span>Prioridad:</span> {INCIDENT_PRIORITY_LABEL[incident.priority]}
-          </p>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setSaved(false);
-              setSaveError(null);
-              setEditing(true);
-            }}
-          >
-            Editar clasificación
-          </Button>
-        </section>
       )}
 
       <ChecklistCard

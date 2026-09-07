@@ -37,6 +37,8 @@ const router = createBrowserRouter([
           { path: "/incidencias/:id", element: <IncidentDetailGuestPage /> },
         ],
       },
+            { path: "/sandbox", element: <GuestSandbox /> },
+
     ],
   },
   {

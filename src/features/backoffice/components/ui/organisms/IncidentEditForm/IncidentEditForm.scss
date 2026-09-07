@@ -1,0 +1,38 @@
+@use "../../../../../../styles/variables" as vars;
+@use "../../../../../../styles/mixins" as mix;
+
+.incident-edit {
+    @include mix.surface-card;
+    @include mix.flex(column, vars.space(16));
+    padding: vars.space(20);
+
+    &__title {
+        margin: 0;
+        @include mix.text-style("card-title");
+    }
+
+    &__row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: vars.space(16);
+
+        @include mix.respond-to("tablet") {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    &__status {
+        margin: 0;
+        min-height: vars.space(20);
+        @include mix.text-style("field-label");
+        color: vars.$color-success;
+
+        @include mix.when-dark {
+            color: vars.$color-success-dark;
+        }
+    }
+
+    &__actions {
+        @include mix.flex(row, vars.space(12));
+    }
+}

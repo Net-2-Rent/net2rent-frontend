@@ -68,3 +68,27 @@ export async function correctIncidentText(id, { title, description }) {
     });
     return data;
 }
+
+export async function getIncidentChecklist(incidentId) {
+  const { data } = await httpClient.get(`/incidents/${incidentId}/checklist`);
+  return data;
+}
+
+export async function addChecklistItem(incidentId, text) {
+  const { data } = await httpClient.post(`/incidents/${incidentId}/checklist`, {
+    text,
+  });
+  return data;
+}
+
+export async function setChecklistItemDone(incidentId, itemId, done) {
+  const { data } = await httpClient.patch(
+    `/incidents/${incidentId}/checklist/${itemId}`,
+    { done },
+  );
+  return data;
+}
+
+export async function deleteChecklistItem(incidentId, itemId) {
+  await httpClient.delete(`/incidents/${incidentId}/checklist/${itemId}`);
+}

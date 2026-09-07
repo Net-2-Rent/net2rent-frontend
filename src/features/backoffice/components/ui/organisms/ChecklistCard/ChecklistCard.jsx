@@ -1,29 +1,82 @@
 import { useState } from "react";
-import { Plus, X, ChevronUp, ChevronDown } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import Input from "../../../../../../shared/components/ui/atoms/Input/Input";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button";
-import { useEditableList } from "../../../../../../hooks/useEditableList";
 import "./ChecklistCard.scss";
 
+function extractErrorMessage(err, fallback) {
+  return (
+    err.response?.data?.errors?.[0]?.message ??
+    err.response?.data?.message ??
+    fallback
+  );
+}
+
 export default function ChecklistCard({
-  initialTasks = [],
-  onChange,
+  items = [],
+  loading = false,
+  error = null,
+  adding = false,
+  pendingIds = new Set(),
+  disabled = false,
+  onAdd,
+  onToggle,
+  onRemove,
   title = "Checklist de trabajo",
   className = "",
 }) {
-    const { items: tasks, add, remove, patch, move } = useEditableList(initialTasks, {onChange});
-    const [draft, setDraft] = useState('');
+  const [draft, setDraft] = useState("");
+  const [formError, setFormError] = useState(null);
 
-  function handleAdd(event) {
+  async function handleAdd(event) {
     event.preventDefault();
     const text = draft.trim();
-    if (!text) return;
-    add({ id: crypto.randomUUID(), text, done: false });
-    setDraft('');
+    if (!text || adding) return;
+
+    setFormError(null);
+    try {
+      await onAdd(text);
+      setDraft("");
+    } catch (err) {
+      setFormError(
+        extractErrorMessage(
+          err,
+          "No se pudo añadir la tarea. Inténtalo de nuevo.",
+        ),
+      );
+    }
   }
 
-  const total = tasks.length;
-  const done = tasks.filter((t) => t.done).length;
+  async function handleToggle(item) {
+    if (disabled || pendingIds.has(item.id)) return;
+    try {
+      await onToggle(item.id, !item.done);
+    } catch (err) {
+      setFormError(
+        extractErrorMessage(
+          err,
+          "No se pudo añadir la tarea. Inténtalo de nuevo.",
+        ),
+      );
+    }
+  }
+
+  async function handleRemove(item) {
+    if (disabled || pendingIds.has(item.id)) return;
+    try {
+      await onRemove(item.id);
+    } catch (err) {
+      setFormError(
+        extractErrorMessage(
+          err,
+          "No se pudo añadir la tarea. Inténtalo de nuevo.",
+        ),
+      );
+    }
+  }
+
+  const total = items.length;
+  const done = items.filter((t) => t.done).length;
   const percent = total ? (done / total) * 100 : 0;
 
   const classes = ["checklist", className].filter(Boolean).join(" ");
@@ -34,8 +87,7 @@ export default function ChecklistCard({
         <h2 className="checklist__title">{title}</h2>
         {total > 0 && (
           <p className="checklist__progress" aria-live="polite">
-            {done} {done === 1 ? "tarea" : "tareas"} de {total}{" "}
-            {total === 1 ? "tarea" : "tareas"} completadas
+            {done} de {total} {total === 1 ? "tarea" : "tareas"} completadas
           </p>
         )}
       </header>
@@ -49,56 +101,46 @@ export default function ChecklistCard({
         </div>
       )}
 
-      {total === 0 ? (
+      {loading ? (
+        <p className="checklist__empty" role="status">
+          Cargando checklist…
+        </p>
+      ) : error ? (
+        <p className="checklist__empty" role="alert">
+          No se pudo cargar la checklist.
+        </p>
+      ) : total === 0 ? (
         <p className="checklist__empty">
           Aún no hay tareas. Añade la primera abajo.
         </p>
       ) : (
         <ul className="checklist__list">
-          {tasks.map((task, index) => (
-            <li key={task.id} className="checklist__item">
+          {items.map((item) => (
+            <li key={item.id} className="checklist__item">
               <label className="checklist__check">
                 <input
                   type="checkbox"
-                  checked={task.done}
-                  onChange={() => patch(task.id, (t) => ({ done: !t.done }))}
+                  checked={item.done}
+                  disabled={disabled || pendingIds.has(item.id)}
+                  onChange={() => handleToggle(item)}
                 />
                 <span
                   className={
                     "checklist__text" +
-                    (task.done ? " checklist__text--done" : "")
+                    (item.done ? " checklist__text--done" : "")
                   }
                 >
-                  {task.text}
+                  {item.text}
                 </span>
               </label>
 
               <div className="checklist__controls">
                 <button
                   type="button"
-                  className="checklist__move"
-                  onClick={() => move(index, -1)}
-                  disabled={index === 0}
-                  aria-label={`Subir "${task.text}"`}
-                >
-                  <ChevronUp size={16} aria-hidden="true" />
-                </button>
-
-                <button
-                  type="button"
-                  className="checklist__move"
-                  onClick={() => move(index, 1)}
-                  disabled={index === tasks.length - 1}
-                  aria-label={`Bajar "${task.text}"`}
-                >
-                  <ChevronDown size={16} aria-hidden="true" />
-                </button>
-
-                <button
-                  type="button"
                   className="checklist__remove"
-                  onClick={() => remove(task.id)}
-                  aria-label={`Eliminar "${task.text}"`}
+                  onClick={() => handleRemove(item)}
+                  disabled={disabled || pendingIds.has(item.id)}
+                  aria-label={`Eliminar "${item.text}"`}
                 >
                   <X size={16} aria-hidden="true" />
                 </button>
@@ -115,12 +157,24 @@ export default function ChecklistCard({
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Añadir tarea y pulsar Enter"
           aria-label="Nueva tarea"
+          disabled={disabled || adding}
+          maxLength={200}
         />
-        <Button type="submit" variant="primary" disabled={!draft.trim()}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={disabled || adding || !draft.trim()}
+        >
           <Plus size={16} aria-hidden="true" />
-          Agregar
+          {adding ? "Añadiendo…" : "Agregar"}
         </Button>
       </form>
+
+      {formError && (
+        <p className="checklist__error" role="alert">
+          {formError}
+        </p>
+      )}
     </section>
   );
 }

@@ -47,6 +47,7 @@ import SearchBar from "../components/ui/molecules/SearchBar/SearchBar.jsx";
 import LodgingRow from "../components/ui/molecules/LodgingRow/LodgingRow.jsx";
 import LodgingModal from "../components/ui/organisms/LodgingModal/LodgingModal.jsx";
 import {useIncidentTimeline} from "../hooks/useIncidentTimeline.js";
+import { INCIDENT_CATEGORY, INCIDENT_CATEGORY_LABEL } from "../../../shared/constants/incidentCategory.js";
 
 /* Helpers de la sandbox                                               */
 
@@ -721,6 +722,7 @@ export default function BackofficeSandbox() {
           title="El aire acondicionado del salón no enfría"
           status={INCIDENT_STATUS.IN_PROGRESS}
           priority={INCIDENT_PRIORITY.HIGH}
+          category={INCIDENT_CATEGORY.PLUMBING}
           actions={
             <>
               <Button variant="primary" onClick={() => setResolveOpen(true)}>

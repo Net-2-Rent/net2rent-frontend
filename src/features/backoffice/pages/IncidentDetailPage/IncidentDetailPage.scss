@@ -11,6 +11,17 @@
         align-self: flex-start;
         @include mix.text-style("field-label");
     }
+
+    .hero-incident {
+        position:relative;
+    }
+
+    .hero-incident__actions {
+        position:absolute;
+        top: vars.space(16);
+        right: vars.space(16);
+        margin: 0;
+    }
 }
 
 .classification-summary {

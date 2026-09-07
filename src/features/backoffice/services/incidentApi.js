@@ -92,3 +92,29 @@ export async function setChecklistItemDone(incidentId, itemId, done) {
 export async function deleteChecklistItem(incidentId, itemId) {
   await httpClient.delete(`/incidents/${incidentId}/checklist/${itemId}`);
 }
+
+function toListParams(filters = {}) {
+    const params = {};
+    const set = (key, value) => {
+        if (value !== undefined && value !== null && value !== "" && value !== "ALL") {
+            params[key] = value;
+        }
+    };
+    set("status", filters.status);
+    set("priority", filters.priority);
+    set("category", filters.category);
+    set("lodgingId", filters.lodgingId);
+    if (filters.unassigned) params.unassigned = true;
+    else set("assigneeId", filters.assigneeId);
+    set("openedFrom", filters.openedFrom);
+    set("sort", filters.sort);
+    set("dir", filters.dir);
+    if (filters.page != null) params.page = filters.page;
+    if (filters.size != null) params.size = filters.size;
+    return params;
+}
+
+export async function listIncidents(filters) {
+    const { data } = await httpClient.get("/incidents", { params: toListParams(filters) });
+    return data;
+}

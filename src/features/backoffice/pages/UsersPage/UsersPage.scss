@@ -1,0 +1,36 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.users-page {
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+
+  &__toolbar {
+    .search-bar {
+      width: 100%;
+    }
+  }
+
+  &__filters {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(12);
+  }
+
+  &__count {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+
+  &__error {
+    color: var(--color-danger);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(20);
+  }
+}

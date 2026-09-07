@@ -9,6 +9,7 @@ export default function SearchBar({
   onSearchChange,
   onCreate,
   placeholder = "Buscar alojamiento",
+  createLabel = "Nuevo alojamiento",
   className = "",
 }) {
   const inputId = useId();
@@ -36,7 +37,7 @@ export default function SearchBar({
           onClick={onCreate}
         >
           <Plus size={16} aria-hidden="true" />
-          Nuevo alojamiento
+          {createLabel}
         </Button>
       )}
     </div>

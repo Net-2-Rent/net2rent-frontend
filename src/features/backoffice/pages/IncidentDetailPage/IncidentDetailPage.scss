@@ -1,0 +1,35 @@
+@use "../../../../styles/variables" as vars;
+@use "../../../../styles/mixins" as mix;
+
+.incident-detail {
+    @include mix.flex(column, vars.space(24));
+    width: 100%;
+    max-width: 1180px;
+    margin-inline: auto;
+
+    &__back {
+        align-self: flex-start;
+        @include mix.text-style("field-label");
+    }
+}
+
+.classification-summary {
+    @include mix.surface-card;
+    @include mix.flex(column, vars.space(12));
+    padding: vars.space(20);
+
+    &__title {
+        margin: 0;
+        @include mix.text-style("card-title");
+    }
+
+    &__row {
+        margin: 0;
+        @include mix.text-style("body");
+
+        span {
+            font-weight: 600;
+            margin-right: vars.space(6);
+        }
+    }
+}

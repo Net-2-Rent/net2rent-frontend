@@ -17,6 +17,7 @@ import ProtectedRoute from "../features/auth/components/ProtectedRoute";
 import ProfilePage from "../features/backoffice/pages/ProfilePage/ProfilePage.jsx";
 import NewIncidentPage from "../features/backoffice/pages/NewIncidentPage.jsx";
 import LodgingsPage from "../features/backoffice/pages/LodgingsPage/LodgingsPage.jsx";
+import IncidentDetailPage from "../features/backoffice/pages/IncidentDetailPage/IncidentDetailPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
                 path: "incidencias",
                 element: <Placeholder title="Incidencias" />,
               },
+              { path: "incidencias/:id", element: <IncidentDetailPage /> },
               { path: "nueva-incidencia", element: <NewIncidentPage /> },
               { path: "alojamientos", element: <LodgingsPage /> },
               { path: "usuarios", element: <Placeholder /> },

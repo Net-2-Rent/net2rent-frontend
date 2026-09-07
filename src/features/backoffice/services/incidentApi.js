@@ -42,3 +42,29 @@ export async function addIncidentComment(incidentId, text) {
     const { data } = await httpClient.post(`/incidents/${incidentId}/comments`, { text });
     return data;
 }
+
+export async function getIncidentById(id) {
+    const { data } = await httpClient.get(`/incidents/${id}`);
+    return data;
+}
+
+export async function classifyIncident(id, { category, priority }) {
+    const { data } = await httpClient.patch(`/incidents/${id}/classification`, {
+        category,
+        priority,
+    });
+    return data;
+}
+
+export async function markIncidentUrgent(id) {
+    const { data } = await httpClient.patch(`/incidents/${id}/urgent`);
+    return data;
+}
+
+export async function correctIncidentText(id, { title, description }) {
+    const { data } = await httpClient.patch(`/incidents${id}/text`, {
+        title: title?.trim() || null,
+        description,
+    });
+    return data;
+}

@@ -92,3 +92,5 @@ export async function setChecklistItemDone(incidentId, itemId, done) {
 export async function deleteChecklistItem(incidentId, itemId) {
   await httpClient.delete(`/incidents/${incidentId}/checklist/${itemId}`);
 }
+
+

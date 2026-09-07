@@ -17,6 +17,8 @@ import { useAuthStore } from "../../../auth/store/authStore";
 import { ROLES } from "../../../../shared/constants/nav";
 import { INCIDENT_STATUS } from "../../../../shared/constants/incidentStatus";
 import "./IncidentDetailPage.scss";
+import ReporterCard from "../../components/ui/organisms/ReporterCard/ReporterCard";
+import LodgingCard from "../../components/ui/organisms/LodgingCard/LodgingCard";
 
 export default function IncidentDetailPage() {
   const { id } = useParams();
@@ -185,6 +187,18 @@ export default function IncidentDetailPage() {
           saved={saved}
         />
       )}
+
+       <ReporterCard
+        message={incident.description}
+        reporterName={`${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim()}
+        reporterContact={incident.guestContact}
+        openedLabel={incident.openedAt}
+      />
+
+      <LodgingCard
+        reference={incident.lodgingRef}
+        accessNotes={incident.lodgingAccessNotes}
+      />
 
       <ChecklistCard
         items={checklistItems}

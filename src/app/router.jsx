@@ -20,7 +20,6 @@ import LodgingsPage from "../features/backoffice/pages/LodgingsPage/LodgingsPage
 import IncidentDetailPage from "../features/backoffice/pages/IncidentDetailPage/IncidentDetailPage.jsx";
 import GuestSandbox from "../features/guest-portal/pages/GuestSandbox.jsx";
 
-
 const router = createBrowserRouter([
   {
     element: <AppScope app="guest" />,

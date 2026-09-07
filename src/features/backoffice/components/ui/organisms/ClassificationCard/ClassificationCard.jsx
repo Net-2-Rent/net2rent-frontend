@@ -2,6 +2,7 @@ import { useState, useId } from 'react';
 import FormField from '../../../../../../shared/components/ui/molecules/FormField/FormField.jsx';
 import DropdownField from '../../../../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx';
 import Button from '../../../../../../shared/components/ui/atoms/Button/Button.jsx';
+import NoticeBox from '../../../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx';
 import { INCIDENT_CATEGORY, INCIDENT_CATEGORY_LABEL } from '../../../../../../shared/constants/incidentCategory.js';
 import { INCIDENT_PRIORITY, INCIDENT_PRIORITY_LABEL } from '../../../../../../shared/constants/incidentPriority.js';
 import './ClassificationCard.scss';
@@ -17,8 +18,13 @@ export default function ClassificationCard({
     initialCategory = '',
     initialPriority = '',
     onAssign,
+    onSubmit,
     onChange,
     title = 'Clasificación',
+    primaryLabel = 'Asignar a un operario',
+    saving = false,
+    error = null,
+    saved = false,
     className = '',
 }) {
     const [category, setCategory] = useState(initialCategory);
@@ -26,8 +32,7 @@ export default function ClassificationCard({
     const categoryId = useId();
     const priorityId = useId();
 
-    // Solo se puede asignar cuando hay categoría Y prioridad
-    const canAssign = Boolean(category) && Boolean(priority);
+    const canSubmit = Boolean(category) && Boolean(priority) && !saving;
 
     function updateCategory(value) {
         setCategory(value);
@@ -38,9 +43,9 @@ export default function ClassificationCard({
         onChange?.({ category, priority: value });
     }
 
-    function handleAssign() {
-        if (!canAssign) return;
-        onAssign?.({ category, priority });
+    function handlePrimary() {
+        if (!canSubmit) return;
+        (onSubmit ?? onAssign)?.({ category, priority });
     }
 
     const classes = ['classification-card', className].filter(Boolean).join(' ');
@@ -51,7 +56,11 @@ export default function ClassificationCard({
 
             <div className="classification-card__fields">
                 <FormField id={categoryId} label="Categoría">
-                    <DropdownField value={category} onChange={(e) => updateCategory(e.target.value)}>
+                    <DropdownField
+                        value={category}
+                        onChange={(e) => updateCategory(e.target.value)}
+                        disabled={saving}
+                    >
                         <option value="" disabled>Selecciona una categoría</option>
                         {CATEGORY_OPTIONS.map(({ value, label }) => (
                             <option key={value} value={value}>{label}</option>
@@ -60,7 +69,11 @@ export default function ClassificationCard({
                 </FormField>
 
                 <FormField id={priorityId} label="Prioridad">
-                    <DropdownField value={priority} onChange={(e) => updatePriority(e.target.value)}>
+                    <DropdownField
+                        value={priority}
+                        onChange={(e) => updatePriority(e.target.value)}
+                        disabled={saving}
+                    >
                         <option value="" disabled>Selecciona una prioridad</option>
                         {PRIORITY_OPTIONS.map(({ value, label }) => (
                             <option key={value} value={value}>{label}</option>
@@ -69,13 +82,23 @@ export default function ClassificationCard({
                 </FormField>
             </div>
 
+            {error && (
+                <div role="alert">
+                    <NoticeBox tone="danger">{error}</NoticeBox>
+                </div>
+            )}
+
+            <p className="classification-card__status" role="status" aria-live="polite">
+                {saved ? 'Clasificación guardada.' : ''}
+            </p>
+
             <Button
                 variant="primary"
-                onClick={handleAssign}
-                disabled={!canAssign}
+                onClick={handlePrimary}
+                disabled={!canSubmit}
                 className="classification-card__assign"
             >
-                Asignar a un operario
+                {saving ? 'Guardando…' : primaryLabel}
             </Button>
         </section>
     );

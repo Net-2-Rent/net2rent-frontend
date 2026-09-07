@@ -62,7 +62,7 @@ export async function markIncidentUrgent(id) {
 }
 
 export async function correctIncidentText(id, { title, description }) {
-    const { data } = await httpClient.patch(`/incidents${id}/text`, {
+    const { data } = await httpClient.patch(`/incidents/${id}/text`, {
         title: title?.trim() || null,
         description,
     });

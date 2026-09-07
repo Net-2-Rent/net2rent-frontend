@@ -1,5 +1,6 @@
 import StatusBadge from '../../../../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx';
 import PriorityBadge from '../../atoms/PriorityBadge/PriorityBadge.jsx';
+import CategoryBadge from '../../atoms/CategoryBadge/CategoryBadge.jsx';
 import './HeroIncidentCard.scss';
 
 export default function HeroIncidentCard({
@@ -7,6 +8,7 @@ export default function HeroIncidentCard({
     title,
     status,
     priority,
+    category,
     actions,
     className = '',
 }) {
@@ -21,6 +23,7 @@ export default function HeroIncidentCard({
                 </span>
                 <StatusBadge status={status} />
                 <PriorityBadge priority={priority} />
+                <CategoryBadge category={category} />
             </div>
 
             <h1 className="hero-incident__title">{title}</h1>

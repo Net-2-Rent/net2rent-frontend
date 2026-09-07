@@ -85,11 +85,23 @@ select {
   }
 }
 
-@mixin emit-priority-tokens {
+@mixin emit-priority-tokens($variant: "light") {
   @each $key, $definition in vars.$bo-priority {
-    --priority-#{$key}-bg: #{map.get($definition, "bg")};
-    --priority-#{$key}-fg: #{map.get($definition, "fg")};
-    --priority-#{$key}-border: #{map.get($definition, "border")};
+    $bg-key: "bg";
+    $fg-key: "fg";
+    $border-key: "border";
+
+    @if $variant == "dark" and map.has-key($definition, "bg-dark") {
+      $bg-key: "bg-dark";
+      $fg-key: "fg-dark";
+    }
+    @if $variant == "dark" and map.has-key($definition, "border-dark") {
+      $border-key: "border-dark";
+    }
+
+    --priority-#{$key}-bg: #{map.get($definition, $bg-key)};
+    --priority-#{$key}-fg: #{map.get($definition, $fg-key)};
+    --priority-#{$key}-border: #{map.get($definition, $border-key)};
     --priority-#{$key}-border-style: #{map.get($definition, "border-style")};
     --priority-#{$key}-weight: #{map.get($definition, "weight")};
   }
@@ -142,6 +154,7 @@ select {
   --color-overlay: #{rgba(14, 19, 34, 0.55)};
 
   @include emit-status-tokens(vars.$status-colors, "dark");
+  @include emit-priority-tokens("dark");
 }
 
 @mixin guest-dark-tokens {

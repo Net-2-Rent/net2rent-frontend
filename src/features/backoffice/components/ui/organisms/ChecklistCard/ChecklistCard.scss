@@ -66,7 +66,9 @@
     padding-block: vars.space(12);
     border-bottom: 1px solid var(--color-border);
 
-    &:last-child { border-bottom: 0; }
+    &:last-child {
+      border-bottom: 0;
+    }
   }
 
   &__check {
@@ -112,13 +114,14 @@
     }
   }
 
-    &__controls {
+  &__controls {
     display: flex;
     flex: none;
     align-items: center;
     gap: vars.space(4);
   }
 
+  /*
   &__move {
     @include mix.button-reset;
 
@@ -139,6 +142,13 @@
       color: var(--color-border-strong);   // apagado cuando no se puede mover
       cursor: not-allowed;
     }
+  }
+*/
+
+  &__error {
+    @include mix.text-style("field-label", "backoffice");
+    margin: 0;
+    color: var(--color-danger);
   }
 
   &__add {

@@ -8,7 +8,9 @@
 
     &__title {
         margin: 0;
-        @include mix.text-style("card-title");
+        @include mix.text-style("block-eyebrow", "backoffice");
+        color: var(--color-text-muted);
+
     }
 
     &__row {
@@ -23,7 +25,6 @@
 
     &__status {
         margin: 0;
-        min-height: vars.space(20);
         @include mix.text-style("field-label");
         color: vars.$color-success;
 
@@ -34,5 +35,9 @@
 
     &__actions {
         @include mix.flex(row, vars.space(12));
+    }
+
+    &__footer {
+        @include mix.flex(colum, vars.space(8));
     }
 }

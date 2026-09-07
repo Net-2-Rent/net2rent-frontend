@@ -107,6 +107,7 @@ function toListParams(filters = {}) {
     if (filters.unassigned) params.unassigned = true;
     else set("assigneeId", filters.assigneeId);
     set("openedFrom", filters.openedFrom);
+    set("openedTo", filters.openedTo);
     set("sort", filters.sort);
     set("dir", filters.dir);
     if (filters.page != null) params.page = filters.page;

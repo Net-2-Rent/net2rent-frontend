@@ -9,10 +9,14 @@ import GuestRoute from "../features/guest-portal/components/GuestRoute";
 import BackofficeSandbox from "../features/backoffice/pages/BackofficeSandbox";
 import LoginPage from "../features/auth/pages/LoginPage";
 import BackofficeLayout from "../features/backoffice/components/ui/organisms/BackofficeLayout/BackofficeLayout";
-import { BackofficeIndexPage, Placeholder } from "../features/backoffice/pages/BackofficePlaceholders.jsx";
+import {
+  BackofficeIndexPage,
+  Placeholder,
+} from "../features/backoffice/pages/BackofficePlaceholders.jsx";
 import ProtectedRoute from "../features/auth/components/ProtectedRoute";
 import ProfilePage from "../features/backoffice/pages/ProfilePage/ProfilePage.jsx";
 import NewIncidentPage from "../features/backoffice/pages/NewIncidentPage.jsx";
+import LodgingsPage from "../features/backoffice/pages/LodgingsPage/LodgingsPage.jsx";
 import IncidentDetailPage from "../features/backoffice/pages/IncidentDetailPage/IncidentDetailPage.jsx";
 
 const router = createBrowserRouter([
@@ -52,7 +56,7 @@ const router = createBrowserRouter([
               },
               { path: "incidencias/:id", element: <IncidentDetailPage /> },
               { path: "nueva-incidencia", element: <NewIncidentPage /> },
-              { path: "alojamientos", element: <Placeholder /> },
+              { path: "alojamientos", element: <LodgingsPage /> },
               { path: "usuarios", element: <Placeholder /> },
               { path: "perfil", element: <ProfilePage /> },
             ],

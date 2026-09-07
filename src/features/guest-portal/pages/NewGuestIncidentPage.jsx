@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ContentLayout from "../components/ui/organisms/ContentLayout/ContentLayout.jsx";
 import PageHeader from "../components/ui/molecules/PageHeader/PageHeader.jsx";
@@ -18,21 +17,12 @@ const reportDateFormatter = new Intl.DateTimeFormat("es-ES", {
 
 function NewGuestIncidentPage() {
   const navigate = useNavigate();
-  const [submitError, setSubmitError] = useState(null);
   const lodgingName = useGuestAuthStore((state) => state.lodgingName);
   const lodgingAddress = useGuestAuthStore((state) => state.lodgingAddress);
 
   async function handleSubmit(values) {
-    setSubmitError(null);
-    try {
-      const incident = await createGuestIncident(values);
-      navigate(`/incidencias/confirmacion/${incident.code}`);
-    } catch (err) {
-      const message =
-        err.response?.data?.message ??
-        "No se pudo enviar la incidencia. Inténtalo de nuevo.";
-      setSubmitError(message);
-    }
+    const incident = await createGuestIncident(values);
+    navigate(`/incidencias/confirmacion/${incident.code}`);
   }
 
   return (
@@ -62,7 +52,7 @@ function NewGuestIncidentPage() {
           )}
         </ReadonlyField>
 
-        <NewIncidentForm onSubmit={handleSubmit} submitError={submitError} />
+        <NewIncidentForm onSubmit={handleSubmit} />
       </div>
     </ContentLayout>
   );

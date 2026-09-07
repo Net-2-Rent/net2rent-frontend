@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Modal from "../../../../../../shared/components/ui/molecules/Modal/Modal.jsx";
 import TextField from "../../../../../../shared/components/ui/atoms/TextField/TextField.jsx";
@@ -23,6 +23,7 @@ export default function LodgingModal({
   mode = "create",
   defaultValues,
   submitError,
+  fieldErrors = {},
 }) {
   const formId = useId();
   const isPinOnly = mode === "pin";
@@ -30,6 +31,7 @@ export default function LodgingModal({
     register,
     control,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onTouched",
@@ -42,6 +44,12 @@ export default function LodgingModal({
       ...defaultValues,
     },
   });
+
+  useEffect(() => {
+    Object.entries(fieldErrors).forEach(([field, message]) => {
+      setError(field, { type: "server", message });
+    });
+  }, [fieldErrors, setError]);
 
   return (
     <Modal

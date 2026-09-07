@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import TextField from "../../../../../../shared/components/ui/atoms/TextField/TextField.jsx";
 import TextArea from "../../../../../../shared/components/ui/atoms/TextArea/TextArea.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
-import FileUpload from "../../../../../../shared/components/ui/molecules/FileUpload/FileUpload.jsx";
+import PhotoUploadList from "../PhotoUploadList/PhotoUploadList.jsx";
 import PrimaryButton from "../../atoms/PrimaryButton/PrimaryButton.jsx";
 import DropdownField from "../../../../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx";
 import {
@@ -10,12 +11,14 @@ import {
   INCIDENT_CATEGORY_LABEL,
 } from "../../../../../../shared/constants/incidentCategory.js";
 import ReadonlyField from "../../../../../../shared/components/ui/molecules/ReadonlyField/ReadonlyField.jsx";
+import PhoneField from "../../../../../../shared/components/ui/molecules/PhoneField/PhoneField.jsx";
+import { isPossiblePhoneNumber } from "react-phone-number-input";
 import "./NewIncidentForm.scss";
 
 const DESCRIPTION_MIN = 10;
 const DESCRIPTION_MAX = 2000;
 
-export default function NewIncidentForm({ onSubmit, submitError }) {
+export default function NewIncidentForm({ onSubmit }) {
   const {
     register,
     handleSubmit,
@@ -30,9 +33,11 @@ export default function NewIncidentForm({ onSubmit, submitError }) {
       contact: "",
       description: "",
       category: "",
-      photo: null,
+      images: [],
     },
   });
+
+  const [submitError, setSubmitError] = useState(null);
 
   const descriptionValue = watch("description");
   const descriptionLength = descriptionValue.length;
@@ -44,10 +49,29 @@ export default function NewIncidentForm({ onSubmit, submitError }) {
     return undefined;
   }
 
+  async function submit(values) {
+    setSubmitError(null);
+    try {
+      await onSubmit(values);
+    } catch (err) {
+      const fieldErrors = err.response?.data?.errors;
+      if (fieldErrors?.length) {
+        fieldErrors.forEach(({ field, message }) => {
+          setError(field, { type: "server", message });
+        });
+      } else {
+        setSubmitError(
+          err.response?.data?.message ??
+            "No se pudo enviar la incidencia. Inténtalo de nuevo.",
+        );
+      }
+    }
+  }
+
   return (
     <form
       className="new-incident-form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(submit)}
       noValidate
     >
       {submitError && (
@@ -99,14 +123,21 @@ export default function NewIncidentForm({ onSubmit, submitError }) {
         error={errors.contact?.message}
         hint="Por si necesitamos contactarte sobre la incidencia."
       >
-        <TextField
-          id="contact"
-          invalid={!!errors.contact}
-          autoComplete="email"
-          aria-describedby={describedBy("contact", true)}
-          {...register("contact", {
-            maxLength: { value: 120, message: "Máximo 120 caracteres" },
-          })}
+        <Controller
+          name="contact"
+          control={control}
+          rules={{
+            validate: (v) =>
+              !v || isPossiblePhoneNumber(v) || "Introduce un teléfono válido",
+          }}
+          render={({ field }) => (
+            <PhoneField
+              id="contact"
+              invalid={!!errors.contact}
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
         />
       </FormField>
 
@@ -137,7 +168,7 @@ export default function NewIncidentForm({ onSubmit, submitError }) {
           </span>
         )}
       </ReadonlyField>
-      
+
       <FormField
         id="description"
         label="Descripción del problema"
@@ -163,22 +194,21 @@ export default function NewIncidentForm({ onSubmit, submitError }) {
         />
       </FormField>
 
-      <div className="new-incident-form__field">
-        <label className="new-incident-form__label" htmlFor="photo">
-          Foto <span className="new-incident-form__optional">(opcional)</span>
-        </label>
+      <fieldset className="new-incident-form__field new-incident-form__fieldset">
+        <legend className="new-incident-form__label">
+          Fotos{" "}
+          <span className="new-incident-form__optional">
+            (opcional, máx. 3)
+          </span>
+        </legend>
         <Controller
-          name="photo"
+          name="images"
           control={control}
           render={({ field }) => (
-            <FileUpload
-              id="photo"
-              value={field.value}
-              onChange={field.onChange}
-            />
+            <PhotoUploadList value={field.value} onChange={field.onChange} />
           )}
         />
-      </div>
+      </fieldset>
 
       <PrimaryButton type="submit" isLoading={isSubmitting}>
         Enviar incidencia

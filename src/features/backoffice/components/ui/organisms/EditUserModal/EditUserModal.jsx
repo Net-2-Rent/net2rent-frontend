@@ -5,6 +5,7 @@ import Input from "../../../../../../shared/components/ui/atoms/Input/Input.jsx"
 import DropdownField from "../../../../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
 import InlineError from "../../../../../../shared/components/ui/atoms/InlineError/InlineError.jsx";
+import NoticeBanner from "../../../../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner.jsx";
 import { ROLES, ROLE_LABEL } from "../../../../../../shared/constants/nav.js";
 import "./EditUserModal.scss";
 
@@ -14,7 +15,16 @@ const ROLE_OPTIONS = [
   { value: ROLES.OPERATOR, label: ROLE_LABEL[ROLES.OPERATOR] },
 ];
 
-export default function EditUserModal({ isOpen, onClose, user, onSave }) {
+export default function EditUserModal({
+  isOpen,
+  onClose,
+  user,
+  onSave,
+  mode = "edit",
+  submitError = "",
+  fieldErrors = {},
+}) {
+  const isCreate = mode === "create";
   const [name, setName] = useState(user?.name ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
   const [role, setRole] = useState(user?.role ?? ROLES.OPERATOR);
@@ -27,7 +37,11 @@ export default function EditUserModal({ isOpen, onClose, user, onSave }) {
       setError("Completa nombre y correo electrónico.");
       return;
     }
-    if (password && password !== repeatPassword) {
+    if (isCreate && !password) {
+      setError("Elige una contraseña inicial para el usuario.");
+      return;
+    }
+    if (password !== repeatPassword) {
       setError("Las contraseñas no coinciden.");
       return;
     }
@@ -38,11 +52,13 @@ export default function EditUserModal({ isOpen, onClose, user, onSave }) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Editar usuario"
-      subtitle={user?.email}
+      title={isCreate ? "Nuevo usuario" : "Editar usuario"}
+      subtitle={isCreate ? "Crea una cuenta para la empresa" : user?.email}
     >
       <div className="edit-user-modal">
-        <FormField label="Nombre y apellido">
+        {submitError && <NoticeBanner tone="error">{submitError}</NoticeBanner>}
+
+        <FormField label="Nombre y apellido" error={fieldErrors.name}>
           <Input
             type="text"
             value={name}
@@ -51,7 +67,7 @@ export default function EditUserModal({ isOpen, onClose, user, onSave }) {
           />
         </FormField>
 
-        <FormField label="Correo electrónico">
+        <FormField label="Correo electrónico" error={fieldErrors.email}>
           <Input
             type="email"
             value={email}
@@ -60,7 +76,7 @@ export default function EditUserModal({ isOpen, onClose, user, onSave }) {
           />
         </FormField>
 
-        <FormField label="Rol">
+        <FormField label="Rol" error={fieldErrors.role}>
           <DropdownField
             value={role}
             onChange={(e) => setRole(e.target.value)}
@@ -68,25 +84,30 @@ export default function EditUserModal({ isOpen, onClose, user, onSave }) {
           />
         </FormField>
 
-        <FormField label="Nueva contraseña">
+        <FormField
+          label={isCreate ? "Contraseña inicial" : "Nueva contraseña"}
+          error={fieldErrors.password}
+        >
           <Input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Dejar vacío para no cambiarla"
+            placeholder={
+              isCreate
+                ? "Mínimo 8 caracteres, letra y número"
+                : "Dejar vacío para no cambiarla"
+            }
           />
         </FormField>
 
-        <FormField label="Repetir contraseña">
+        <FormField label="Repetir contraseña" error={error}>
           <Input
             type="password"
             value={repeatPassword}
             onChange={(e) => setRepeatPassword(e.target.value)}
-            placeholder="Repite la nueva contraseña"
+            placeholder="Repite la contraseña"
           />
         </FormField>
-
-        {error && <InlineError>{error}</InlineError>}
 
         <div className="edit-user-modal__actions">
           <Button
@@ -94,7 +115,7 @@ export default function EditUserModal({ isOpen, onClose, user, onSave }) {
             className="edit-user-modal__save"
             onClick={handleSave}
           >
-            Guardar cambios
+            {isCreate ? "Crear usuario" : "Guardar cambios"}
           </Button>
           <Button
             variant="secondary"

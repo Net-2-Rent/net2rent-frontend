@@ -18,8 +18,7 @@ import ProfilePage from "../features/backoffice/pages/ProfilePage/ProfilePage.js
 import NewIncidentPage from "../features/backoffice/pages/NewIncidentPage.jsx";
 import LodgingsPage from "../features/backoffice/pages/LodgingsPage/LodgingsPage.jsx";
 import IncidentDetailPage from "../features/backoffice/pages/IncidentDetailPage/IncidentDetailPage.jsx";
-import GuestSandbox from "../features/guest-portal/pages/GuestSandbox.jsx";
-
+import UsersPage from "../features/backoffice/pages/UsersPage/UsersPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -61,7 +60,7 @@ const router = createBrowserRouter([
               { path: "incidencias/:id", element: <IncidentDetailPage /> },
               { path: "nueva-incidencia", element: <NewIncidentPage /> },
               { path: "alojamientos", element: <LodgingsPage /> },
-              { path: "usuarios", element: <Placeholder /> },
+              { path: "usuarios", element: <UsersPage /> },
               { path: "perfil", element: <ProfilePage /> },
             ],
           },

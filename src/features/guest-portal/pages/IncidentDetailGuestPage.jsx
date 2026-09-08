@@ -7,6 +7,7 @@ import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusB
 import PrimaryButton from "../components/ui/atoms/PrimaryButton/PrimaryButton.jsx";
 import { formatDate } from "../../../shared/utils/formatDate.js";
 import { fetchGuestIncidentDetail } from "../services/guestApi.js";
+import NoticeBox from "../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
 import "./IncidentDetailGuestPage.scss";
 
 const RESOLVED_STATES = new Set(["RESOLVED", "CLOSED"]);
@@ -137,6 +138,12 @@ export default function IncidentDetailGuestPage() {
               className="incident-detail-guest__divider"
               aria-hidden="true"
             />
+
+            {incident.status === "REJECTED" && incident.rejectionReason && (
+              <NoticeBox tone="warning">
+                <strong>Motivo del rechazo</strong> {incident.rejectionReason}
+              </NoticeBox>
+            )}
 
             <div className="incident-detail-guest__desc">
               <span className="incident-detail-guest__label">Descripción</span>

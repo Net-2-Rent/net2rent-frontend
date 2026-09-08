@@ -175,6 +175,9 @@ select {
   --color-text-soft: #{vars.$guest-dark-text-muted};
   --color-text-muted: #{vars.$guest-dark-text-muted};
   --color-text-faint: #{vars.$guest-dark-text-muted};
+  --color-note-bg: #{vars.$bo-note-bg-dark};
+  --color-note-border: #{vars.$bo-note-border-dark};
+  --color-note-ink: #{vars.$bo-note-ink-dark};
 
   --color-success: #{vars.$color-success-dark};
   --color-success-soft: #{vars.$color-success-soft-dark};
@@ -311,6 +314,9 @@ select {
   --color-surface-subtle: #{vars.$color-fill-subtle};
   --color-input-bg: #{vars.$color-surface};
   --color-border: #{vars.$guest-border};
+  --color-note-bg: #{vars.$bo-note-bg};
+  --color-note-border: #{vars.$bo-note-border};
+  --color-note-ink: #{vars.$bo-note-ink};
   --color-border-strong: #{vars.$guest-border};
   --color-locked-bg: #{vars.$color-fill-subtle};
   --color-locked-text: #{vars.$color-text-strong};

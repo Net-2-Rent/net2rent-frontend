@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import SideBar from "../SideBar/SideBar.jsx";
 import StickyHero from "../StickyHero/StickyHero.jsx";
@@ -8,6 +8,7 @@ import {
   setTheme,
 } from "../../../../../../shared/utils/theme.js";
 import { NAV_BY_ROLE } from "../../../../../../shared/constants/nav.js";
+import { listIncidents } from "../../../../services/incidentApi.js";
 import "./BackofficeLayout.scss";
 
 const ROUTE_TO_KEY = {
@@ -41,8 +42,14 @@ export default function BackofficeLayout() {
 
   const userName = `${user.firstName} ${user.lastName}`.trim();
 
-  // MOCK: sustituir por el nº real de incidencias nuevas cuando exista la API
-  const newIncidentsCount = 2;
+  const [newIncidentsCount, setNewIncidentsCount] = useState(0);
+  useEffect(() => {
+    let active = true;
+    listIncidents({ status: "NEW", size: 1 })
+        .then((res) => { if (active) setNewIncidentsCount(res.counters?.NEW ?? 0); })
+        .catch(() => { if (active) setNewIncidentsCount(0); });
+    return () => { active = false; };
+  }, [location.pathname]);
 
   function toggleTheme() {
     const next = theme === "dark" ? "light" : "dark";

@@ -10,7 +10,7 @@ import {
 import "./FilterBar.scss";
 
 const CATEGORY_FILTER_OPTIONS = [
-  { value: "ALL", label: "Todas las categorías" },
+  { value: "ALL", label: "Categorías" },
   ...Object.values(INCIDENT_CATEGORY).map((value) => ({
     value,
     label: INCIDENT_CATEGORY_LABEL[value],
@@ -18,7 +18,7 @@ const CATEGORY_FILTER_OPTIONS = [
 ];
 
 const PRIORITY_FILTER_OPTIONS = [
-  { value: "ALL", label: "Toda prioridad" },
+  { value: "ALL", label: "Prioridad" },
   { value: "URGENT", label: INCIDENT_PRIORITY_LABEL.URGENT },
   { value: "HIGH", label: INCIDENT_PRIORITY_LABEL.HIGH },
   { value: "NORMAL", label: INCIDENT_PRIORITY_LABEL.NORMAL },

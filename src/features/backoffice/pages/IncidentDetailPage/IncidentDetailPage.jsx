@@ -7,12 +7,7 @@ import ChecklistCard from "../../components/ui/organisms/ChecklistCard/Checklist
 import IncidentEditForm from "../../components/ui/organisms/IncidentEditForm/IncidentEditForm";
 import Button from "../../../../shared/components/ui/atoms/Button/Button";
 import Spinner from "../../../../shared/components/ui/atoms/Spinner/Spinner";
-import {
-  getIncidentById,
-  classifyIncident,
-  correctIncidentText,
-  rejectIncident,
-} from "../../services/incidentApi";
+import { getIncidentById, classifyIncident, correctIncidentText, rejectIncident, claimIncident } from "../../services/incidentApi";
 import ActionsMenu from "../../components/ui/molecules/ActionsMenu/ActionsMenu";
 import RejectionModal from "../../components/ui/organisms/RejectionModal/RejectionModal";
 import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox";
@@ -28,6 +23,7 @@ export default function IncidentDetailPage() {
   const { id } = useParams();
   const role = useAuthStore((s) => s.user?.role);
   const canTriage = role === ROLES.COORDINATOR || role === ROLES.ADMIN;
+  const isOperator = role === ROLES.OPERATOR;
 
   const [incident, setIncident] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -41,6 +37,9 @@ export default function IncidentDetailPage() {
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejecting, setRejecting] = useState(false);
   const [rejectError, setRejectError] = useState(null);
+
+  const [claiming, setClaiming] = useState(false);
+  const [claimError, setClaimError] = useState(null);
 
   const {
     items: checklistItems,
@@ -148,9 +147,31 @@ export default function IncidentDetailPage() {
     }
   }
 
+  async function handleClaim() {
+    setClaiming(true);
+    setClaimError(null);
+    try {
+      const updated = await claimIncident(id);
+      setIncident(updated);
+    } catch (err) {
+      setClaimError(
+          err.response?.data?.message ??
+          "No se pudo asignar la incidencia. Inténtalo de nuevo.",
+      );
+      if (err.response?.status === 409) loadIncident();
+    } finally {
+      setClaiming(false);
+    }
+  }
+
   if (loading) return <Spinner />;
   if (loadError) return <p role="alert">{loadError}</p>;
   if (!incident) return null;
+
+  const canClaim =
+      isOperator &&
+      incident.assigneeName == null &&
+      incident.status === INCIDENT_STATUS.NEW;
 
   const isUnclassified = incident.category == null;
   const isTerminal =
@@ -168,8 +189,18 @@ export default function IncidentDetailPage() {
 
   const canEdit = canTriage && !isUnclassified && !editing;
   const heroActions =
-    canEdit || canReject ? (
+    canEdit || canReject || canClaim ? (
       <>
+        {canClaim && (
+            <Button
+                variant="primary"
+                onClick={handleClaim}
+                disabled={claiming}
+            >
+              {claiming ? "Asignando…" : "Asignármela"}
+            </Button>
+        )}
+
         {canEdit && (
           <Button
             variant="secondary"
@@ -217,6 +248,8 @@ export default function IncidentDetailPage() {
         category={incident.category}
         actions={heroActions}
       />
+
+      {claimError && <NoticeBox tone="danger">{claimError}</NoticeBox>}
 
       {incident.status === INCIDENT_STATUS.REJECTED &&
         incident.rejectionReason && (

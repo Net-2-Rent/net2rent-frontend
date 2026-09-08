@@ -104,6 +104,13 @@ export async function reorderChecklistItems(incidentId, orderedIds) {
   return data;
 }
 
+export async function rejectIncident(id, reason) {
+    const { data } = await httpClient.patch(`/incidents/${id}/reject`, {
+        reason: reason?.trim(),
+    });
+    return data;
+}
+
 function toListParams(filters = {}) {
     const params = {};
     const set = (key, value) => {

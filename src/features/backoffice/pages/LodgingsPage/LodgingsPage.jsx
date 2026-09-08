@@ -13,13 +13,14 @@ import {
 import { useAuthStore } from "../../../auth/store/authStore.js";
 import { ROLES } from "../../../../shared/constants/nav.js";
 
-function toRowProps(lodging) {
+function toRowProps(lodging, revealedPins) {
   return {
     name: lodging.name,
     address: lodging.address,
     reference: lodging.ref,
     active: lodging.active,
     notes: lodging.accessNotes,
+    pin: revealedPins[lodging.id],
   };
 }
 const BACKEND_TO_FORM_FIELD = {
@@ -39,6 +40,8 @@ export default function LodgingsPage() {
 
   const [modalMode, setModalMode] = useState(null); 
   const [selected, setSelected] = useState(null);
+
+   const [revealedPins, setRevealedPins] = useState({});
   
 
   const [confirmTarget, setConfirmTarget] = useState(null);
@@ -91,18 +94,21 @@ export default function LodgingsPage() {
   async function handleSubmit(values) {
     setSubmitError("");
     try {
+       let saved;
       if (modalMode === "create") {
-        await createLodging(values);
+        saved = await createLodging(values);
       } else if (modalMode === "edit") {
-        await updateLodging(selected.id, values);
+        saved = await updateLodging(selected.id, values);
       } else if (modalMode === "pin") {
-        await updateLodging(selected.id, {
+        saved = await updateLodging(selected.id, {
           name: selected.name,
           address: selected.address,
-          reference: selected.ref,
           notes: selected.accessNotes,
           pin: values.pin,
         });
+         }
+      if (values.pin) {
+        setRevealedPins((prev) => ({ ...prev, [saved.id]: values.pin }));
       }
       closeModal();
       await loadLodgings();
@@ -116,9 +122,6 @@ export default function LodgingsPage() {
           mapped[BACKEND_TO_FORM_FIELD[field] ?? field] = message;
         });
         setFieldErrors(mapped);
-        setSubmitError("");
-      } else if (data?.message?.includes("referencia")) {
-        setFieldErrors({ reference: data.message });
         setSubmitError("");
       } else if (data?.message?.includes("PIN")) {
         setFieldErrors({ pin: data.message });
@@ -181,7 +184,7 @@ export default function LodgingsPage() {
         {filteredLodgings.map((lodging) => (
           <LodgingRow
             key={lodging.id}
-            {...toRowProps(lodging)}
+            {...toRowProps(lodging, revealedPins)}
             onEdit={isAdmin ? () => openEdit(lodging) : undefined}
             onChangePin={isAdmin ? () => openPin(lodging) : undefined}
             onToggleActive={
@@ -207,7 +210,6 @@ export default function LodgingsPage() {
               ? {
                   name: selected.name,
                   address: selected.address,
-                  reference: selected.ref,
                   notes: selected.accessNotes,
                   pin: "",
                 }

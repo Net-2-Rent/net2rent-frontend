@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Pencil } from "lucide-react";
+import { Pencil, XCircle } from "lucide-react";
 import HeroIncidentCard from "../../components/ui/molecules/HeroIncidentCard/HeroIncidentCard";
 import ClassificationCard from "../../components/ui/organisms/ClassificationCard/ClassificationCard";
 import ChecklistCard from "../../components/ui/organisms/ChecklistCard/ChecklistCard";
@@ -11,7 +11,11 @@ import {
   getIncidentById,
   classifyIncident,
   correctIncidentText,
+  rejectIncident,
 } from "../../services/incidentApi";
+import ActionsMenu from "../../components/ui/molecules/ActionsMenu/ActionsMenu";
+import RejectionModal from "../../components/ui/organisms/RejectionModal/RejectionModal";
+import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox";
 import { useIncidentChecklist } from "../../hooks/useIncidentChecklist";
 import { useAuthStore } from "../../../auth/store/authStore";
 import { ROLES } from "../../../../shared/constants/nav";
@@ -33,6 +37,10 @@ export default function IncidentDetailPage() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [saved, setSaved] = useState(false);
+
+  const [rejectOpen, setRejectOpen] = useState(false);
+  const [rejecting, setRejecting] = useState(false);
+  const [rejectError, setRejectError] = useState(null);
 
   const {
     items: checklistItems,
@@ -123,6 +131,23 @@ export default function IncidentDetailPage() {
     }
   }
 
+  async function handleReject(reason) {
+    setRejecting(true);
+    setRejectError(null);
+    try {
+      const updated = await rejectIncident(id, reason);
+      setIncident(updated);
+      setRejectOpen(false);
+    } catch (err) {
+      setRejectError(
+        err.response?.data?.message ??
+          "No se pudo rechazar la incidencia. Inténtalo de nuevo",
+      );
+    } finally {
+      setRejecting(false);
+    }
+  }
+
   if (loading) return <Spinner />;
   if (loadError) return <p role="alert">{loadError}</p>;
   if (!incident) return null;
@@ -132,19 +157,50 @@ export default function IncidentDetailPage() {
     incident.status === INCIDENT_STATUS.CLOSED ||
     incident.status === INCIDENT_STATUS.REJECTED;
 
+  const canReject =
+    canTriage &&
+    [
+      INCIDENT_STATUS.NEW,
+      INCIDENT_STATUS.ASSIGNED,
+      INCIDENT_STATUS.IN_PROGRESS,
+      INCIDENT_STATUS.PAUSED,
+    ].includes(incident.status);
+
+  const canEdit = canTriage && !isUnclassified && !editing;
   const heroActions =
-    canTriage && !isUnclassified && !editing ? (
-      <Button
-        variant="secondary"
-        aria-label="Editar incidencia"
-        onClick={() => {
-          setSaved(false);
-          setSaveError(null);
-          setEditing(true);
-        }}
-      >
-        <Pencil size={18} aria-hidden="true" />
-      </Button>
+    canEdit || canReject ? (
+      <>
+        {canEdit && (
+          <Button
+            variant="secondary"
+            aria-label="Editar incidencia"
+            onClick={() => {
+              setSaved(false);
+              setSaveError(null);
+              setEditing(true);
+            }}
+          >
+            <Pencil size={18} aria-hidden="true" />
+          </Button>
+        )}
+
+        {canReject && (
+          <ActionsMenu
+            items={[
+              {
+                id: "reject",
+                label: "Rechazar incidencia",
+                icon: XCircle,
+                danger: true,
+                onSelect: () => {
+                  setRejectError(null);
+                  setRejectOpen(true);
+                },
+              },
+            ]}
+          />
+        )}
+      </>
     ) : null;
 
   return (
@@ -161,6 +217,13 @@ export default function IncidentDetailPage() {
         category={incident.category}
         actions={heroActions}
       />
+
+      {incident.status === INCIDENT_STATUS.REJECTED &&
+        incident.rejectionReason && (
+          <NoticeBox>
+            <strong>Motivo del rechazo:</strong> {incident.rejectionReason}
+          </NoticeBox>
+        )}
 
       {canTriage &&
         (isUnclassified || editing) &&
@@ -189,7 +252,7 @@ export default function IncidentDetailPage() {
         />
       )}
 
-       <ReporterCard
+      <ReporterCard
         message={incident.description}
         reporterName={`${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim()}
         reporterContact={incident.guestContact}
@@ -224,6 +287,16 @@ export default function IncidentDetailPage() {
         onToggle={toggleChecklistItem}
         onRemove={removeChecklistItem}
         onReorder={reorderChecklistItem}
+      />
+
+      <RejectionModal
+        isOpen={rejectOpen}
+        onClose={() => setRejectOpen(false)}
+        incidentCode={incident.code}
+        lodgingName={incident.lodgingName}
+        onReject={handleReject}
+        submitting={rejecting}
+        error={rejectError}
       />
     </section>
   );

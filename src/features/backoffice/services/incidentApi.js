@@ -111,6 +111,11 @@ export async function rejectIncident(id, reason) {
     return data;
 }
 
+export async function claimIncident(id) {
+    const { data } = await httpClient.patch(`/incidents/${id}/claim`);
+    return data;
+}
+
 function toListParams(filters = {}) {
     const params = {};
     const set = (key, value) => {

@@ -103,7 +103,6 @@ export default function LodgingsPage() {
         saved = await updateLodging(selected.id, {
           name: selected.name,
           address: selected.address,
-          reference: selected.ref,
           notes: selected.accessNotes,
           pin: values.pin,
         });
@@ -123,9 +122,6 @@ export default function LodgingsPage() {
           mapped[BACKEND_TO_FORM_FIELD[field] ?? field] = message;
         });
         setFieldErrors(mapped);
-        setSubmitError("");
-      } else if (data?.message?.includes("referencia")) {
-        setFieldErrors({ reference: data.message });
         setSubmitError("");
       } else if (data?.message?.includes("PIN")) {
         setFieldErrors({ pin: data.message });
@@ -214,7 +210,6 @@ export default function LodgingsPage() {
               ? {
                   name: selected.name,
                   address: selected.address,
-                  reference: selected.ref,
                   notes: selected.accessNotes,
                   pin: "",
                 }

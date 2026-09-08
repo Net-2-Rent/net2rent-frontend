@@ -220,7 +220,7 @@ export default function IncidentDetailPage() {
 
       {incident.status === INCIDENT_STATUS.REJECTED &&
         incident.rejectionReason && (
-          <NoticeBox>
+          <NoticeBox tone="warning">
             <strong>Motivo del rechazo:</strong> {incident.rejectionReason}
           </NoticeBox>
         )}

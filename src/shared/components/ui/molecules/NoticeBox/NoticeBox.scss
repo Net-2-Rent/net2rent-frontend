@@ -42,4 +42,13 @@
       color: var(--color-brand-ink);
     }
   }
+
+  &--warning {
+    @include mix.surface-note;
+
+    .notice-box__icon,
+    .notice-box__text {
+      color: var(--color-note-ink);
+    }
+  }
 }

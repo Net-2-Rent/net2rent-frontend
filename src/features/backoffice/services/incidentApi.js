@@ -90,7 +90,18 @@ export async function setChecklistItemDone(incidentId, itemId, done) {
 }
 
 export async function deleteChecklistItem(incidentId, itemId) {
-  await httpClient.delete(`/incidents/${incidentId}/checklist/${itemId}`);
+  const { data } = await httpClient.delete(
+    `/incidents/${incidentId}/checklist/${itemId}`,
+  );
+  return data;
+}
+
+export async function reorderChecklistItems(incidentId, orderedIds) {
+  const { data } = await httpClient.patch(
+    `/incidents/${incidentId}/checklist/order`,
+    { orderedIds },
+  );
+  return data;
 }
 
 function toListParams(filters = {}) {

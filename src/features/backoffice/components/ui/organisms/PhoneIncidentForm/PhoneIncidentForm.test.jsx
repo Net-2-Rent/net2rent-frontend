@@ -69,14 +69,14 @@ describe("PhoneIncidentForm", () => {
     const handleSubmit = renderPhoneIncidentForm();
 
     fireEvent.change(screen.getByLabelText(/Teléfono/), {
-      target: { value: "600 sin prefijo" },
+      target: { value: "600" },
     });
     fireEvent.click(
         screen.getByRole("button", { name: "Registrar incidencia" }),
     );
 
     expect(
-        await screen.findByText(/formato internacional/, {
+        await screen.findByText("Introduce un teléfono válido", {
           selector: '[role="alert"] *',
         }),
     ).toBeInTheDocument();

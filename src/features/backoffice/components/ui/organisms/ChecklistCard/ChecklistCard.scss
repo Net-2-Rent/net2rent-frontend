@@ -121,6 +121,50 @@
     gap: vars.space(4);
   }
 
+    &__index {
+    @include mix.text-style("field-label", "backoffice");
+
+    flex: none;
+    min-width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-subtle);
+    color: var(--color-text-soft);
+    font-weight: 600;
+  }
+
+  &__item--dragging {
+    opacity: 0.5;
+  }
+
+  &__handle {
+    @include mix.button-reset;
+
+    display: inline-flex;
+    padding: vars.space(4);
+    border-radius: var(--radius-chip);
+    color: var(--color-text-faint);
+    cursor: grab;
+    touch-action: none;
+
+    &:hover:not(:disabled) {
+      color: var(--color-text-strong);
+      background: var(--color-surface-subtle);
+    }
+
+    &:active:not(:disabled) {
+      cursor: grabbing;
+    }
+
+    &:disabled {
+      color: var(--color-border-strong);
+      cursor: not-allowed;
+    }
+  }
+
   /*
   &__move {
     @include mix.button-reset;

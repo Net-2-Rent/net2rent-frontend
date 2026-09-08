@@ -51,6 +51,7 @@ export default function IncidentDetailPage() {
     addItem: addChecklistItem,
     toggleItem: toggleChecklistItem,
     removeItem: removeChecklistItem,
+    reorderItem: reorderChecklistItem,
   } = useIncidentChecklist(id);
 
   const loadIncident = useCallback(async () => {
@@ -285,6 +286,7 @@ export default function IncidentDetailPage() {
         onAdd={addChecklistItem}
         onToggle={toggleChecklistItem}
         onRemove={removeChecklistItem}
+        onReorder={reorderChecklistItem}
       />
 
       <RejectionModal

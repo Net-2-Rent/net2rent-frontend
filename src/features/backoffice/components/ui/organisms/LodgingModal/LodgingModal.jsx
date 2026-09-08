@@ -38,7 +38,6 @@ export default function LodgingModal({
     defaultValues: {
       name: "",
       address: "",
-      reference: "",
       pin: "",
       notes: "",
       ...defaultValues,
@@ -104,20 +103,6 @@ export default function LodgingModal({
                 invalid={!!errors.address}
                 {...register("address", {
                   required: "La dirección es obligatoria",
-                })}
-              />
-            </FormField>
-
-            <FormField
-              id="reference"
-              label="Referencia interna"
-              error={errors.reference?.message}
-              required
-            >
-              <TextField
-                invalid={!!errors.reference}
-                {...register("reference", {
-                  required: "La referencia es obligatoria",
                 })}
               />
             </FormField>

@@ -11,6 +11,7 @@ export default function ChronologyCard({
                                         loading = false,
                                         error = null,
                                         submitting = false,
+                                        canComment = true,
                                         title = "Cronología",
                                         className = "",
                                       }) {
@@ -35,7 +36,7 @@ export default function ChronologyCard({
   const titleId = useId();
 
   return (
-      <section className={classes} aria-labelledby="{titleId}">
+      <section className={classes} aria-labelledby={titleId}>
         <h2 className="chronology__title" id={titleId}>{title}</h2>
 
         {loading ? (
@@ -74,6 +75,7 @@ export default function ChronologyCard({
             </ol>
         )}
 
+        {canComment ? (
         <form className="chronology__add" onSubmit={handleSubmit}>
           <Input
               className="chronology__input"
@@ -87,6 +89,11 @@ export default function ChronologyCard({
             {submitting ? "Enviando…" : "Enviar"}
           </Button>
         </form>
+        ) : (
+            <p className="chronology__closed" role="note">
+                La incidencia está cerrada: no se pueden añadir comentarios.
+            </p>
+        )}
 
         {formError && <p className="chronology__error" role="alert">{formError}</p>}
       </section>

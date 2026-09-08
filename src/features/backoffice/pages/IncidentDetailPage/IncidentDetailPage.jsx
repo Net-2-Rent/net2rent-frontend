@@ -23,6 +23,8 @@ import { INCIDENT_STATUS } from "../../../../shared/constants/incidentStatus";
 import "./IncidentDetailPage.scss";
 import ReporterCard from "../../components/ui/organisms/ReporterCard/ReporterCard";
 import LodgingCard from "../../components/ui/organisms/LodgingCard/LodgingCard";
+import {useIncidentTimeline} from "../../hooks/useIncidentTimeline.js";
+import ChronologyCard from "../../components/ui/organisms/ChronologyCard/ChronologyCard.jsx";
 
 export default function IncidentDetailPage() {
   const { id } = useParams();
@@ -53,6 +55,14 @@ export default function IncidentDetailPage() {
     removeItem: removeChecklistItem,
     reorderItem: reorderChecklistItem,
   } = useIncidentChecklist(id);
+
+  const {
+    entries: timelineEntries,
+    loading: timelineLoading,
+    error: timelineError,
+    submitting: timelineSubmitting,
+    addComment: addTimelineComment,
+  } = useIncidentTimeline(id);
 
   const loadIncident = useCallback(async () => {
     setLoading(true);
@@ -287,6 +297,15 @@ export default function IncidentDetailPage() {
         onToggle={toggleChecklistItem}
         onRemove={removeChecklistItem}
         onReorder={reorderChecklistItem}
+      />
+
+      <ChronologyCard
+          entries={timelineEntries}
+          onAddComment={addTimelineComment}
+          loading={timelineLoading}
+          error={timelineError}
+          submitting={timelineSubmitting}
+          canComment={!isTerminal}
       />
 
       <RejectionModal

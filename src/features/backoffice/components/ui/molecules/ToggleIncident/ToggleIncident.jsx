@@ -2,12 +2,12 @@ import { INCIDENT_SCOPE } from "../../../../../../shared/constants/incidentScope
 import "./ToggleIncident.scss";
 
 export default function ToggleIncident({
-  value = INCIDENT_SCOPE.ASSIGNED,
+  value = INCIDENT_SCOPE.MINE,
   onChange,
   className = "",
 }) {
   const options = [
-    { value: INCIDENT_SCOPE.ASSIGNED, label: "Asignadas a mí" },
+    { value: INCIDENT_SCOPE.MINE, label: "Asignadas a mí" },
     { value: INCIDENT_SCOPE.POOL, label: "Pool" },
   ];
 

@@ -93,6 +93,13 @@ export async function deleteChecklistItem(incidentId, itemId) {
   await httpClient.delete(`/incidents/${incidentId}/checklist/${itemId}`);
 }
 
+export async function rejectIncident(id, reason) {
+    const { data } = await httpClient.patch(`/incidents/${id}/reject`, {
+        reason: reason?.trim(),
+    });
+    return data;
+}
+
 function toListParams(filters = {}) {
     const params = {};
     const set = (key, value) => {

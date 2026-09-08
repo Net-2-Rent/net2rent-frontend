@@ -1,5 +1,20 @@
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical, Plus, X } from "lucide-react";
 import Input from "../../../../../../shared/components/ui/atoms/Input/Input";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button";
 import "./ChecklistCard.scss";
@@ -9,6 +24,69 @@ function extractErrorMessage(err, fallback) {
     err.response?.data?.errors?.[0]?.message ??
     err.response?.data?.message ??
     fallback
+  );
+}
+
+function SortableItem({ index, item, disabled, pending, onToggle, onRemove }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: item.id, disabled });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const itemClass = [
+    "checklist__item",
+    isDragging && "checklist__item--dragging",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <li ref={setNodeRef} style={style} className={itemClass}>
+      <span className="checklist__index" aria-hidden="true">
+        {index + 1}
+      </span>
+
+      <label className="checklist__check">
+        <input
+          type="checkbox"
+          checked={item.done}
+          disabled={disabled || pending}
+          onChange={() => onToggle(item)}
+        />
+        <span
+          className={
+            "checklist__text" + (item.done ? " checklist__text--done" : "")
+          }
+        >
+          {item.text}
+        </span>
+      </label>
+
+      <div className="checklist__controls">
+        <button
+          type="button"
+          className="checklist__handle"
+          disabled={disabled || pending}
+          aria-label={`Mover "${item.text}"`}
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical size={16} aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className="checklist__remove"
+          onClick={() => onRemove(item)}
+          disabled={disabled || pending}
+          aria-label={`Eliminar "${item.text}"`}
+        >
+          <X size={16} aria-hidden="true" />
+        </button>
+      </div>
+    </li>
   );
 }
 
@@ -22,11 +100,19 @@ export default function ChecklistCard({
   onAdd,
   onToggle,
   onRemove,
+  onReorder,
   title = "Checklist de trabajo",
   className = "",
 }) {
   const [draft, setDraft] = useState("");
   const [formError, setFormError] = useState(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   async function handleAdd(event) {
     event.preventDefault();
@@ -55,7 +141,7 @@ export default function ChecklistCard({
       setFormError(
         extractErrorMessage(
           err,
-          "No se pudo añadir la tarea. Inténtalo de nuevo.",
+          "No se pudo cambiar el estado de la tarea.",
         ),
       );
     }
@@ -69,8 +155,26 @@ export default function ChecklistCard({
       setFormError(
         extractErrorMessage(
           err,
-          "No se pudo añadir la tarea. Inténtalo de nuevo.",
+          "No se pudo eliminar la tarea. Inténtalo de nuevo.",
         ),
+      );
+    }
+  }
+
+  async function handleDragEnd(event) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const fromIndex = items.findIndex((i) => i.id === active.id);
+    const toIndex = items.findIndex((i) => i.id === over.id);
+    if (fromIndex === -1 || toIndex === -1) return;
+
+    setFormError(null);
+    try {
+      await onReorder(fromIndex, toIndex);
+    } catch (err) {
+      setFormError(
+        extractErrorMessage(err, "No se pudo reordenar la tarea."),
       );
     }
   }
@@ -80,6 +184,8 @@ export default function ChecklistCard({
   const percent = total ? (done / total) * 100 : 0;
 
   const classes = ["checklist", className].filter(Boolean).join(" ");
+
+  const canReorder = typeof onReorder === "function" && !disabled;
 
   return (
     <section className={classes}>
@@ -114,40 +220,30 @@ export default function ChecklistCard({
           Aún no hay tareas. Añade la primera abajo.
         </p>
       ) : (
-        <ul className="checklist__list">
-          {items.map((item) => (
-            <li key={item.id} className="checklist__item">
-              <label className="checklist__check">
-                <input
-                  type="checkbox"
-                  checked={item.done}
-                  disabled={disabled || pendingIds.has(item.id)}
-                  onChange={() => handleToggle(item)}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={items.map((i) => i.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <ul className="checklist__list">
+              {items.map((item, index) => (
+                <SortableItem
+                  key={item.id}
+                  index={index}
+                  item={item}
+                  disabled={!canReorder}
+                  pending={pendingIds.has(item.id)}
+                  onToggle={handleToggle}
+                  onRemove={handleRemove}
                 />
-                <span
-                  className={
-                    "checklist__text" +
-                    (item.done ? " checklist__text--done" : "")
-                  }
-                >
-                  {item.text}
-                </span>
-              </label>
-
-              <div className="checklist__controls">
-                <button
-                  type="button"
-                  className="checklist__remove"
-                  onClick={() => handleRemove(item)}
-                  disabled={disabled || pendingIds.has(item.id)}
-                  aria-label={`Eliminar "${item.text}"`}
-                >
-                  <X size={16} aria-hidden="true" />
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+              ))}
+            </ul>
+          </SortableContext>
+        </DndContext>
       )}
 
       <form className="checklist__add" onSubmit={handleAdd}>

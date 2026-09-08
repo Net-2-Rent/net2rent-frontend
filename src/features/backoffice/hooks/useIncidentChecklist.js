@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   getIncidentChecklist,
   addChecklistItem,
   setChecklistItemDone,
   deleteChecklistItem,
+  reorderChecklistItems,
 } from "../services/incidentApi.js";
 
 export function useIncidentChecklist(incidentId) {
@@ -12,6 +13,11 @@ export function useIncidentChecklist(incidentId) {
   const [error, setError] = useState(null);
   const [adding, setAdding] = useState(false);
   const [pendingIds, setPendingIds] = useState(() => new Set());
+
+  const itemsRef = useRef(items);
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
 
   useEffect(() => {
     if (incidentId == null) return;
@@ -49,8 +55,8 @@ export function useIncidentChecklist(incidentId) {
     async (text) => {
       setAdding(true);
       try {
-        const created = await addChecklistItem(incidentId, text);
-        setItems((prev) => [...prev, created]);
+        const list = await addChecklistItem(incidentId, text);
+        setItems(list);
       } finally {
         setAdding(false);
       }
@@ -62,8 +68,8 @@ export function useIncidentChecklist(incidentId) {
     async (itemId, done) => {
       markPending(itemId, true);
       try {
-        const updated = await setChecklistItemDone(incidentId, itemId, done);
-        setItems((prev) => prev.map((it) => (it.id === itemId ? updated : it)));
+        const list = await setChecklistItemDone(incidentId, itemId, done);
+        setItems(list);
       } finally {
         markPending(itemId, false);
       }
@@ -75,14 +81,37 @@ export function useIncidentChecklist(incidentId) {
     async (itemId) => {
       markPending(itemId, true);
       try {
-        await deleteChecklistItem(incidentId, itemId);
-        setItems((prev) => prev.filter((it) => it.id !== itemId));
+        const list = await deleteChecklistItem(incidentId, itemId);
+        setItems(list);
       } catch (err) {
         markPending(itemId, false);
         throw err;
       }
     },
     [incidentId, markPending],
+  );
+
+  const reorderItem = useCallback(
+    async (fromIndex, toIndex) => {
+      if (fromIndex === toIndex) return;
+      const previous = itemsRef.current;
+      const next = [...previous];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+
+      setItems(next);
+      try {
+        const list = await reorderChecklistItems(
+          incidentId,
+          next.map((i) => i.id),
+        );
+        setItems(list);
+      } catch (err) {
+        setItems(previous);
+        throw err;
+      }
+    },
+    [incidentId],
   );
 
   return {
@@ -94,5 +123,6 @@ export function useIncidentChecklist(incidentId) {
     addItem,
     toggleItem,
     removeItem,
+    reorderItem,
   };
 }

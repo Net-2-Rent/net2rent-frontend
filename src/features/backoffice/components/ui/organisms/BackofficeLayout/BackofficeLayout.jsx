@@ -7,7 +7,7 @@ import {
   getInitialTheme,
   setTheme,
 } from "../../../../../../shared/utils/theme.js";
-import { NAV_BY_ROLE } from "../../../../../../shared/constants/nav.js";
+import { NAV_BY_ROLE, ROLES } from "../../../../../../shared/constants/nav.js";
 import { listIncidents } from "../../../../services/incidentApi.js";
 import "./BackofficeLayout.scss";
 
@@ -42,14 +42,29 @@ export default function BackofficeLayout() {
 
   const userName = `${user.firstName} ${user.lastName}`.trim();
 
-  const [newIncidentsCount, setNewIncidentsCount] = useState(0);
+  const [badgeCount, setBadgeCount] = useState(0);
+  const [badgeLabel, setBadgeLabel] = useState("");
   useEffect(() => {
     let active = true;
-    listIncidents({ status: "NEW", size: 1 })
-        .then((res) => { if (active) setNewIncidentsCount(res.counters?.NEW ?? 0); })
-        .catch(() => { if (active) setNewIncidentsCount(0); });
+    const isOperator = user.role === ROLES.OPERATOR;
+    const params = isOperator ? { scope: "MINE", size: 1 } : { status: "NEW", size: 1 };
+    listIncidents(params)
+        .then((res) => {
+          if (!active) return;
+          const c = res.counters ?? {};
+          const count = isOperator
+              ? (c.ASSIGNED ?? 0) + (c.IN_PROGRESS ?? 0) + (c.PAUSED ?? 0)
+              : (c.NEW ?? 0);
+          setBadgeCount(count);
+          setBadgeLabel(
+              isOperator
+                  ? `${count} incidencias asignadas a ti`
+                  : `${count} incidencias nuevas`
+          );
+        })
+        .catch(() => { if (active) { setBadgeCount(0); setBadgeLabel(""); } });
     return () => { active = false; };
-  }, [location.pathname]);
+  }, [location.pathname, user.role]);
 
   function toggleTheme() {
     const next = theme === "dark" ? "light" : "dark";
@@ -78,7 +93,8 @@ export default function BackofficeLayout() {
         onLogout={handleLogout}
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
-        newIncidentsCount={newIncidentsCount}
+        badgeCount={badgeCount}
+        badgeLabel={badgeLabel}
       />
       <div className="backoffice-layout__main">
         <StickyHero

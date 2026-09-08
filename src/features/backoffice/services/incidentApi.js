@@ -128,6 +128,7 @@ function toListParams(filters = {}) {
     set("openedTo", filters.openedTo);
     set("sort", filters.sort);
     set("dir", filters.dir);
+    set("scope", filters.scope);
     if (filters.page != null) params.page = filters.page;
     if (filters.size != null) params.size = filters.size;
     return params;

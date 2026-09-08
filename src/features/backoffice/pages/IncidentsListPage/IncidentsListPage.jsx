@@ -4,11 +4,15 @@ import { useIncidentList } from "../../hooks/useIncidentList.js";
 import { listActiveLodgings, listOperators } from "../../services/incidentApi.js";
 import FilterBar from "../../components/ui/molecules/FilterBar/FilterBar.jsx";
 import StatusBadgeIncident from "../../components/ui/molecules/StatusBadgeIncident/StatusBadgeIncident.jsx";
+import ToggleIncident from "../../components/ui/molecules/ToggleIncident/ToggleIncident.jsx";
 import TableIncident from "../../components/ui/organisms/TableIncident/TableIncident.jsx";
 import DropdownField from "../../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx";
 import Input from "../../../../shared/components/ui/atoms/Input/Input.jsx";
 import Skeleton from "../../../../shared/components/ui/atoms/Skeleton/Skeleton.jsx";
 import Button from "../../../../shared/components/ui/atoms/Button/Button.jsx";
+import { useAuthStore } from "../../../auth/store/authStore.js";
+import { ROLES } from "../../../../shared/constants/nav.js";
+import { INCIDENT_SCOPE } from "../../../../shared/constants/incidentScope.js";
 import { INCIDENT_STATUS } from "../../../../shared/constants/incidentStatus.js";
 import { ALL_STATUS } from "../../../../shared/constants/statusBadgeIncident.js";
 import "./IncidentsListPage.scss";
@@ -34,6 +38,17 @@ export default function IncidentsListPage() {
         filters, rows, counters, loading, error,
         page, totalPages, totalElements, updateParams, goToPage, reload,
     } = useIncidentList();
+
+    const role = useAuthStore((s) => s.user?.role);
+    const isOperator = role === ROLES.OPERATOR;
+    const scopeValue = filters.scope || INCIDENT_SCOPE.MINE;
+
+    // El operario entra por defecto en "Asignadas a mí" y ordenado por prioridad (CU-EXE-01).
+    useEffect(() => {
+        if (isOperator && !filters.scope) {
+            updateParams({ scope: INCIDENT_SCOPE.MINE, sort: "priority", dir: "desc" });
+        }
+    }, [isOperator, filters.scope, updateParams]);
 
     const [lodgings, setLodgings] = useState([]);
     const [operators, setOperators] = useState([]);
@@ -88,6 +103,15 @@ export default function IncidentsListPage() {
         <section className="incidents-page">
             <header className="incidents-page__header">
                 <h1 className="incidents-page__title">Incidencias</h1>
+
+                {isOperator && (
+                    <ToggleIncident
+                        className="incidents-page__scope"
+                        value={scopeValue}
+                        onChange={(next) => updateParams({ scope: next })}
+                    />
+                )}
+
                 <div className="incidents-page__counters" role="group" aria-label="Filtrar por estado">
                     <StatusBadgeIncident
                         status={ALL_STATUS} count={openTotal}
@@ -110,6 +134,7 @@ export default function IncidentsListPage() {
                 onReload={reload}
                 reloading={loading}
                 onCreate={() => navigate("/backoffice/nueva-incidencia")}
+                showCreate={!isOperator}
             />
 
             <div className="incidents-page__filters">
@@ -120,13 +145,15 @@ export default function IncidentsListPage() {
                     options={lodgingOptions}
                     aria-label="Filtrar por alojamiento"
                 />
-                <DropdownField
-                    className="incidents-page__filter"
-                    value={operatorValue}
-                    onChange={onOperatorChange}
-                    options={operatorOptions}
-                    aria-label="Filtrar por operario"
-                />
+                {!isOperator && (
+                    <DropdownField
+                        className="incidents-page__filter"
+                        value={operatorValue}
+                        onChange={onOperatorChange}
+                        options={operatorOptions}
+                        aria-label="Filtrar por operario"
+                    />
+                )}
                 <DropdownField
                     className="incidents-page__filter"
                     value={`${filters.sort}:${filters.dir}`}

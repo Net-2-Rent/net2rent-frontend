@@ -16,7 +16,8 @@ export default function SideBar({
   onLogout,
   open = false,
   onClose,
-  newIncidentsCount = 0,
+  badgeCount = 0,
+  badgeLabel,
 }) {
   const items = NAV_BY_ROLE[role] || [];
 
@@ -86,13 +87,13 @@ export default function SideBar({
                   >
                     <Icon size={18} aria-hidden="true" />
                     <span className="sidebar__item-label">{item.label}</span>
-                                        {item.key === "incidents" && newIncidentsCount > 0 && (
-                      <span
-                        className="sidebar__badge"
-                        aria-label={`${newIncidentsCount} incidencias nuevas`}
-                      >
-                        {newIncidentsCount}
-                      </span>
+                    {item.key === "incidents" && badgeCount > 0 && (
+                        <span
+                            className="sidebar__badge"
+                            aria-label={badgeLabel ?? `${badgeCount} incidencias`}
+                        >
+                          {badgeCount}
+                        </span>
                     )}
                   </button>
                 </li>

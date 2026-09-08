@@ -12,6 +12,7 @@ import {
   classifyIncident,
   correctIncidentText,
   rejectIncident,
+  claimIncident,
   startIncident,
   pauseIncident,
   resumeIncident,
@@ -34,6 +35,7 @@ export default function IncidentDetailPage() {
   const { id } = useParams();
   const role = useAuthStore((s) => s.user?.role);
   const canTriage = role === ROLES.COORDINATOR || role === ROLES.ADMIN;
+  const isOperator = role === ROLES.OPERATOR;
 
   const [incident, setIncident] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,6 +49,9 @@ export default function IncidentDetailPage() {
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejecting, setRejecting] = useState(false);
   const [rejectError, setRejectError] = useState(null);
+
+  const [claiming, setClaiming] = useState(false);
+  const [claimError, setClaimError] = useState(null);
 
   const [executing, setExecuting] = useState(false);
   const [executeError, setExecuteError] = useState(null);
@@ -161,6 +166,23 @@ export default function IncidentDetailPage() {
     }
   }
 
+  async function handleClaim() {
+    setClaiming(true);
+    setClaimError(null);
+    try {
+      const updated = await claimIncident(id);
+      setIncident(updated);
+    } catch (err) {
+      setClaimError(
+        err.response?.data?.message ??
+          "No se pudo asignar la incidencia. Inténtalo de nuevo.",
+      );
+      if (err.response?.status === 409) loadIncident();
+    } finally {
+      setClaiming(false);
+    }
+  }
+
   async function handleStart() {
     setExecuting(true);
     setExecuteError(null);
@@ -214,6 +236,11 @@ export default function IncidentDetailPage() {
   if (loadError) return <p role="alert">{loadError}</p>;
   if (!incident) return null;
 
+  const canClaim =
+    isOperator &&
+    incident.assigneeName == null &&
+    incident.status === INCIDENT_STATUS.NEW;
+
   const isUnclassified = incident.category == null;
   const isTerminal =
     incident.status === INCIDENT_STATUS.CLOSED ||
@@ -231,6 +258,12 @@ export default function IncidentDetailPage() {
   const canEdit = canTriage && !isUnclassified && !editing;
   const heroActions = (
     <>
+      {canClaim && (
+        <Button variant="primary" onClick={handleClaim} disabled={claiming}>
+          {claiming ? "Asignando…" : "Asignármela"}
+        </Button>
+      )}
+
       <IncidentPrimaryAction
         status={incident.status}
         loading={executing}
@@ -289,6 +322,12 @@ export default function IncidentDetailPage() {
         category={incident.category}
         actions={heroActions}
       />
+
+      {claimError && (
+        <NoticeBanner tone="error" onClose={() => setClaimError(null)}>
+          {claimError}
+        </NoticeBanner>
+      )}
 
       {executeError && (
         <NoticeBanner tone="error" onClose={() => setExecuteError(null)}>

@@ -113,6 +113,11 @@ export async function rejectIncident(id, reason) {
   return data;
 }
 
+export async function claimIncident(id) {
+    const { data } = await httpClient.patch(`/incidents/${id}/claim`);
+    return data;
+}
+
 export async function startIncident(id) {
   const { data } = await httpClient.patch(`/incidents/${id}/start`);
   return data;
@@ -152,6 +157,7 @@ function toListParams(filters = {}) {
   set("openedTo", filters.openedTo);
   set("sort", filters.sort);
   set("dir", filters.dir);
+    set("scope", filters.scope);
   if (filters.page != null) params.page = filters.page;
   if (filters.size != null) params.size = filters.size;
   return params;

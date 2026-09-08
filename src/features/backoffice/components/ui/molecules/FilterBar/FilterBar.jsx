@@ -3,10 +3,7 @@ import DropdownField from "../../../../../../shared/components/ui/atoms/Dropdown
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
 import Spinner from "../../../../../../shared/components/ui/atoms/Spinner/Spinner.jsx";
 import { INCIDENT_PRIORITY_LABEL } from "../../../../../../shared/constants/incidentPriority.js";
-import {
-  INCIDENT_CATEGORY,
-  INCIDENT_CATEGORY_LABEL,
-} from "../../../../../../shared/constants/incidentCategory.js";
+import { INCIDENT_CATEGORY, INCIDENT_CATEGORY_LABEL } from "../../../../../../shared/constants/incidentCategory.js";
 import "./FilterBar.scss";
 
 const CATEGORY_FILTER_OPTIONS = [
@@ -38,6 +35,7 @@ export default function FilterBar({
   placeholder = "Buscar por código, alojamiento o descripción",
   categoryOptions = CATEGORY_FILTER_OPTIONS,
   priorityOptions = PRIORITY_FILTER_OPTIONS,
+  showCreate = true,
   className = "",
 }) {
   const classes = ["filter-bar", className].filter(Boolean).join(" ");
@@ -66,9 +64,11 @@ export default function FilterBar({
         {reloading && <Spinner size="sm" />}
         Recargar
       </Button>
-      <Button variant="primary" className="filter-bar__create" onClick={onCreate}>
-        Nueva incidencia
-      </Button>
+      {showCreate && (
+          <Button variant="primary" className="filter-bar__create" onClick={onCreate}>
+              Nueva incidencia
+          </Button>
+      )}
     </div>
   );
 }

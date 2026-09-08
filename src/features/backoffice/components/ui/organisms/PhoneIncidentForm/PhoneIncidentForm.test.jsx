@@ -47,20 +47,17 @@ describe("PhoneIncidentForm", () => {
   it("blocks submission when the opening date is in the future", async () => {
     const handleSubmit = renderPhoneIncidentForm();
 
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    fireEvent.change(screen.getByLabelText(/^Fecha de apertura/), {
-      target: { value: tomorrow.toISOString().slice(0, 10) },
+    fireEvent.change(screen.getByLabelText(/^Hora de apertura/), {
+      target: { value: "23:59" },
     });
     fireEvent.click(
-        screen.getByRole("button", { name: "Registrar incidencia" }),
+      screen.getByRole("button", { name: "Registrar incidencia" }),
     );
 
     expect(
-        await screen.findByText("No se admiten fechas ni horas futuras.", {
-          selector: '[role="alert"] *',
-        }),
+      await screen.findByText("No se admiten fechas ni horas futuras.", {
+        selector: '[role="alert"] *',
+      }),
     ).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();
   });

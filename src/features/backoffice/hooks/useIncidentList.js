@@ -23,6 +23,7 @@ export function useIncidentList() {
             lodgingId: get("lodgingId"),
             assigneeId: get("assigneeId"),
             unassigned: searchParams.get("unassigned") === "true" || undefined,
+            scope: get("scope"),
             openedFrom: get("openedFrom"),
             openedTo: get("openedTo"),
             sort: get("sort") || "openedAt",

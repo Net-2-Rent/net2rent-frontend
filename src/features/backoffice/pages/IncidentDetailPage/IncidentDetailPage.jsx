@@ -21,6 +21,7 @@ import ActionsMenu from "../../components/ui/molecules/ActionsMenu/ActionsMenu";
 import RejectionModal from "../../components/ui/organisms/RejectionModal/RejectionModal";
 import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox";
 import { useIncidentChecklist } from "../../hooks/useIncidentChecklist";
+import { useIncidentTimeline } from "../../hooks/useIncidentTimeline.js";
 import { useAuthStore } from "../../../auth/store/authStore";
 import { ROLES } from "../../../../shared/constants/nav";
 import { INCIDENT_STATUS } from "../../../../shared/constants/incidentStatus";
@@ -30,6 +31,7 @@ import LodgingCard from "../../components/ui/organisms/LodgingCard/LodgingCard";
 import IncidentPrimaryAction from "../../components/ui/molecules/IncidentPrimaryAction/IncidentPrimaryAction";
 import PauseModal from "../../components/ui/organisms/PauseModal/PauseModal";
 import NoticeBanner from "../../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner";
+import ChronologyCard from "../../components/ui/organisms/ChronologyCard/ChronologyCard.jsx";
 
 export default function IncidentDetailPage() {
   const { id } = useParams();
@@ -71,6 +73,14 @@ export default function IncidentDetailPage() {
     removeItem: removeChecklistItem,
     reorderItem: reorderChecklistItem,
   } = useIncidentChecklist(id);
+
+  const {
+    entries: timelineEntries,
+    loading: timelineLoading,
+    error: timelineError,
+    submitting: timelineSubmitting,
+    addComment: addTimelineComment,
+  } = useIncidentTimeline(id);
 
   const loadIncident = useCallback(async () => {
     setLoading(true);
@@ -404,6 +414,15 @@ export default function IncidentDetailPage() {
         onToggle={toggleChecklistItem}
         onRemove={removeChecklistItem}
         onReorder={reorderChecklistItem}
+      />
+
+      <ChronologyCard
+          entries={timelineEntries}
+          onAddComment={addTimelineComment}
+          loading={timelineLoading}
+          error={timelineError}
+          submitting={timelineSubmitting}
+          canComment={!isTerminal}
       />
 
       <RejectionModal

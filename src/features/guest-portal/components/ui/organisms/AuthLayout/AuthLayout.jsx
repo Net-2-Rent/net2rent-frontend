@@ -7,9 +7,10 @@ import Logo from '../../atoms/Logo/Logo'
 export default function AuthLayout({ children }) {
   return (
     <GradientBackground className="auth-layout">
+      <a className="skip-link" href="#main-content">Saltar al contenido</a>
       <ThemeToggle />
       <Logo className="auth-layout__logo" />
-      <Card variant="auth" className="auth-layout__card">
+      <Card variant="auth" className="auth-layout__card" id="main-content">
         {children}
       </Card>
     </GradientBackground>

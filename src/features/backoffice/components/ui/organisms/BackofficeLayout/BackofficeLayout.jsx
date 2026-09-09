@@ -47,23 +47,32 @@ export default function BackofficeLayout() {
   useEffect(() => {
     let active = true;
     const isOperator = user.role === ROLES.OPERATOR;
-    const params = isOperator ? { scope: "MINE", size: 1 } : { status: "NEW", size: 1 };
+    const params = isOperator
+      ? { scope: "MINE", size: 1 }
+      : { status: "NEW", size: 1 };
     listIncidents(params)
-        .then((res) => {
-          if (!active) return;
-          const c = res.counters ?? {};
-          const count = isOperator
-              ? (c.ASSIGNED ?? 0) + (c.IN_PROGRESS ?? 0) + (c.PAUSED ?? 0)
-              : (c.NEW ?? 0);
-          setBadgeCount(count);
-          setBadgeLabel(
-              isOperator
-                  ? `${count} incidencias asignadas a ti`
-                  : `${count} incidencias nuevas`
-          );
-        })
-        .catch(() => { if (active) { setBadgeCount(0); setBadgeLabel(""); } });
-    return () => { active = false; };
+      .then((res) => {
+        if (!active) return;
+        const c = res.counters ?? {};
+        const count = isOperator
+          ? (c.ASSIGNED ?? 0) + (c.IN_PROGRESS ?? 0) + (c.PAUSED ?? 0)
+          : (c.NEW ?? 0);
+        setBadgeCount(count);
+        setBadgeLabel(
+          isOperator
+            ? `${count} incidencias asignadas a ti`
+            : `${count} incidencias nuevas`,
+        );
+      })
+      .catch(() => {
+        if (active) {
+          setBadgeCount(0);
+          setBadgeLabel("");
+        }
+      });
+    return () => {
+      active = false;
+    };
   }, [location.pathname, user.role]);
 
   function toggleTheme() {
@@ -85,6 +94,9 @@ export default function BackofficeLayout() {
 
   return (
     <div className="backoffice-layout">
+      <a className="skip-link" href="#backoffice-content">
+        Saltar al contenido
+      </a>
       <SideBar
         role={user.role}
         activeItem={activeKey}
@@ -98,13 +110,18 @@ export default function BackofficeLayout() {
       />
       <div className="backoffice-layout__main">
         <StickyHero
-          title={activeItem?.label ?? ""}
+          title={
+            activeItem?.label ??
+            (location.pathname.startsWith("/backoffice/incidencias/")
+              ? "Detalle de incidencia"
+              : "")
+          }
           subtitle={activeItem?.subtitle ?? ""}
           theme={theme}
           onToggleTheme={toggleTheme}
           onMenuClick={() => setMenuOpen(true)}
         />
-        <main className="backoffice-layout__content">
+        <main className="backoffice-layout__content" id="backoffice-content">
           <Outlet />
         </main>
       </div>

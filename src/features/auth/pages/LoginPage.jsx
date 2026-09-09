@@ -22,8 +22,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="login-page">
-      {/* Izquierda: fondo blanco con la tarjeta de login en navy */}
+    <main className="login-page" id="login-main">
+      <a className="skip-link" href="#login-main">Saltar al contenido</a>
       <div className="login-page__form-panel">
         <section className="login-page__card" aria-labelledby="login-title">
           <div className="login-page__brand">

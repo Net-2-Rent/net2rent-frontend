@@ -101,7 +101,7 @@ export default function IncidentsListPage() {
 
     return (
         <section className="incidents-page">
-            <header className="incidents-page__header">
+            <div className="incidents-page__header">
                 <h1 className="incidents-page__title">Incidencias</h1>
 
                 {isOperator && (
@@ -122,7 +122,7 @@ export default function IncidentsListPage() {
                             active={currentStatus === s} onClick={() => onStatusClick(s)} />
                     ))}
                 </div>
-            </header>
+            </div>
 
             <FilterBar
                 search={search}

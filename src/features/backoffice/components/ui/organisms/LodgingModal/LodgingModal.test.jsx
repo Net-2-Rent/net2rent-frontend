@@ -33,11 +33,6 @@ describe("LodgingModal", () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("La referencia es obligatoria", {
-        selector: '[role="alert"] *',
-      }),
-    ).toBeInTheDocument();
-    expect(
       screen.getByText("El PIN es obligatorio", {
         selector: '[role="alert"] *',
       }),

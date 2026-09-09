@@ -7,7 +7,16 @@ import ChecklistCard from "../../components/ui/organisms/ChecklistCard/Checklist
 import IncidentEditForm from "../../components/ui/organisms/IncidentEditForm/IncidentEditForm";
 import Button from "../../../../shared/components/ui/atoms/Button/Button";
 import Spinner from "../../../../shared/components/ui/atoms/Spinner/Spinner";
-import { getIncidentById, classifyIncident, correctIncidentText, rejectIncident, claimIncident } from "../../services/incidentApi";
+import {
+  getIncidentById,
+  classifyIncident,
+  correctIncidentText,
+  rejectIncident,
+  claimIncident,
+  startIncident,
+  pauseIncident,
+  resumeIncident,
+} from "../../services/incidentApi";
 import ActionsMenu from "../../components/ui/molecules/ActionsMenu/ActionsMenu";
 import RejectionModal from "../../components/ui/organisms/RejectionModal/RejectionModal";
 import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox";
@@ -18,6 +27,9 @@ import { INCIDENT_STATUS } from "../../../../shared/constants/incidentStatus";
 import "./IncidentDetailPage.scss";
 import ReporterCard from "../../components/ui/organisms/ReporterCard/ReporterCard";
 import LodgingCard from "../../components/ui/organisms/LodgingCard/LodgingCard";
+import IncidentPrimaryAction from "../../components/ui/molecules/IncidentPrimaryAction/IncidentPrimaryAction";
+import PauseModal from "../../components/ui/organisms/PauseModal/PauseModal";
+import NoticeBanner from "../../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner";
 
 export default function IncidentDetailPage() {
   const { id } = useParams();
@@ -40,6 +52,13 @@ export default function IncidentDetailPage() {
 
   const [claiming, setClaiming] = useState(false);
   const [claimError, setClaimError] = useState(null);
+
+  const [executing, setExecuting] = useState(false);
+  const [executeError, setExecuteError] = useState(null);
+
+  const [pauseOpen, setPauseOpen] = useState(false);
+  const [pausing, setPausing] = useState(false);
+  const [pauseError, setPauseError] = useState(null);
 
   const {
     items: checklistItems,
@@ -155,7 +174,7 @@ export default function IncidentDetailPage() {
       setIncident(updated);
     } catch (err) {
       setClaimError(
-          err.response?.data?.message ??
+        err.response?.data?.message ??
           "No se pudo asignar la incidencia. Inténtalo de nuevo.",
       );
       if (err.response?.status === 409) loadIncident();
@@ -164,14 +183,63 @@ export default function IncidentDetailPage() {
     }
   }
 
+  async function handleStart() {
+    setExecuting(true);
+    setExecuteError(null);
+    try {
+      const updated = await startIncident(id);
+      setIncident(updated);
+    } catch (err) {
+      setExecuteError(
+        err.response?.data?.message ??
+          "No se pudo comenzar la incidencia. Inténtalo de nuevo.",
+      );
+    } finally {
+      setExecuting(false);
+    }
+  }
+
+  async function handleResume() {
+    setExecuting(true);
+    setExecuteError(null);
+    try {
+      const updated = await resumeIncident(id);
+      setIncident(updated);
+    } catch (err) {
+      setExecuteError(
+        err.response?.data?.message ??
+          "No se pudo reanudar la incidencia. Inténtalo de nuevo.",
+      );
+    } finally {
+      setExecuting(false);
+    }
+  }
+
+  async function handlePause(reason) {
+    setPausing(true);
+    setPauseError(null);
+    try {
+      const updated = await pauseIncident(id, reason);
+      setIncident(updated);
+      setPauseOpen(false);
+    } catch (err) {
+      setPauseError(
+        err.response?.data?.message ??
+          "No se pudo pausar la incidencia. Inténtalo de nuevo.",
+      );
+    } finally {
+      setPausing(false);
+    }
+  }
+
   if (loading) return <Spinner />;
   if (loadError) return <p role="alert">{loadError}</p>;
   if (!incident) return null;
 
   const canClaim =
-      isOperator &&
-      incident.assigneeName == null &&
-      incident.status === INCIDENT_STATUS.NEW;
+    isOperator &&
+    incident.assigneeName == null &&
+    incident.status === INCIDENT_STATUS.NEW;
 
   const isUnclassified = incident.category == null;
   const isTerminal =
@@ -188,51 +256,57 @@ export default function IncidentDetailPage() {
     ].includes(incident.status);
 
   const canEdit = canTriage && !isUnclassified && !editing;
-  const heroActions =
-    canEdit || canReject || canClaim ? (
-      <>
-        {canClaim && (
-            <Button
-                variant="primary"
-                onClick={handleClaim}
-                disabled={claiming}
-            >
-              {claiming ? "Asignando…" : "Asignármela"}
-            </Button>
-        )}
+  const heroActions = (
+    <>
+      {canClaim && (
+        <Button variant="primary" onClick={handleClaim} disabled={claiming}>
+          {claiming ? "Asignando…" : "Asignármela"}
+        </Button>
+      )}
 
-        {canEdit && (
-          <Button
-            variant="secondary"
-            aria-label="Editar incidencia"
-            onClick={() => {
-              setSaved(false);
-              setSaveError(null);
-              setEditing(true);
-            }}
-          >
-            <Pencil size={18} aria-hidden="true" />
-          </Button>
-        )}
+      <IncidentPrimaryAction
+        status={incident.status}
+        loading={executing}
+        onStart={handleStart}
+        onPause={() => {
+          setPauseError(null);
+          setPauseOpen(true);
+        }}
+        onResume={handleResume}
+      />
 
-        {canReject && (
-          <ActionsMenu
-            items={[
-              {
-                id: "reject",
-                label: "Rechazar incidencia",
-                icon: XCircle,
-                danger: true,
-                onSelect: () => {
-                  setRejectError(null);
-                  setRejectOpen(true);
-                },
+      {canEdit && (
+        <Button
+          variant="secondary"
+          aria-label="Editar incidencia"
+          onClick={() => {
+            setSaved(false);
+            setSaveError(null);
+            setEditing(true);
+          }}
+        >
+          <Pencil size={18} aria-hidden="true" />
+        </Button>
+      )}
+
+      {canReject && (
+        <ActionsMenu
+          items={[
+            {
+              id: "reject",
+              label: "Rechazar incidencia",
+              icon: XCircle,
+              danger: true,
+              onSelect: () => {
+                setRejectError(null);
+                setRejectOpen(true);
               },
-            ]}
-          />
-        )}
-      </>
-    ) : null;
+            },
+          ]}
+        />
+      )}
+    </>
+  );
 
   return (
     <section className="incident-detail">
@@ -249,7 +323,17 @@ export default function IncidentDetailPage() {
         actions={heroActions}
       />
 
-      {claimError && <NoticeBox tone="danger">{claimError}</NoticeBox>}
+      {claimError && (
+        <NoticeBanner tone="error" onClose={() => setClaimError(null)}>
+          {claimError}
+        </NoticeBanner>
+      )}
+
+      {executeError && (
+        <NoticeBanner tone="error" onClose={() => setExecuteError(null)}>
+          {executeError}
+        </NoticeBanner>
+      )}
 
       {incident.status === INCIDENT_STATUS.REJECTED &&
         incident.rejectionReason && (
@@ -330,6 +414,16 @@ export default function IncidentDetailPage() {
         onReject={handleReject}
         submitting={rejecting}
         error={rejectError}
+      />
+
+      <PauseModal
+        isOpen={pauseOpen}
+        onClose={() => setPauseOpen(false)}
+        incidentCode={incident.code}
+        lodgingName={incident.lodgingName}
+        onPause={handlePause}
+        submitting={pausing}
+        error={pauseError}
       />
     </section>
   );

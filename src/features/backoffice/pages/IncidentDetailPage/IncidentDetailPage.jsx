@@ -265,7 +265,7 @@ export default function IncidentDetailPage() {
       INCIDENT_STATUS.PAUSED,
     ].includes(incident.status);
 
-  const canEdit = canTriage && !isUnclassified && !editing;
+  const canEdit = canTriage && !isUnclassified && !editing && !isTerminal;
   const heroActions = (
     <>
       {canClaim && (
@@ -352,9 +352,7 @@ export default function IncidentDetailPage() {
           </NoticeBox>
         )}
 
-      {canTriage &&
-        (isUnclassified || editing) &&
-        !isUnclassified === false && (
+      {canTriage && isUnclassified && !isTerminal && (
           <ClassificationCard
             onSubmit={handleClassify}
             primaryLabel={

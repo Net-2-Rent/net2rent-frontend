@@ -12,13 +12,13 @@ export default function ContentLayout({ header, children, contained = true }) {
         <div className="content-layout__header-inner">{header}</div>
       </GradientBackground>
 
-      <div className="content-layout__body">
+      <main id="main-content" className="content-layout__body">
         {contained ? (
           <Card variant="content">{children}</Card>
         ) : (
           <div className="content-layout__plain">{children}</div>
         )}
-      </div>
+      </main>
     </div>
   )
 }

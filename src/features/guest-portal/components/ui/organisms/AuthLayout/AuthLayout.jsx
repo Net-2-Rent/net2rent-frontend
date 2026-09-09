@@ -10,7 +10,7 @@ export default function AuthLayout({ children }) {
       <a className="skip-link" href="#main-content">Saltar al contenido</a>
       <ThemeToggle />
       <Logo className="auth-layout__logo" />
-      <Card variant="auth" className="auth-layout__card" id="main-content">
+      <Card variant="auth" className="auth-layout__card" id="main-content" role="main">
         {children}
       </Card>
     </GradientBackground>

@@ -17,10 +17,13 @@ import {
   startIncident,
   pauseIncident,
   resumeIncident,
+  resolveIncident,
 } from "../../services/incidentApi";
 import ActionsMenu from "../../components/ui/molecules/ActionsMenu/ActionsMenu";
 import RejectionModal from "../../components/ui/organisms/RejectionModal/RejectionModal";
 import ConfirmationModal from "../../components/ui/organisms/ConfirmationModal/ConfirmationModal.jsx";
+import PauseModal from "../../components/ui/organisms/PauseModal/PauseModal";
+import ResolutionModal from "../../components/ui/organisms/ResolutionModal/ResolutionModal";
 import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox";
 import { useIncidentChecklist } from "../../hooks/useIncidentChecklist";
 import { useIncidentTimeline } from "../../hooks/useIncidentTimeline.js";
@@ -31,9 +34,9 @@ import "./IncidentDetailPage.scss";
 import ReporterCard from "../../components/ui/organisms/ReporterCard/ReporterCard";
 import LodgingCard from "../../components/ui/organisms/LodgingCard/LodgingCard";
 import IncidentPrimaryAction from "../../components/ui/molecules/IncidentPrimaryAction/IncidentPrimaryAction";
-import PauseModal from "../../components/ui/organisms/PauseModal/PauseModal";
 import NoticeBanner from "../../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner";
 import ChronologyCard from "../../components/ui/organisms/ChronologyCard/ChronologyCard.jsx";
+import { withMinDuration } from "../../../../shared/utils/withMinDuration.js";
 
 export default function IncidentDetailPage() {
   const { id } = useParams();
@@ -68,6 +71,10 @@ export default function IncidentDetailPage() {
   const [pauseOpen, setPauseOpen] = useState(false);
   const [pausing, setPausing] = useState(false);
   const [pauseError, setPauseError] = useState(null);
+
+  const [resolveOpen, setResolveOpen] = useState(false);
+  const [resolving, setResolving] = useState(false);
+  const [resolveError, setResolveError] = useState(null);
 
   const {
     items: checklistItems,
@@ -201,7 +208,7 @@ export default function IncidentDetailPage() {
     } catch (err) {
       setCloseOpen(false);
       setCloseError(
-          err.response?.data?.message ??
+        err.response?.data?.message ??
           "No se pudo cerrar la incidencia. Inténtalo de nuevo.",
       );
     }
@@ -229,7 +236,7 @@ export default function IncidentDetailPage() {
     setExecuting(true);
     setExecuteError(null);
     try {
-      const updated = await startIncident(id);
+      const updated = await withMinDuration(startIncident(id));
       setIncident(updated);
       await reloadTimeline();
     } catch (err) {
@@ -242,22 +249,22 @@ export default function IncidentDetailPage() {
     }
   }
 
-  async function handleResume() {
-    setExecuting(true);
-    setExecuteError(null);
-    try {
-      const updated = await resumeIncident(id);
-      setIncident(updated);
-      await reloadTimeline();
-    } catch (err) {
-      setExecuteError(
-        err.response?.data?.message ??
-          "No se pudo reanudar la incidencia. Inténtalo de nuevo.",
-      );
-    } finally {
-      setExecuting(false);
-    }
-  }
+ async function handleResume() {
+   setExecuting(true);
+   setExecuteError(null);
+   try {
+     const updated = await withMinDuration(resumeIncident(id));
+     setIncident(updated);
+     await reloadTimeline();
+   } catch (err) {
+     setExecuteError(
+       err.response?.data?.message ??
+         "No se pudo reanudar la incidencia. Inténtalo de nuevo.",
+     );
+   } finally {
+     setExecuting(false);
+   }
+ }
 
   async function handlePause(reason) {
     setPausing(true);
@@ -274,6 +281,24 @@ export default function IncidentDetailPage() {
       );
     } finally {
       setPausing(false);
+    }
+  }
+
+  async function handleResolve({ minutes, note }) {
+    setResolving(true);
+    setResolveError(null);
+    try {
+      const updated = await resolveIncident(id, { minutes, note });
+      setIncident(updated);
+      await reloadTimeline();
+      setResolveOpen(false);
+    } catch (err) {
+      setResolveError(
+        err.response?.data?.message ??
+          "No se pudo resolver la incidencia. Inténtalo de nuevo.",
+      );
+    } finally {
+      setResolving(false);
     }
   }
 
@@ -300,22 +325,48 @@ export default function IncidentDetailPage() {
       INCIDENT_STATUS.PAUSED,
     ].includes(incident.status);
 
-  const canClose =
-      canTriage && incident.status === INCIDENT_STATUS.RESOLVED;
+  const canClose = canTriage && incident.status === INCIDENT_STATUS.RESOLVED;
 
   const canEdit = canTriage && !isUnclassified && !editing && !isTerminal;
+
+ const secondaryActions = [];
+
+ if (incident.status === INCIDENT_STATUS.IN_PROGRESS) {
+   secondaryActions.push({
+     id: "pause",
+     label: "Pausar trabajo",
+     onSelect: () => {
+       setPauseError(null);
+       setPauseOpen(true);
+     },
+   });
+ }
+
+ if (canReject) {
+   secondaryActions.push({
+     id: "reject",
+     label: "Rechazar incidencia",
+     icon: XCircle,
+     danger: true,
+     onSelect: () => {
+       setRejectError(null);
+       setRejectOpen(true);
+     },
+   });
+ }
+
   const heroActions = (
     <>
       {canClose && (
-          <Button
-              variant="primary"
-              onClick={() => {
-                setCloseError(null);
-                setCloseOpen(true);
-              }}
-          >
-            Cerrar
-          </Button>
+        <Button
+          variant="primary"
+          onClick={() => {
+            setCloseError(null);
+            setCloseOpen(true);
+          }}
+        >
+          Cerrar
+        </Button>
       )}
 
       {canClaim && (
@@ -328,9 +379,9 @@ export default function IncidentDetailPage() {
         status={incident.status}
         loading={executing}
         onStart={handleStart}
-        onPause={() => {
-          setPauseError(null);
-          setPauseOpen(true);
+        onResolve={() => {
+          setResolveError(null);
+          setResolveOpen(true);
         }}
         onResume={handleResume}
       />
@@ -349,22 +400,7 @@ export default function IncidentDetailPage() {
         </Button>
       )}
 
-      {canReject && (
-        <ActionsMenu
-          items={[
-            {
-              id: "reject",
-              label: "Rechazar incidencia",
-              icon: XCircle,
-              danger: true,
-              onSelect: () => {
-                setRejectError(null);
-                setRejectOpen(true);
-              },
-            },
-          ]}
-        />
-      )}
+      {secondaryActions.length > 0 && <ActionsMenu items={secondaryActions} />}
     </>
   );
 
@@ -396,15 +432,15 @@ export default function IncidentDetailPage() {
       )}
 
       {closedNotice && (
-          <NoticeBanner tone="success" onClose={() => setClosedNotice(false)}>
-            Incidencia cerrada.
-          </NoticeBanner>
+        <NoticeBanner tone="success" onClose={() => setClosedNotice(false)}>
+          Incidencia cerrada.
+        </NoticeBanner>
       )}
 
       {closeError && (
-          <NoticeBanner tone="error" onClose={() => setCloseError(null)}>
-            {closeError}
-          </NoticeBanner>
+        <NoticeBanner tone="error" onClose={() => setCloseError(null)}>
+          {closeError}
+        </NoticeBanner>
       )}
 
       {incident.status === INCIDENT_STATUS.REJECTED &&
@@ -415,16 +451,16 @@ export default function IncidentDetailPage() {
         )}
 
       {canTriage && isUnclassified && !isTerminal && (
-          <ClassificationCard
-            onSubmit={handleClassify}
-            primaryLabel={
-              isUnclassified ? "Guardar clasificación" : "Guardar cambios"
-            }
-            saving={saving}
-            error={saveError}
-            saved={saved}
-          />
-        )}
+        <ClassificationCard
+          onSubmit={handleClassify}
+          primaryLabel={
+            isUnclassified ? "Guardar clasificación" : "Guardar cambios"
+          }
+          saving={saving}
+          error={saveError}
+          saved={saved}
+        />
+      )}
 
       {canTriage && !isUnclassified && editing && (
         <IncidentEditForm
@@ -477,12 +513,12 @@ export default function IncidentDetailPage() {
       />
 
       <ChronologyCard
-          entries={timelineEntries}
-          onAddComment={addTimelineComment}
-          loading={timelineLoading}
-          error={timelineError}
-          submitting={timelineSubmitting}
-          canComment={!isTerminal}
+        entries={timelineEntries}
+        onAddComment={addTimelineComment}
+        loading={timelineLoading}
+        error={timelineError}
+        submitting={timelineSubmitting}
+        canComment={!isTerminal}
       />
 
       <RejectionModal
@@ -505,14 +541,26 @@ export default function IncidentDetailPage() {
         error={pauseError}
       />
 
+      <ResolutionModal
+        isOpen={resolveOpen}
+        onClose={() => setResolveOpen(false)}
+        incidentCode={incident.code}
+        lodgingName={incident.lodgingName}
+        onResolve={handleResolve}
+        submitting={resolving}
+        error={resolveError}
+      />
+
       <ConfirmationModal
-          isOpen={closeOpen}
-          onClose={() => setCloseOpen(false)}
-          onConfirm={handleClose}
-          title="Cerrar incidencia"
-          subtitle={[incident.code, incident.lodgingName].filter(Boolean).join(" · ")}
-          message="Una vez cerrada, la incidencia no podrá editarse, comentarse ni reabrirse."
-          confirmLabel="Cerrar incidencia"
+        isOpen={closeOpen}
+        onClose={() => setCloseOpen(false)}
+        onConfirm={handleClose}
+        title="Cerrar incidencia"
+        subtitle={[incident.code, incident.lodgingName]
+          .filter(Boolean)
+          .join(" · ")}
+        message="Una vez cerrada, la incidencia no podrá editarse, comentarse ni reabrirse."
+        confirmLabel="Cerrar incidencia"
       />
     </section>
   );

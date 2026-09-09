@@ -140,6 +140,14 @@ export async function resumeIncident(id) {
   return data;
 }
 
+export async function resolveIncident(id, { minutes, note }) {
+  const { data } = await httpClient.patch(`/incidents/${id}/resolve`, {
+    minutes,
+    note: note?.trim(),
+  });
+  return data;
+}
+
 function toListParams(filters = {}) {
   const params = {};
   const set = (key, value) => {

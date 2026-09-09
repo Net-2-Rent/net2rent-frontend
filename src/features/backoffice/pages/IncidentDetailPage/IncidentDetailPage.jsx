@@ -8,6 +8,7 @@ import IncidentEditForm from "../../components/ui/organisms/IncidentEditForm/Inc
 import Button from "../../../../shared/components/ui/atoms/Button/Button";
 import Spinner from "../../../../shared/components/ui/atoms/Spinner/Spinner";
 import {
+  closeIncident,
   getIncidentById,
   classifyIncident,
   correctIncidentText,
@@ -19,6 +20,7 @@ import {
 } from "../../services/incidentApi";
 import ActionsMenu from "../../components/ui/molecules/ActionsMenu/ActionsMenu";
 import RejectionModal from "../../components/ui/organisms/RejectionModal/RejectionModal";
+import ConfirmationModal from "../../components/ui/organisms/ConfirmationModal/ConfirmationModal.jsx";
 import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox";
 import { useIncidentChecklist } from "../../hooks/useIncidentChecklist";
 import { useIncidentTimeline } from "../../hooks/useIncidentTimeline.js";
@@ -52,6 +54,11 @@ export default function IncidentDetailPage() {
   const [rejecting, setRejecting] = useState(false);
   const [rejectError, setRejectError] = useState(null);
 
+  const [closeOpen, setCloseOpen] = useState(false);
+  const [closeError, setCloseError] = useState(null);
+
+  const [closedNotice, setClosedNotice] = useState(false);
+
   const [claiming, setClaiming] = useState(false);
   const [claimError, setClaimError] = useState(null);
 
@@ -80,6 +87,7 @@ export default function IncidentDetailPage() {
     error: timelineError,
     submitting: timelineSubmitting,
     addComment: addTimelineComment,
+    reload: reloadTimeline,
   } = useIncidentTimeline(id);
 
   const loadIncident = useCallback(async () => {
@@ -102,6 +110,12 @@ export default function IncidentDetailPage() {
   useEffect(() => {
     loadIncident();
   }, [loadIncident]);
+
+  useEffect(() => {
+    if (!closedNotice) return;
+    const t = setTimeout(() => setClosedNotice(false), 3000);
+    return () => clearTimeout(t);
+  }, [closedNotice]);
 
   async function handleClassify(values) {
     setSaving(true);
@@ -165,6 +179,7 @@ export default function IncidentDetailPage() {
     try {
       const updated = await rejectIncident(id, reason);
       setIncident(updated);
+      await reloadTimeline();
       setRejectOpen(false);
     } catch (err) {
       setRejectError(
@@ -176,12 +191,29 @@ export default function IncidentDetailPage() {
     }
   }
 
+  async function handleClose() {
+    try {
+      const updated = await closeIncident(id);
+      setIncident(updated);
+      setCloseOpen(false);
+      setClosedNotice(true);
+      await reloadTimeline();
+    } catch (err) {
+      setCloseOpen(false);
+      setCloseError(
+          err.response?.data?.message ??
+          "No se pudo cerrar la incidencia. Inténtalo de nuevo.",
+      );
+    }
+  }
+
   async function handleClaim() {
     setClaiming(true);
     setClaimError(null);
     try {
       const updated = await claimIncident(id);
       setIncident(updated);
+      await reloadTimeline();
     } catch (err) {
       setClaimError(
         err.response?.data?.message ??
@@ -199,6 +231,7 @@ export default function IncidentDetailPage() {
     try {
       const updated = await startIncident(id);
       setIncident(updated);
+      await reloadTimeline();
     } catch (err) {
       setExecuteError(
         err.response?.data?.message ??
@@ -215,6 +248,7 @@ export default function IncidentDetailPage() {
     try {
       const updated = await resumeIncident(id);
       setIncident(updated);
+      await reloadTimeline();
     } catch (err) {
       setExecuteError(
         err.response?.data?.message ??
@@ -231,6 +265,7 @@ export default function IncidentDetailPage() {
     try {
       const updated = await pauseIncident(id, reason);
       setIncident(updated);
+      await reloadTimeline();
       setPauseOpen(false);
     } catch (err) {
       setPauseError(
@@ -265,9 +300,24 @@ export default function IncidentDetailPage() {
       INCIDENT_STATUS.PAUSED,
     ].includes(incident.status);
 
+  const canClose =
+      canTriage && incident.status === INCIDENT_STATUS.RESOLVED;
+
   const canEdit = canTriage && !isUnclassified && !editing && !isTerminal;
   const heroActions = (
     <>
+      {canClose && (
+          <Button
+              variant="primary"
+              onClick={() => {
+                setCloseError(null);
+                setCloseOpen(true);
+              }}
+          >
+            Cerrar
+          </Button>
+      )}
+
       {canClaim && (
         <Button variant="primary" onClick={handleClaim} disabled={claiming}>
           {claiming ? "Asignando…" : "Asignármela"}
@@ -343,6 +393,18 @@ export default function IncidentDetailPage() {
         <NoticeBanner tone="error" onClose={() => setExecuteError(null)}>
           {executeError}
         </NoticeBanner>
+      )}
+
+      {closedNotice && (
+          <NoticeBanner tone="success" onClose={() => setClosedNotice(false)}>
+            Incidencia cerrada.
+          </NoticeBanner>
+      )}
+
+      {closeError && (
+          <NoticeBanner tone="error" onClose={() => setCloseError(null)}>
+            {closeError}
+          </NoticeBanner>
       )}
 
       {incident.status === INCIDENT_STATUS.REJECTED &&
@@ -441,6 +503,16 @@ export default function IncidentDetailPage() {
         onPause={handlePause}
         submitting={pausing}
         error={pauseError}
+      />
+
+      <ConfirmationModal
+          isOpen={closeOpen}
+          onClose={() => setCloseOpen(false)}
+          onConfirm={handleClose}
+          title="Cerrar incidencia"
+          subtitle={[incident.code, incident.lodgingName].filter(Boolean).join(" · ")}
+          message="Una vez cerrada, la incidencia no podrá editarse, comentarse ni reabrirse."
+          confirmLabel="Cerrar incidencia"
       />
     </section>
   );

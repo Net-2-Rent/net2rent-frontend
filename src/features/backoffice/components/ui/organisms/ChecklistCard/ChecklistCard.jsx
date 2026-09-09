@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -113,6 +113,8 @@ export default function ChecklistCard({
   const [draft, setDraft] = useState("");
   const [formError, setFormError] = useState(null);
 
+  const inputRef = useRef(null);
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
     useSensor(KeyboardSensor, {
@@ -129,6 +131,7 @@ export default function ChecklistCard({
     try {
       await onAdd(text);
       setDraft("");
+      requestAnimationFrame(() => inputRef.current?.focus());
     } catch (err) {
       setFormError(
         extractErrorMessage(
@@ -275,6 +278,7 @@ export default function ChecklistCard({
 
       <form className="checklist__add" onSubmit={handleAdd}>
         <Input
+          ref={inputRef}
           className="checklist__input"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}

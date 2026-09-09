@@ -21,17 +21,17 @@ import ActionsMenu from "../../components/ui/molecules/ActionsMenu/ActionsMenu";
 import RejectionModal from "../../components/ui/organisms/RejectionModal/RejectionModal";
 import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox";
 import { useIncidentChecklist } from "../../hooks/useIncidentChecklist";
+import { useIncidentTimeline } from "../../hooks/useIncidentTimeline.js";
 import { useAuthStore } from "../../../auth/store/authStore";
 import { ROLES } from "../../../../shared/constants/nav";
 import { INCIDENT_STATUS } from "../../../../shared/constants/incidentStatus";
 import "./IncidentDetailPage.scss";
 import ReporterCard from "../../components/ui/organisms/ReporterCard/ReporterCard";
 import LodgingCard from "../../components/ui/organisms/LodgingCard/LodgingCard";
-import {useIncidentTimeline} from "../../hooks/useIncidentTimeline.js";
-import ChronologyCard from "../../components/ui/organisms/ChronologyCard/ChronologyCard.jsx";
 import IncidentPrimaryAction from "../../components/ui/molecules/IncidentPrimaryAction/IncidentPrimaryAction";
 import PauseModal from "../../components/ui/organisms/PauseModal/PauseModal";
 import NoticeBanner from "../../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner";
+import ChronologyCard from "../../components/ui/organisms/ChronologyCard/ChronologyCard.jsx";
 
 export default function IncidentDetailPage() {
   const { id } = useParams();
@@ -176,9 +176,80 @@ export default function IncidentDetailPage() {
     }
   }
 
+  async function handleClaim() {
+    setClaiming(true);
+    setClaimError(null);
+    try {
+      const updated = await claimIncident(id);
+      setIncident(updated);
+    } catch (err) {
+      setClaimError(
+        err.response?.data?.message ??
+          "No se pudo asignar la incidencia. Inténtalo de nuevo.",
+      );
+      if (err.response?.status === 409) loadIncident();
+    } finally {
+      setClaiming(false);
+    }
+  }
+
+  async function handleStart() {
+    setExecuting(true);
+    setExecuteError(null);
+    try {
+      const updated = await startIncident(id);
+      setIncident(updated);
+    } catch (err) {
+      setExecuteError(
+        err.response?.data?.message ??
+          "No se pudo comenzar la incidencia. Inténtalo de nuevo.",
+      );
+    } finally {
+      setExecuting(false);
+    }
+  }
+
+  async function handleResume() {
+    setExecuting(true);
+    setExecuteError(null);
+    try {
+      const updated = await resumeIncident(id);
+      setIncident(updated);
+    } catch (err) {
+      setExecuteError(
+        err.response?.data?.message ??
+          "No se pudo reanudar la incidencia. Inténtalo de nuevo.",
+      );
+    } finally {
+      setExecuting(false);
+    }
+  }
+
+  async function handlePause(reason) {
+    setPausing(true);
+    setPauseError(null);
+    try {
+      const updated = await pauseIncident(id, reason);
+      setIncident(updated);
+      setPauseOpen(false);
+    } catch (err) {
+      setPauseError(
+        err.response?.data?.message ??
+          "No se pudo pausar la incidencia. Inténtalo de nuevo.",
+      );
+    } finally {
+      setPausing(false);
+    }
+  }
+
   if (loading) return <Spinner />;
   if (loadError) return <p role="alert">{loadError}</p>;
   if (!incident) return null;
+
+  const canClaim =
+    isOperator &&
+    incident.assigneeName == null &&
+    incident.status === INCIDENT_STATUS.NEW;
 
   const isUnclassified = incident.category == null;
   const isTerminal =

@@ -28,8 +28,14 @@ function extractErrorMessage(err, fallback) {
 }
 
 function SortableItem({ index, item, disabled, pending, onToggle, onRemove }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: item.id, disabled });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id, disabled });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -139,10 +145,7 @@ export default function ChecklistCard({
       await onToggle(item.id, !item.done);
     } catch (err) {
       setFormError(
-        extractErrorMessage(
-          err,
-          "No se pudo cambiar el estado de la tarea.",
-        ),
+        extractErrorMessage(err, "No se pudo cambiar el estado de la tarea."),
       );
     }
   }
@@ -173,9 +176,7 @@ export default function ChecklistCard({
     try {
       await onReorder(fromIndex, toIndex);
     } catch (err) {
-      setFormError(
-        extractErrorMessage(err, "No se pudo reordenar la tarea."),
-      );
+      setFormError(extractErrorMessage(err, "No se pudo reordenar la tarea."));
     }
   }
 
@@ -186,6 +187,31 @@ export default function ChecklistCard({
   const classes = ["checklist", className].filter(Boolean).join(" ");
 
   const canReorder = typeof onReorder === "function" && !disabled;
+
+  const labelOf = (id) => {
+    const item = items.find((i) => i.id === id);
+    return item ? `la tarea "${item.text}"` : "la tarea";
+  };
+
+  const announcements = {
+    onDragStart({ active }) {
+      return `Arrastrando ${labelOf(active.id)} de la posición ${items.findIndex((i) => i.id === active.id) + 1}.`;
+    },
+    onDragOver({ active, over }) {
+      if (over && active.id !== over.id) {
+        return `${labelOf(active.id)} movida a la posición ${items.findIndex((i) => i.id === over.id) + 1}.`;
+      }
+      return undefined;
+    },
+    onDragEnd({ active, over }) {
+      if (over && active.id === over.id)
+        return `${labelOf(active.id)} soltada en su posición.`;
+      return `${labelOf(active.id)} reordenada.`;
+    },
+    onDragCancel({ active }) {
+      return `${labelOf(active.id)} no se ha movido.`;
+    },
+  };
 
   return (
     <section className={classes}>
@@ -224,6 +250,7 @@ export default function ChecklistCard({
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
+          accessibility={{ announcements }}
         >
           <SortableContext
             items={items.map((i) => i.id)}

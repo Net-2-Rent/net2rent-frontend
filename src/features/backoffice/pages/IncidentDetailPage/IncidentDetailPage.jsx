@@ -12,6 +12,10 @@ import {
   classifyIncident,
   correctIncidentText,
   rejectIncident,
+  claimIncident,
+  startIncident,
+  pauseIncident,
+  resumeIncident,
 } from "../../services/incidentApi";
 import ActionsMenu from "../../components/ui/molecules/ActionsMenu/ActionsMenu";
 import RejectionModal from "../../components/ui/organisms/RejectionModal/RejectionModal";
@@ -25,11 +29,15 @@ import ReporterCard from "../../components/ui/organisms/ReporterCard/ReporterCar
 import LodgingCard from "../../components/ui/organisms/LodgingCard/LodgingCard";
 import {useIncidentTimeline} from "../../hooks/useIncidentTimeline.js";
 import ChronologyCard from "../../components/ui/organisms/ChronologyCard/ChronologyCard.jsx";
+import IncidentPrimaryAction from "../../components/ui/molecules/IncidentPrimaryAction/IncidentPrimaryAction";
+import PauseModal from "../../components/ui/organisms/PauseModal/PauseModal";
+import NoticeBanner from "../../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner";
 
 export default function IncidentDetailPage() {
   const { id } = useParams();
   const role = useAuthStore((s) => s.user?.role);
   const canTriage = role === ROLES.COORDINATOR || role === ROLES.ADMIN;
+  const isOperator = role === ROLES.OPERATOR;
 
   const [incident, setIncident] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -43,6 +51,16 @@ export default function IncidentDetailPage() {
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejecting, setRejecting] = useState(false);
   const [rejectError, setRejectError] = useState(null);
+
+  const [claiming, setClaiming] = useState(false);
+  const [claimError, setClaimError] = useState(null);
+
+  const [executing, setExecuting] = useState(false);
+  const [executeError, setExecuteError] = useState(null);
+
+  const [pauseOpen, setPauseOpen] = useState(false);
+  const [pausing, setPausing] = useState(false);
+  const [pauseError, setPauseError] = useState(null);
 
   const {
     items: checklistItems,
@@ -177,41 +195,57 @@ export default function IncidentDetailPage() {
     ].includes(incident.status);
 
   const canEdit = canTriage && !isUnclassified && !editing;
-  const heroActions =
-    canEdit || canReject ? (
-      <>
-        {canEdit && (
-          <Button
-            variant="secondary"
-            aria-label="Editar incidencia"
-            onClick={() => {
-              setSaved(false);
-              setSaveError(null);
-              setEditing(true);
-            }}
-          >
-            <Pencil size={18} aria-hidden="true" />
-          </Button>
-        )}
+  const heroActions = (
+    <>
+      {canClaim && (
+        <Button variant="primary" onClick={handleClaim} disabled={claiming}>
+          {claiming ? "Asignando…" : "Asignármela"}
+        </Button>
+      )}
 
-        {canReject && (
-          <ActionsMenu
-            items={[
-              {
-                id: "reject",
-                label: "Rechazar incidencia",
-                icon: XCircle,
-                danger: true,
-                onSelect: () => {
-                  setRejectError(null);
-                  setRejectOpen(true);
-                },
+      <IncidentPrimaryAction
+        status={incident.status}
+        loading={executing}
+        onStart={handleStart}
+        onPause={() => {
+          setPauseError(null);
+          setPauseOpen(true);
+        }}
+        onResume={handleResume}
+      />
+
+      {canEdit && (
+        <Button
+          variant="secondary"
+          aria-label="Editar incidencia"
+          onClick={() => {
+            setSaved(false);
+            setSaveError(null);
+            setEditing(true);
+          }}
+        >
+          <Pencil size={18} aria-hidden="true" />
+        </Button>
+      )}
+
+      {canReject && (
+        <ActionsMenu
+          items={[
+            {
+              id: "reject",
+              label: "Rechazar incidencia",
+              icon: XCircle,
+              danger: true,
+              onSelect: () => {
+                setRejectError(null);
+                setRejectOpen(true);
               },
-            ]}
-          />
-        )}
-      </>
-    ) : null;
+            },
+          ]}
+        />
+      )}
+    </>
+  );
 
   return (
     <section className="incident-detail">
@@ -227,6 +261,18 @@ export default function IncidentDetailPage() {
         category={incident.category}
         actions={heroActions}
       />
+
+      {claimError && (
+        <NoticeBanner tone="error" onClose={() => setClaimError(null)}>
+          {claimError}
+        </NoticeBanner>
+      )}
+
+      {executeError && (
+        <NoticeBanner tone="error" onClose={() => setExecuteError(null)}>
+          {executeError}
+        </NoticeBanner>
+      )}
 
       {incident.status === INCIDENT_STATUS.REJECTED &&
         incident.rejectionReason && (
@@ -316,6 +362,16 @@ export default function IncidentDetailPage() {
         onReject={handleReject}
         submitting={rejecting}
         error={rejectError}
+      />
+
+      <PauseModal
+        isOpen={pauseOpen}
+        onClose={() => setPauseOpen(false)}
+        incidentCode={incident.code}
+        lodgingName={incident.lodgingName}
+        onPause={handlePause}
+        submitting={pausing}
+        error={pauseError}
       />
     </section>
   );

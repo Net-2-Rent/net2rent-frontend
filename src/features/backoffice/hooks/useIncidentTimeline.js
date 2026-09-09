@@ -8,20 +8,32 @@ export function useIncidentTimeline(incidentId) {
     const [error, setError] = useState(null);
     const [submitting, setSubmitting] = useState(false);
 
+    const fetchTimeline = useCallback(async () => {
+        const items = await getIncidentTimeline(incidentId);
+        return mapTimeline(items);
+    }, [incidentId]);
+
     useEffect(() => {
         if (incidentId == null) return;
-
         let active = true;
         setLoading(true);
         setError(null);
-
-        getIncidentTimeline(incidentId)
-            .then((items) => { if (active) setEntries(mapTimeline(items)); })
+        fetchTimeline()
+            .then((mapped) => { if (active) setEntries(mapped); })
             .catch((err) => { if (active) setError(err); })
             .finally(() => { if (active) setLoading(false); });
-
         return () => { active = false; };
-    }, [incidentId]);
+    }, [incidentId, fetchTimeline]);
+
+    // Recarga manual tras una acción que haya escrito historial
+    const reload = useCallback(async () => {
+        setError(null);
+        try {
+            setEntries(await fetchTimeline());
+        } catch (err) {
+            setError(err);
+        }
+    }, [fetchTimeline]);
 
     const addComment = useCallback(async (text) => {
         setSubmitting(true);
@@ -33,5 +45,5 @@ export function useIncidentTimeline(incidentId) {
         }
     }, [incidentId]);
 
-    return { entries, loading, error, submitting, addComment };
+    return { entries, loading, error, submitting, addComment, reload };
 }

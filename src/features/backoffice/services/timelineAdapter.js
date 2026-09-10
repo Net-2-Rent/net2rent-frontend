@@ -25,11 +25,13 @@ export function mapTimelineItemToEntry(item, index) {
 }
 
 function eventDescription(item) {
-    const before = prettyValue(item.previousValue);
-    const after = prettyValue(item.newValue);
-    if (before && after) return `${before} → ${after}`;
-    if (after) return after;
-    return null;
+  if (item.note) return item.note;
+  const before = prettyValue(item.previousValue);
+  const after = prettyValue(item.newValue);
+  if (before && after) return `${before} → ${after}`;
+  if (item.eventType === "TIME_LOGGED" && after) return `${after} min`;
+  if (after) return after;
+  return null;
 }
 
 export function mapTimeline(items) {

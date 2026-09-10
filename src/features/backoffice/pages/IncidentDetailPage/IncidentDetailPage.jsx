@@ -249,22 +249,22 @@ export default function IncidentDetailPage() {
     }
   }
 
- async function handleResume() {
-   setExecuting(true);
-   setExecuteError(null);
-   try {
-     const updated = await withMinDuration(resumeIncident(id));
-     setIncident(updated);
-     await reloadTimeline();
-   } catch (err) {
-     setExecuteError(
-       err.response?.data?.message ??
-         "No se pudo reanudar la incidencia. Inténtalo de nuevo.",
-     );
-   } finally {
-     setExecuting(false);
-   }
- }
+  async function handleResume() {
+    setExecuting(true);
+    setExecuteError(null);
+    try {
+      const updated = await withMinDuration(resumeIncident(id));
+      setIncident(updated);
+      await reloadTimeline();
+    } catch (err) {
+      setExecuteError(
+        err.response?.data?.message ??
+          "No se pudo reanudar la incidencia. Inténtalo de nuevo.",
+      );
+    } finally {
+      setExecuting(false);
+    }
+  }
 
   async function handlePause(reason) {
     setPausing(true);
@@ -329,31 +329,31 @@ export default function IncidentDetailPage() {
 
   const canEdit = canTriage && !isUnclassified && !editing && !isTerminal;
 
- const secondaryActions = [];
+  const secondaryActions = [];
 
- if (incident.status === INCIDENT_STATUS.IN_PROGRESS) {
-   secondaryActions.push({
-     id: "pause",
-     label: "Pausar trabajo",
-     onSelect: () => {
-       setPauseError(null);
-       setPauseOpen(true);
-     },
-   });
- }
+  if (incident.status === INCIDENT_STATUS.IN_PROGRESS) {
+    secondaryActions.push({
+      id: "pause",
+      label: "Pausar trabajo",
+      onSelect: () => {
+        setPauseError(null);
+        setPauseOpen(true);
+      },
+    });
+  }
 
- if (canReject) {
-   secondaryActions.push({
-     id: "reject",
-     label: "Rechazar incidencia",
-     icon: XCircle,
-     danger: true,
-     onSelect: () => {
-       setRejectError(null);
-       setRejectOpen(true);
-     },
-   });
- }
+  if (canReject) {
+    secondaryActions.push({
+      id: "reject",
+      label: "Rechazar incidencia",
+      icon: XCircle,
+      danger: true,
+      onSelect: () => {
+        setRejectError(null);
+        setRejectOpen(true);
+      },
+    });
+  }
 
   const heroActions = (
     <>
@@ -447,6 +447,21 @@ export default function IncidentDetailPage() {
         incident.rejectionReason && (
           <NoticeBox tone="warning">
             <strong>Motivo del rechazo:</strong> {incident.rejectionReason}
+          </NoticeBox>
+        )}
+
+      {incident.status === INCIDENT_STATUS.PAUSED && incident.pauseReason && (
+        <NoticeBox tone="warning">
+          <strong>Motivo de la pausa:</strong> {incident.pauseReason}
+        </NoticeBox>
+      )}
+
+      {(incident.status === INCIDENT_STATUS.RESOLVED ||
+        incident.status === INCIDENT_STATUS.CLOSED) &&
+        incident.resolutionNote && (
+          <NoticeBox>
+            <strong>Nota de resolución:</strong> {incident.resolutionNote}
+            {incident.minutesSpent != null && ` (${incident.minutesSpent} min)`}
           </NoticeBox>
         )}
 

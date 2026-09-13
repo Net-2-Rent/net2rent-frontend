@@ -17,10 +17,16 @@
     }
 
     .hero-incident__actions {
-        position:absolute;
-        top: vars.space(16);
-        right: vars.space(16);
-        margin: 0;
+        position:relative;
+    }
+
+    .hero-incident__actions {
+        @include mix.respond-to("tablet") {
+            position: absolute;
+            top: vars.space(16);
+            right: vars.space(16);
+            margin: 0;
+        }
     }
 }
 

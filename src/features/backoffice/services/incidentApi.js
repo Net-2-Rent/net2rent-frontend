@@ -148,6 +148,14 @@ export async function resolveIncident(id, { minutes, note }) {
   return data;
 }
 
+export async function assignOperator(id, { operatorId, reason }) {
+    const { data } = await httpClient.patch(`/incidents/${id}/assignee`, {
+        operatorId: Number(operatorId),
+        reason: reason?.trim() || null,
+    });
+    return data;
+}
+
 function toListParams(filters = {}) {
   const params = {};
   const set = (key, value) => {

@@ -10,6 +10,7 @@ import { fetchGuestIncidentDetail } from "../../services/guestApi.js";
 import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
 import { truncate } from "../../../../shared/utils/truncate.js";
 import "./IncidentDetailGuestPage.scss";
+import GuestIncidentTimeline from "../../components/ui/organisms/GuestIncidentTimeline/GuestIncidentTimeline.jsx"
 
 const RESOLVED_STATES = new Set(["RESOLVED", "CLOSED"]);
 
@@ -177,6 +178,8 @@ export default function IncidentDetailGuestPage() {
                 a reportarla.
               </div>
             )}
+
+            <GuestIncidentTimeline incident={incident} />
           </div>
         )}
       </div>

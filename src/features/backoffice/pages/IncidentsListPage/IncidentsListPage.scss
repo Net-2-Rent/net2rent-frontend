@@ -20,6 +20,12 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+
+    > .status-badge-incident {
+      flex: 1 1 0;
+      justify-content: center;
+      white-space: nowrap;
+    }
   }
 
   &__headerbar {
@@ -80,7 +86,7 @@
     gap: 0.5rem;
     align-items: center;
   }
-  
+
   &__filters-card[hidden] { display: none; }
 
   &__filter {

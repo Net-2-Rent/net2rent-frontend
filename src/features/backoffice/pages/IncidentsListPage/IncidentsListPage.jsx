@@ -15,8 +15,7 @@ import { useAuthStore } from "../../../auth/store/authStore.js";
 import { ROLES } from "../../../../shared/constants/nav.js";
 import { INCIDENT_SCOPE } from "../../../../shared/constants/incidentScope.js";
 import { ALL_STATUS, STATUS_BADGE_FILTERS } from "../../../../shared/constants/statusBadgeIncident.js";
-import { INCIDENT_PRIORITY_LABEL } from "../../../../shared/constants/incidentPriority.js";
-import { INCIDENT_CATEGORY, INCIDENT_CATEGORY_LABEL } from "../../../../shared/constants/incidentCategory.js";
+import { CATEGORY_FILTER_OPTIONS, PRIORITY_FILTER_OPTIONS } from "../../../../shared/constants/incidentFilterOptions.js";
 import "./IncidentsListPage.scss";
 
 const HEADER_STATUSES = STATUS_BADGE_FILTERS.filter((s) => s !== ALL_STATUS);
@@ -32,22 +31,6 @@ const ADVANCED_FILTER_KEYS = [
 
 const OPERATOR_UNASSIGNED = "UNASSIGNED";
 
-// Opciones de los desplegables de categoría y prioridad (antes vivían en FilterBar).
-const CATEGORY_FILTER_OPTIONS = [
-    { value: "ALL", label: "Categorías" },
-    ...Object.values(INCIDENT_CATEGORY).map((value) => ({
-        value,
-        label: INCIDENT_CATEGORY_LABEL[value],
-    })),
-];
-const PRIORITY_FILTER_OPTIONS = [
-    { value: "ALL", label: "Prioridad" },
-    { value: "URGENT", label: INCIDENT_PRIORITY_LABEL.URGENT },
-    { value: "HIGH", label: INCIDENT_PRIORITY_LABEL.HIGH },
-    { value: "NORMAL", label: INCIDENT_PRIORITY_LABEL.NORMAL },
-    { value: "LOW", label: INCIDENT_PRIORITY_LABEL.LOW },
-];
-
 export default function IncidentsListPage() {
     const navigate = useNavigate();
     const {
@@ -59,7 +42,6 @@ export default function IncidentsListPage() {
     const isOperator = role === ROLES.OPERATOR;
     const scopeValue = filters.scope || INCIDENT_SCOPE.MINE;
 
-    // El operario entra por defecto en "Asignadas a mí" y ordenado por prioridad (CU-EXE-01).
     useEffect(() => {
         if (isOperator && !filters.scope) {
             updateParams({ scope: INCIDENT_SCOPE.MINE, sort: "priority", dir: "desc" });
@@ -72,12 +54,11 @@ export default function IncidentsListPage() {
         let active = true;
         Promise.all([listActiveLodgings(), listOperators()])
             .then(([lods, ops]) => { if (active) { setLodgings(lods); setOperators(ops); } })
-            .catch(() => { /* if options fail, the dropdowns just stay minimal */ });
+            .catch(() => { });
         return () => { active = false; };
     }, []);
 
     const [search, setSearch] = useState("");
-    // Estado del panel de filtros plegable (arranca cerrado para "despejar" la vista).
     const [filtersOpen, setFiltersOpen] = useState(false);
 
     const visibleRows = useMemo(() => {
@@ -109,7 +90,7 @@ export default function IncidentsListPage() {
         const v = e.target.value;
         if (v === "ALL") updateParams({ assigneeId: null, unassigned: null });
         else if (v === OPERATOR_UNASSIGNED) updateParams({ unassigned: true, assigneeId: null });
-        else updateParams({ assigneeId: v, unassigned: null });   // numeric id
+        else updateParams({ assigneeId: v, unassigned: null });
     };
 
     const activeAdvancedCount = ADVANCED_FILTER_KEYS.filter((k) => filters[k]).length;

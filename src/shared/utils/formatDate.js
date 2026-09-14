@@ -7,5 +7,10 @@ const dateFormatter = new Intl.DateTimeFormat('es-ES', {
 });
 
 export function formatDate(isoString) {
-    return dateFormatter.format(new Date(isoString));
+    if (!isoString) return '';
+    
+    const date = new Date(isoString);
+    if (Number.isNaN(date.getTime())) return '';
+    
+    return dateFormatter.format(date);
 }

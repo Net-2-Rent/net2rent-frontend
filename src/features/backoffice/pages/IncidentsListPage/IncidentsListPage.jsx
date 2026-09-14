@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Plus, Filter } from "lucide-react";
 import { useIncidentList } from "../../hooks/useIncidentList.js";
 import { listActiveLodgings, listOperators } from "../../services/incidentApi.js";
-import FilterBar from "../../components/ui/molecules/FilterBar/FilterBar.jsx";
+import SearchBar from "../../components/ui/molecules/SearchBar/SearchBar.jsx";
 import StatusBadgeIncident from "../../components/ui/molecules/StatusBadgeIncident/StatusBadgeIncident.jsx";
 import ToggleIncident from "../../components/ui/molecules/ToggleIncident/ToggleIncident.jsx";
 import TableIncident from "../../components/ui/organisms/TableIncident/TableIncident.jsx";
@@ -13,24 +14,39 @@ import Button from "../../../../shared/components/ui/atoms/Button/Button.jsx";
 import { useAuthStore } from "../../../auth/store/authStore.js";
 import { ROLES } from "../../../../shared/constants/nav.js";
 import { INCIDENT_SCOPE } from "../../../../shared/constants/incidentScope.js";
-import { INCIDENT_STATUS } from "../../../../shared/constants/incidentStatus.js";
-import { ALL_STATUS } from "../../../../shared/constants/statusBadgeIncident.js";
+import { ALL_STATUS, STATUS_BADGE_FILTERS } from "../../../../shared/constants/statusBadgeIncident.js";
+import { INCIDENT_PRIORITY_LABEL } from "../../../../shared/constants/incidentPriority.js";
+import { INCIDENT_CATEGORY, INCIDENT_CATEGORY_LABEL } from "../../../../shared/constants/incidentCategory.js";
 import "./IncidentsListPage.scss";
 
-const HEADER_STATUSES = [
-    INCIDENT_STATUS.NEW,
-    INCIDENT_STATUS.ASSIGNED,
-    INCIDENT_STATUS.IN_PROGRESS,
-    INCIDENT_STATUS.PAUSED,
-    INCIDENT_STATUS.RESOLVED,
-];
+const HEADER_STATUSES = STATUS_BADGE_FILTERS.filter((s) => s !== ALL_STATUS);
 
 const FILTER_KEYS = [
     "status", "priority", "category",
     "lodgingId", "assigneeId", "unassigned", "openedFrom", "openedTo",
 ];
 
+const ADVANCED_FILTER_KEYS = [
+    "priority", "category", "lodgingId", "assigneeId", "unassigned", "openedFrom", "openedTo",
+];
+
 const OPERATOR_UNASSIGNED = "UNASSIGNED";
+
+// Opciones de los desplegables de categoría y prioridad (antes vivían en FilterBar).
+const CATEGORY_FILTER_OPTIONS = [
+    { value: "ALL", label: "Categorías" },
+    ...Object.values(INCIDENT_CATEGORY).map((value) => ({
+        value,
+        label: INCIDENT_CATEGORY_LABEL[value],
+    })),
+];
+const PRIORITY_FILTER_OPTIONS = [
+    { value: "ALL", label: "Prioridad" },
+    { value: "URGENT", label: INCIDENT_PRIORITY_LABEL.URGENT },
+    { value: "HIGH", label: INCIDENT_PRIORITY_LABEL.HIGH },
+    { value: "NORMAL", label: INCIDENT_PRIORITY_LABEL.NORMAL },
+    { value: "LOW", label: INCIDENT_PRIORITY_LABEL.LOW },
+];
 
 export default function IncidentsListPage() {
     const navigate = useNavigate();
@@ -61,6 +77,9 @@ export default function IncidentsListPage() {
     }, []);
 
     const [search, setSearch] = useState("");
+    // Estado del panel de filtros plegable (arranca cerrado para "despejar" la vista).
+    const [filtersOpen, setFiltersOpen] = useState(false);
+
     const visibleRows = useMemo(() => {
         const q = search.trim().toLowerCase();
         if (!q) return rows;
@@ -70,7 +89,7 @@ export default function IncidentsListPage() {
     }, [rows, search]);
 
     const currentStatus = filters.status || ALL_STATUS;
-    const openTotal = HEADER_STATUSES.reduce((sum, s) => sum + (counters[s] ?? 0), 0);
+    const totalCount = HEADER_STATUSES.reduce((sum, s) => sum + (counters[s] ?? 0), 0);
     const onStatusClick = (status) =>
         updateParams({ status: status === ALL_STATUS ? null : status });
 
@@ -93,6 +112,8 @@ export default function IncidentsListPage() {
         else updateParams({ assigneeId: v, unassigned: null });   // numeric id
     };
 
+    const activeAdvancedCount = ADVANCED_FILTER_KEYS.filter((k) => filters[k]).length;
+
     const hasActiveFilters = FILTER_KEYS.some((k) => filters[k]) || search.trim() !== "";
     const clearFilters = () => {
         setSearch("");
@@ -102,7 +123,20 @@ export default function IncidentsListPage() {
     return (
         <section className="incidents-page">
             <div className="incidents-page__header">
-                <h1 className="incidents-page__title">Incidencias</h1>
+                <div className="incidents-page__headerbar">
+                    <h1 className="incidents-page__title">Incidencias</h1>
+
+                    {!isOperator && (
+                        <Button
+                            variant="primary"
+                            className="incidents-page__create"
+                            onClick={() => navigate("/backoffice/nueva-incidencia")}
+                        >
+                            <Plus size={16} aria-hidden="true" />
+                            Nueva incidencia
+                        </Button>
+                    )}
+                </div>
 
                 {isOperator && (
                     <ToggleIncident
@@ -114,7 +148,7 @@ export default function IncidentsListPage() {
 
                 <div className="incidents-page__counters" role="group" aria-label="Filtrar por estado">
                     <StatusBadgeIncident
-                        status={ALL_STATUS} count={openTotal}
+                        status={ALL_STATUS} count={totalCount}
                         active={currentStatus === ALL_STATUS} onClick={() => onStatusClick(ALL_STATUS)} />
                     {HEADER_STATUSES.map((s) => (
                         <StatusBadgeIncident
@@ -124,20 +158,59 @@ export default function IncidentsListPage() {
                 </div>
             </div>
 
-            <FilterBar
-                search={search}
-                onSearchChange={(e) => setSearch(e.target.value)}
-                category={filters.category || "ALL"}
-                onCategoryChange={(e) => updateParams({ category: e.target.value })}
-                priority={filters.priority || "ALL"}
-                onPriorityChange={(e) => updateParams({ priority: e.target.value })}
-                onReload={reload}
-                reloading={loading}
-                onCreate={() => navigate("/backoffice/nueva-incidencia")}
-                showCreate={!isOperator}
-            />
+            <div className="incidents-page__toolbar">
+                <SearchBar
+                    className="incidents-page__search"
+                    search={search}
+                    onSearchChange={(e) => setSearch(e.target.value)}
+                    placeholder="Buscar por código, alojamiento o descripción"
+                />
 
-            <div className="incidents-page__filters">
+                <Button
+                    variant="secondary"
+                    className="incidents-page__filter-toggle"
+                    onClick={() => setFiltersOpen((open) => !open)}
+                    aria-expanded={filtersOpen}
+                    aria-controls="incidents-filters"
+                >
+                    <Filter size={16} aria-hidden="true" />
+                    Filtros
+                    {activeAdvancedCount > 0 && (
+                        <span className="incidents-page__filter-badge" aria-hidden="true">
+                            {activeAdvancedCount}
+                        </span>
+                    )}
+                </Button>
+
+                <Button
+                    variant="secondary"
+                    className="incidents-page__reload"
+                    onClick={reload}
+                    disabled={loading}
+                >
+                    Recargar
+                </Button>
+            </div>
+
+            <div
+                className="incidents-page__filters-card"
+                id="incidents-filters"
+                hidden={!filtersOpen}
+            >
+                <DropdownField
+                    className="incidents-page__filter"
+                    value={filters.category || "ALL"}
+                    onChange={(e) => updateParams({ category: e.target.value })}
+                    options={CATEGORY_FILTER_OPTIONS}
+                    aria-label="Filtrar por categoría"
+                />
+                <DropdownField
+                    className="incidents-page__filter"
+                    value={filters.priority || "ALL"}
+                    onChange={(e) => updateParams({ priority: e.target.value })}
+                    options={PRIORITY_FILTER_OPTIONS}
+                    aria-label="Filtrar por prioridad"
+                />
                 <DropdownField
                     className="incidents-page__filter"
                     value={filters.lodgingId ?? "ALL"}

@@ -1,3 +1,5 @@
+@use "mixins" as mix;
+
 .incidents-page {
   display: flex;
   flex-direction: column;
@@ -20,12 +22,66 @@
     gap: 0.5rem;
   }
 
-  &__filters {
+  &__headerbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__create {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  &__toolbar {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     align-items: center;
   }
+
+  &__search {
+    flex: 1 1 240px;
+    min-width: 200px;
+  }
+
+  &__reload { white-space: nowrap; }
+
+  &__filter-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  &__filter-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--radius-pill);
+    background: var(--color-brand);
+    color: var(--color-text-on-brand);
+    font-size: 0.72rem;
+    line-height: 1;
+  }
+
+  &__filters-card {
+    @include mix.surface-card;
+    padding: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  &__filters-card[hidden] { display: none; }
 
   &__filter {
     flex: 1 1 180px;

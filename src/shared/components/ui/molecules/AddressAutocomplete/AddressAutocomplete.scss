@@ -1,0 +1,43 @@
+@use "../../../../../styles/mixins" as mix;
+
+.address-autocomplete {
+  width: 100%;
+  position: relative;
+
+  .geoapify-input-wrapper {
+    width: 100%;
+  }
+
+  input.geoapify-autocomplete-input {
+    @include mix.field-base;
+  }
+
+  &--invalid input.geoapify-autocomplete-input {
+    @include mix.field-error;
+  }
+
+  .geoapify-autocomplete-items {
+    @include mix.surface-floating;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 4px;
+    padding: 0;
+    list-style: none;
+    font-family: inherit;
+    font-size: var(--field-font-size);
+    overflow: hidden;
+    z-index: 20;
+
+    .geoapify-autocomplete-item {
+      padding: var(--field-padding-inline);
+      cursor: pointer;
+
+      &:hover,
+      &.active {
+        background: var(--color-surface-hover, var(--color-border));
+      }
+    }
+  }
+}

@@ -501,3 +501,21 @@ pre,
     scroll-behavior: auto !important;
   }
 }
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  z-index: 600;
+  padding: 8px 14px;
+  border-radius: var(--radius-field, 10px);
+  background: var(--color-surface);
+  color: var(--color-text-strong);
+  outline: 2px solid var(--color-brand-ink);
+  transform: translateY(-200%);
+  transition: transform 120ms ease;
+
+  &:focus {
+    transform: translateY(0);
+  }
+}

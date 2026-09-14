@@ -8,9 +8,9 @@ const ACTION_BY_STATUS = {
     handlerKey: "onStart",
   },
   [INCIDENT_STATUS.IN_PROGRESS]: {
-    label: "Pausar",
-    loadingLabel: "Pausando...",
-    handlerKey: "onPause",
+    label: "Resolver",
+    loadingLabel: "Resolver",
+    handlerKey: "onResolve",
   },
   [INCIDENT_STATUS.PAUSED]: {
     label: "Reanudar",
@@ -23,13 +23,13 @@ export default function IncidentPrimaryAction({
   status,
   loading = false,
   onStart,
-  onPause,
+  onResolve,
   onResume,
 }) {
   const config = ACTION_BY_STATUS[status];
   if (!config) return null;
 
-  const handleClick = { onStart, onPause, onResume }[config.handlerKey];
+  const handleClick = { onStart, onResolve, onResume }[config.handlerKey];
 
   return (
     <Button variant="primary" disabled={loading} onClick={handleClick}>

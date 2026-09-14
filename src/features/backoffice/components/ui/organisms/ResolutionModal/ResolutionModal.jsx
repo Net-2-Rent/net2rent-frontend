@@ -1,9 +1,10 @@
-import { useState, useId } from "react";
+import { useState, useId, useEffect } from "react";
 import Modal from "../../../../../../shared/components/ui/molecules/Modal/Modal.jsx";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
 import Input from "../../../../../../shared/components/ui/atoms/Input/Input.jsx";
 import TextArea from "../../../../../../shared/components/ui/atoms/TextArea/TextArea.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
+import InlineError from "../../../../../../shared/components/ui/atoms/InlineError/InlineError.jsx";
 import "./ResolutionModal.scss";
 
 export default function ResolutionModal({
@@ -12,6 +13,8 @@ export default function ResolutionModal({
   incidentCode,
   lodgingName,
   onResolve,
+  submitting = false,
+  error = null,
 }) {
   const [minutes, setMinutes] = useState("");
   const [note, setNote] = useState("");
@@ -19,14 +22,20 @@ export default function ResolutionModal({
   const minutesId = useId();
   const noteId = useId();
 
-  const canSubmit = Number(minutes) > 0 && note.trim().length > 0;
+  const canSubmit =
+    Number(minutes) > 0 && note.trim().length > 0 && !submitting;
+
+  useEffect(() => {
+    if (isOpen) {
+      setMinutes("");
+      setNote("");
+    }
+  }, [isOpen]);
 
   function handleSubmit(event) {
     event.preventDefault();
     if (!canSubmit) return;
     onResolve?.({ minutes: Number(minutes), note: note.trim() });
-    setMinutes("");
-    setNote("");
   }
 
   const subtitle = [incidentCode, lodgingName].filter(Boolean).join(" · ");
@@ -45,7 +54,7 @@ export default function ResolutionModal({
             variant="primary"
             disabled={!canSubmit}
           >
-            Marcar como resuelta
+            {submitting ? "Guardando..." : "Marcar como resuelta"}
           </Button>
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancelar
@@ -77,6 +86,8 @@ export default function ResolutionModal({
             placeholder="Qué se ha hecho y con qué material"
           />
         </FormField>
+
+        {error && <InlineError>{error}</InlineError>}
       </form>
     </Modal>
   );

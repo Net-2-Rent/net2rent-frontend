@@ -39,7 +39,16 @@ export default function TableIncident({
             onClick={() => onRowClick?.(inc)}
           >
             <div className="table-incident__card-header">
-              <span className="table-incident__td--code">{inc.code}</span>
+              <a
+                href="#"
+                className="table-incident__td--link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onRowClick?.(inc);
+                }}
+              >
+                {inc.code}
+              </a>
               <StatusBadge status={inc.status} />
               <PriorityBadge priority={inc.priority} />
             </div>
@@ -82,15 +91,34 @@ export default function TableIncident({
             <tbody>
               {incidents.map((inc) => (
                 <tr key={inc.code} onClick={() => onRowClick?.(inc)}>
-                  <td className="table-incident__td--code">{inc.code}</td>
+                  <td className="table-incident__td--code">
+                    <a
+                      href="#"
+                      className="table-incident__td--link"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onRowClick?.(inc);
+                      }}
+                    >
+                      {inc.code}
+                    </a>
+                  </td>
                   <td className="table-incident__td--title">{inc.title}</td>
                   <td className="table-incident__td--muted">
                     {INCIDENT_CATEGORY_LABEL[inc.category] ?? "Sin categorizar"}
                   </td>
-                  <td className="table-incident__td--muted">{inc.accommodation}</td>
-                  <td><StatusBadge status={inc.status} /></td>
-                  <td><PriorityBadge priority={inc.priority} /></td>
-                  <td className="table-incident__td--muted">{inc.assignee ?? "Sin asignar"}</td>
+                  <td className="table-incident__td--muted">
+                    {inc.accommodation}
+                  </td>
+                  <td>
+                    <StatusBadge status={inc.status} />
+                  </td>
+                  <td>
+                    <PriorityBadge priority={inc.priority} />
+                  </td>
+                  <td className="table-incident__td--muted">
+                    {inc.assignee ?? "Sin asignar"}
+                  </td>
                   <td className="table-incident__td--date">{inc.createdAt}</td>
                 </tr>
               ))}
@@ -100,7 +128,8 @@ export default function TableIncident({
 
         <div className="table-incident__footer">
           <span className="table-incident__info">
-            {incidents.length} de {totalResults} incidencias · página {page} de {totalPages}
+            {incidents.length} de {totalResults} incidencias · página {page} de{" "}
+            {totalPages}
           </span>
           <div className="table-incident__pagination">
             <PageButton disabled={page <= 1} onClick={onPrevPage}>

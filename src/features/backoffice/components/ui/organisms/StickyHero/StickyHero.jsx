@@ -7,7 +7,7 @@ export default function StickyHero({
   const isDark = theme === 'dark';
 
   return (
-    <header className={['sticky-hero', className].filter(Boolean).join(' ')}>
+    <header className={['sticky-hero', className].filter(Boolean).join(' ')} aria-label="Cabecera principal">
       <button
         type="button"
         className="sticky-hero__menu"

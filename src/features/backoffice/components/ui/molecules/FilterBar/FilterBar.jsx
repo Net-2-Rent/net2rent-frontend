@@ -44,18 +44,21 @@ export default function FilterBar({
     <div className={classes}>
       <Input
         className="filter-bar__search"
+        aria-label="Buscar incidencias"
         placeholder={placeholder}
         value={search}
         onChange={onSearchChange}
       />
       <DropdownField
         className="filter-bar__category"
+        aria-label="Filtrar por categoría"
         value={category}
         onChange={onCategoryChange}
         options={categoryOptions}
       />
       <DropdownField
         className="filter-bar__priority"
+        aria-label="Filtrar por prioridad"
         value={priority}
         onChange={onPriorityChange}
         options={priorityOptions}

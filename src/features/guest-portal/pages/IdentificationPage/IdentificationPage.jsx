@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import AuthLayout from "../components/ui/organisms/AuthLayout/AuthLayout.jsx";
-import PrimaryButton from "../components/ui/atoms/PrimaryButton/PrimaryButton.jsx";
-import PinInput from "../../../shared/components/ui/atoms/PinInput/PinInput.jsx";
-import TextField from "../../../shared/components/ui/atoms/TextField/TextField.jsx";
-import FormField from "../../../shared/components/ui/molecules/FormField/FormField.jsx";
-import InlineError from "../../../shared/components/ui/atoms/InlineError/InlineError.jsx";
-import { useGuestAuthStore } from "../store/guestAuthStore.js";
+import AuthLayout from "../../components/ui/organisms/AuthLayout/AuthLayout.jsx";
+import PrimaryButton from "../../components/ui/atoms/PrimaryButton/PrimaryButton.jsx";
+import PinInput from "../../../../shared/components/ui/atoms/PinInput/PinInput.jsx";
+import TextField from "../../../../shared/components/ui/atoms/TextField/TextField.jsx";
+import FormField from "../../../../shared/components/ui/molecules/FormField/FormField.jsx";
+import InlineError from "../../../../shared/components/ui/atoms/InlineError/InlineError.jsx";
+import { useGuestAuthStore } from "../../store/guestAuthStore.js";
 import "./IdentificationPage.scss";
  
 export default function IdentificationPage() {

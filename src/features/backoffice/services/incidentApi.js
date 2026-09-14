@@ -118,6 +118,11 @@ export async function claimIncident(id) {
     return data;
 }
 
+export async function closeIncident(id) {
+  const { data } = await httpClient.patch(`/incidents/${id}/close`);
+  return data;
+}
+
 export async function startIncident(id) {
   const { data } = await httpClient.patch(`/incidents/${id}/start`);
   return data;
@@ -133,6 +138,22 @@ export async function pauseIncident(id, reason) {
 export async function resumeIncident(id) {
   const { data } = await httpClient.patch(`/incidents/${id}/resume`);
   return data;
+}
+
+export async function resolveIncident(id, { minutes, note }) {
+  const { data } = await httpClient.patch(`/incidents/${id}/resolve`, {
+    minutes,
+    note: note?.trim(),
+  });
+  return data;
+}
+
+export async function assignOperator(id, { operatorId, reason }) {
+    const { data } = await httpClient.patch(`/incidents/${id}/assignee`, {
+        operatorId: Number(operatorId),
+        reason: reason?.trim() || null,
+    });
+    return data;
 }
 
 function toListParams(filters = {}) {

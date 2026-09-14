@@ -4,7 +4,6 @@ import Button from "../../../../../../shared/components/ui/atoms/Button/Button.j
 import Input from "../../../../../../shared/components/ui/atoms/Input/Input.jsx";
 import DropdownField from "../../../../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
-import InlineError from "../../../../../../shared/components/ui/atoms/InlineError/InlineError.jsx";
 import NoticeBanner from "../../../../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner.jsx";
 import { ROLES, ROLE_LABEL } from "../../../../../../shared/constants/nav.js";
 import "./EditUserModal.scss";
@@ -58,26 +57,37 @@ export default function EditUserModal({
       <div className="edit-user-modal">
         {submitError && <NoticeBanner tone="error">{submitError}</NoticeBanner>}
 
-        <FormField label="Nombre y apellido" error={fieldErrors.name}>
+        <FormField
+          id="edit-user-name"
+          label="Nombre y apellido"
+          error={fieldErrors.name}
+        >
           <Input
             type="text"
+            name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Nombre y apellido"
           />
         </FormField>
 
-        <FormField label="Correo electrónico" error={fieldErrors.email}>
+        <FormField
+          id="edit-user-email"
+          label="Correo electrónico"
+          error={fieldErrors.email}
+        >
           <Input
             type="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="nombre@email.com"
           />
         </FormField>
 
-        <FormField label="Rol" error={fieldErrors.role}>
+        <FormField id="edit-user-role" label="Rol" error={fieldErrors.role}>
           <DropdownField
+            name="role"
             value={role}
             onChange={(e) => setRole(e.target.value)}
             options={ROLE_OPTIONS}
@@ -85,11 +95,13 @@ export default function EditUserModal({
         </FormField>
 
         <FormField
+          id="edit-user-password"
           label={isCreate ? "Contraseña inicial" : "Nueva contraseña"}
           error={fieldErrors.password}
         >
           <Input
             type="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={
@@ -100,9 +112,14 @@ export default function EditUserModal({
           />
         </FormField>
 
-        <FormField label="Repetir contraseña" error={error}>
+        <FormField
+          id="edit-user-repeat"
+          label="Repetir contraseña"
+          error={error}
+        >
           <Input
             type="password"
+            name="repeatPassword"
             value={repeatPassword}
             onChange={(e) => setRepeatPassword(e.target.value)}
             placeholder="Repite la contraseña"

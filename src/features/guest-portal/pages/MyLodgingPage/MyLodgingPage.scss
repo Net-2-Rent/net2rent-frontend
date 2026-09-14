@@ -57,4 +57,16 @@
     text-align: center;
     color: var(--color-text-strong);
   }
+
+  &__logout {
+    align-self: center;
+    margin-top: vars.space(16);
+  }
+
+  &__logout-actions {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    gap: vars.space(12);
+  }
 }

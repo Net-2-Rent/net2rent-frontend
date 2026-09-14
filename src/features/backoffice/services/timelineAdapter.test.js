@@ -54,4 +54,34 @@ describe('timelineAdapter', () => {
         ];
         expect(mapTimeline(items).map((e) => e.id)).toEqual(['event-0', 'comment-1']);
     });
+
+    it("usa item.note cuando existe, en vez del antes → después", () => {
+      const item = {
+        type: "EVENT",
+        at: "2026-09-04T12:00:00",
+        actorName: "Marc Vidal",
+        eventType: "STATUS_CHANGED",
+        previousValue: "IN_PROGRESS",
+        newValue: "PAUSED",
+        note: "Falta el recambio del termo",
+        text: null,
+      };
+      const entry = mapTimelineItemToEntry(item, 3);
+      expect(entry.description).toBe("Falta el recambio del termo");
+    });
+
+    it('formatea TIME_LOGGED con la unidad "min"', () => {
+      const item = {
+        type: "EVENT",
+        at: "2026-09-04T13:00:00",
+        actorName: "Marc Vidal",
+        eventType: "TIME_LOGGED",
+        previousValue: null,
+        newValue: "45",
+        note: null,
+        text: null,
+      };
+      const entry = mapTimelineItemToEntry(item, 4);
+      expect(entry.description).toBe("45 min");
+    });
 });

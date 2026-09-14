@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Pencil, XCircle } from "lucide-react";
+import { Pencil, XCircle, UserPlus } from "lucide-react";
 import HeroIncidentCard from "../../components/ui/molecules/HeroIncidentCard/HeroIncidentCard";
 import ClassificationCard from "../../components/ui/organisms/ClassificationCard/ClassificationCard";
 import ChecklistCard from "../../components/ui/organisms/ChecklistCard/ChecklistCard";
@@ -18,6 +18,7 @@ import {
   pauseIncident,
   resumeIncident,
   resolveIncident,
+  assignOperator,
 } from "../../services/incidentApi";
 import ActionsMenu from "../../components/ui/molecules/ActionsMenu/ActionsMenu";
 import RejectionModal from "../../components/ui/organisms/RejectionModal/RejectionModal";
@@ -37,6 +38,7 @@ import IncidentPrimaryAction from "../../components/ui/molecules/IncidentPrimary
 import NoticeBanner from "../../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner";
 import ChronologyCard from "../../components/ui/organisms/ChronologyCard/ChronologyCard.jsx";
 import { withMinDuration } from "../../../../shared/utils/withMinDuration.js";
+import AssignmentModal from "../../components/ui/organisms/AssignmentModal/AssignmentModal.jsx";
 
 export default function IncidentDetailPage() {
   const { id } = useParams();
@@ -75,6 +77,10 @@ export default function IncidentDetailPage() {
   const [resolveOpen, setResolveOpen] = useState(false);
   const [resolving, setResolving] = useState(false);
   const [resolveError, setResolveError] = useState(null);
+
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [assigning, setAssigning] = useState(false);
+  const [assignError, setAssignError] = useState(null);
 
   const {
     items: checklistItems,
@@ -302,6 +308,24 @@ export default function IncidentDetailPage() {
     }
   }
 
+  async function handleAssign({ operatorId, reason }) {
+    setAssigning(true);
+    setAssignError(null);
+    try {
+      const updated = await assignOperator(id, { operatorId, reason });
+      setIncident(updated);
+      await reloadTimeline();
+      setAssignOpen(false);
+    } catch (err) {
+      setAssignError(
+        err.response?.data?.message ??
+        "No se pudo asignar el operario. Inténtalo de nuevo"
+      );
+    } finally {
+      setAssigning(false);
+    }
+  }
+
   if (loading) return <Spinner />;
   if (loadError) return <p role="alert">{loadError}</p>;
   if (!incident) return null;
@@ -329,6 +353,17 @@ export default function IncidentDetailPage() {
 
   const canEdit = canTriage && !isUnclassified && !editing && !isTerminal;
 
+  const isClassified = incident.category != null && incident.priority != null;
+  const canAssign = 
+    canTriage &&
+    isClassified &&
+    [
+      INCIDENT_STATUS.NEW,
+      INCIDENT_STATUS.ASSIGNED,
+      INCIDENT_STATUS.IN_PROGRESS,
+      INCIDENT_STATUS.PAUSED,
+    ].includes(incident.status);
+
   const secondaryActions = [];
 
   if (incident.status === INCIDENT_STATUS.IN_PROGRESS) {
@@ -338,6 +373,18 @@ export default function IncidentDetailPage() {
       onSelect: () => {
         setPauseError(null);
         setPauseOpen(true);
+      },
+    });
+  }
+  
+  if (canAssign) {
+    secondaryActions.push({
+      id: "assign",
+      label: incident.assigneeName ? "Reasignar operario" : "Asignar operario",
+      icon: UserPlus,
+      onSelect: () => {
+        setAssignError(null);
+        setAssignOpen(true);
       },
     });
   }
@@ -416,7 +463,8 @@ export default function IncidentDetailPage() {
         status={incident.status}
         priority={incident.priority}
         category={incident.category}
-        actions={heroActions}
+        assigneeName={incident.assigneeName}
+        actions={heroActions}vale geni
       />
 
       {claimError && (
@@ -564,6 +612,18 @@ export default function IncidentDetailPage() {
         onResolve={handleResolve}
         submitting={resolving}
         error={resolveError}
+      />
+
+      <AssignmentModal
+        isOpen={assignOpen}
+        onClose={() => setAssignOpen(false)}
+        incidentCode={incident.code}
+        lodgingName={incident.lodgingName}
+        isReassign={Boolean(incident.assigneeName)}
+        onAssign={handleAssign}
+        submitting={assigning}
+        error={assignError}
+        actions={heroActions}
       />
 
       <ConfirmationModal

@@ -9,6 +9,7 @@ export default function HeroIncidentCard({
     status,
     priority,
     category,
+    assigneeName,
     actions,
     className = '',
 }) {
@@ -26,8 +27,15 @@ export default function HeroIncidentCard({
                 <CategoryBadge category={category} />
             </div>
 
-            <h1 className="hero-incident__title">{title}</h1>
-
+            <div className="hero-incident__heading">
+                <h1 className="hero-incident__title">{title}</h1>
+                {assigneeName && (
+                    <p className="hero-incident__assignee">
+                        Operario: <strong>{assigneeName}</strong>
+                    </p>
+                )}
+            </div>
+            
             {actions && <div className="hero-incident__actions">{actions}</div>}
         </section>
     );

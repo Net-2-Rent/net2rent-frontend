@@ -8,6 +8,7 @@ import InlineError from "../../../../../../shared/components/ui/atoms/InlineErro
 import HelperText from "../../../../../../shared/components/ui/atoms/HelperText/HelperText.jsx";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
 import PinGenerator from "../../molecules/PinGenerator/PinGenerator.jsx";
+import AddressAutocomplete from "../../../../../../shared/components/ui/molecules/AddressAutocomplete/AddressAutocomplete.jsx";
 import "./LodgingModal.scss";
 
 const TITLE_BY_MODE = {
@@ -99,11 +100,18 @@ export default function LodgingModal({
               error={errors.address?.message}
               required
             >
-              <TextField
-                invalid={!!errors.address}
-                {...register("address", {
-                  required: "La dirección es obligatoria",
-                })}
+              <Controller
+                name="address"
+                control={control}
+                rules={{ required: "La dirección es obligatoria" }}
+                render={({ field }) => (
+                  <AddressAutocomplete
+                    value={field.value}
+                    invalid={!!errors.address}
+                    onTextChange={field.onChange}
+                    onSelect={(place) => field.onChange(place.formatted)}
+                  />
+                )}
               />
             </FormField>
           </>

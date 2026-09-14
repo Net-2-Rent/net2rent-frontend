@@ -6,20 +6,15 @@ import NewGuestIncidentPage from "../features/guest-portal/pages/NewGuestInciden
 import ConfirmationPage from "../features/guest-portal/pages/ConfirmationPage";
 import IncidentDetailGuestPage from "../features/guest-portal/pages/IncidentDetailGuestPage/IncidentDetailGuestPage.jsx";
 import GuestRoute from "../features/guest-portal/components/GuestRoute";
-import BackofficeSandbox from "../features/backoffice/pages/BackofficeSandbox";
 import LoginPage from "../features/auth/pages/LoginPage";
 import BackofficeLayout from "../features/backoffice/components/ui/organisms/BackofficeLayout/BackofficeLayout";
-import {
-  BackofficeIndexPage,
-  Placeholder,
-} from "../features/backoffice/pages/BackofficePlaceholders.jsx";
+import { BackofficeIndexPage } from "../features/backoffice/pages/BackofficePlaceholders.jsx";
 import ProtectedRoute from "../features/auth/components/ProtectedRoute";
 import ProfilePage from "../features/backoffice/pages/ProfilePage/ProfilePage.jsx";
 import NewIncidentPage from "../features/backoffice/pages/NewIncidentPage.jsx";
 import LodgingsPage from "../features/backoffice/pages/LodgingsPage/LodgingsPage.jsx";
 import IncidentDetailPage from "../features/backoffice/pages/IncidentDetailPage/IncidentDetailPage.jsx";
 import UsersPage from "../features/backoffice/pages/UsersPage/UsersPage.jsx";
-import GuestSandbox from "../features/guest-portal/pages/GuestSandbox";
 import IncidentsListPage from "../features/backoffice/pages/IncidentsListPage/IncidentsListPage.jsx";
 
 const router = createBrowserRouter([
@@ -39,8 +34,6 @@ const router = createBrowserRouter([
           { path: "/incidencias/:id", element: <IncidentDetailGuestPage /> },
         ],
       },
-            { path: "/sandbox", element: <GuestSandbox /> },
-
     ],
   },
   {
@@ -68,7 +61,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-      { path: "/sandbox/backoffice", element: <BackofficeSandbox /> },
     ],
   },
 ]);

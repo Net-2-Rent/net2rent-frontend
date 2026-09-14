@@ -14,7 +14,7 @@ export default function ContentLayout({ header, children, contained = true }) {
 
       <main id="main-content" className="content-layout__body">
         {contained ? (
-          <Card variant="content">{children}</Card>
+          <Card variant="content" className="content-layout__card">{children}</Card>
         ) : (
           <div className="content-layout__plain">{children}</div>
         )}

@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import ContentLayout from "../components/ui/organisms/ContentLayout/ContentLayout.jsx";
-import PageHeader from "../components/ui/molecules/PageHeader/PageHeader.jsx";
-import NewIncidentForm from "../components/ui/organisms/NewIncidentForm/NewIncidentForm.jsx";
-import ReadonlyField from "../../../shared/components/ui/molecules/ReadonlyField/ReadonlyField.jsx";
-import { useGuestAuthStore } from "../store/guestAuthStore.js";
-import { createGuestIncident } from "../services/guestApi.js";
+import ContentLayout from "../../components/ui/organisms/ContentLayout/ContentLayout.jsx";
+import PageHeader from "../../components/ui/molecules/PageHeader/PageHeader.jsx";
+import NewIncidentForm from "../../components/ui/organisms/NewIncidentForm/NewIncidentForm.jsx";
+import ReadonlyField from "../../../../shared/components/ui/molecules/ReadonlyField/ReadonlyField.jsx";
+import { useGuestAuthStore } from "../../store/guestAuthStore.js";
+import { createGuestIncident } from "../../services/guestApi.js";
 import "./NewGuestIncidentPage.scss";
 
 const reportDateFormatter = new Intl.DateTimeFormat("es-ES", {

@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import AppScope from "./AppScope";
-import IdentificationPage from "../features/guest-portal/pages/IdentificationPage";
-import MyLodgingPage from "../features/guest-portal/pages/MyLodgingPage";
-import NewGuestIncidentPage from "../features/guest-portal/pages/NewGuestIncidentPage";
+import IdentificationPage from "../features/guest-portal/pages/IdentificationPage/IdentificationPage.jsx";
+import MyLodgingPage from "../features/guest-portal/pages/MyLodgingPage/MyLodgingPage.jsx";
+import NewGuestIncidentPage from "../features/guest-portal/pages/NewGuestIncidentPage/NewGuestIncidentPage.jsx";
 import ConfirmationPage from "../features/guest-portal/pages/ConfirmationPage";
-import IncidentDetailGuestPage from "../features/guest-portal/pages/IncidentDetailGuestPage";
+import IncidentDetailGuestPage from "../features/guest-portal/pages/IncidentDetailGuestPage/IncidentDetailGuestPage.jsx";
 import GuestRoute from "../features/guest-portal/components/GuestRoute";
 import BackofficeSandbox from "../features/backoffice/pages/BackofficeSandbox";
 import LoginPage from "../features/auth/pages/LoginPage";

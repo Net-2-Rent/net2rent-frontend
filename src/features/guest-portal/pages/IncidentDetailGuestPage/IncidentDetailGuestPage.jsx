@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
-import ContentLayout from "../components/ui/organisms/ContentLayout/ContentLayout.jsx";
-import PageHeader from "../components/ui/molecules/PageHeader/PageHeader.jsx";
-import StatusBadge from "../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
-import PrimaryButton from "../components/ui/atoms/PrimaryButton/PrimaryButton.jsx";
-import { formatDate } from "../../../shared/utils/formatDate.js";
-import { fetchGuestIncidentDetail } from "../services/guestApi.js";
-import NoticeBox from "../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
+import ContentLayout from "../../components/ui/organisms/ContentLayout/ContentLayout.jsx";
+import PageHeader from "../../components/ui/molecules/PageHeader/PageHeader.jsx";
+import StatusBadge from "../../../../shared/components/ui/atoms/StatusBadge/StatusBadge.jsx";
+import PrimaryButton from "../../components/ui/atoms/PrimaryButton/PrimaryButton.jsx";
+import { formatDate } from "../../../../shared/utils/formatDate.js";
+import { fetchGuestIncidentDetail } from "../../services/guestApi.js";
+import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
+import { truncate } from "../../../../shared/utils/truncate.js";
 import "./IncidentDetailGuestPage.scss";
 
 const RESOLVED_STATES = new Set(["RESOLVED", "CLOSED"]);
@@ -82,7 +83,7 @@ export default function IncidentDetailGuestPage() {
           backLabel="Mi alojamiento"
           onBack={handleBack}
           eyebrow={incident?.code}
-          title={incident ? incident.description : "Detalle de la incidencia"}
+          title={incident ? truncate(incident.description) : "Detalle de la incidencia"}
         />
       }
     >

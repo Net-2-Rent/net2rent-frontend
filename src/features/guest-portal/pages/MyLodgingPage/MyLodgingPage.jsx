@@ -1,24 +1,35 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
-import ContentLayout from '../components/ui/organisms/ContentLayout/ContentLayout.jsx';
-import PageHeader from '../components/ui/molecules/PageHeader/PageHeader.jsx';
-import Logo from '../components/ui/atoms/Logo/Logo.jsx';
-import GuestIncidentItem from '../components/ui/organisms/GuestIncidentItem/GuestIncidentItem.jsx';
-import EmptyState from '../components/ui/organisms/EmptyState/EmptyState.jsx';
-import PrimaryButton from '../components/ui/atoms/PrimaryButton/PrimaryButton.jsx';
-import NoticeBox from '../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx';
-import { useGuestAuthStore } from '../store/guestAuthStore.js';
-import { fetchGuestIncidents } from '../services/guestApi.js';
+import ContentLayout from '../../components/ui/organisms/ContentLayout/ContentLayout.jsx';
+import PageHeader from '../../components/ui/molecules/PageHeader/PageHeader.jsx';
+import Logo from '../../components/ui/atoms/Logo/Logo.jsx';
+import GuestIncidentItem from '../../components/ui/organisms/GuestIncidentItem/GuestIncidentItem.jsx';
+import EmptyState from '../../components/ui/organisms/EmptyState/EmptyState.jsx';
+import PrimaryButton from '../../components/ui/atoms/PrimaryButton/PrimaryButton.jsx';
+import NoticeBox from '../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx';
+import { useGuestAuthStore } from '../../store/guestAuthStore.js';
+import { fetchGuestIncidents } from '../../services/guestApi.js';
+import { truncate } from '../../../../shared/utils/truncate.js'
+import TextButton from '../../components/ui/atoms/TextButton/TextButton.jsx';
+import Modal from '../../../../shared/components/ui/molecules/Modal/Modal.jsx';
+import Button from '../../../../shared/components/ui/atoms/Button/Button.jsx';
 import './MyLodgingPage.scss';
 
 export default function MyLodgingPage() {
   const lodgingName = useGuestAuthStore((state) => state.lodgingName);
   const lodgingRef = useGuestAuthStore((state) => state.lodgingRef);
   const [incidents, setIncidents] = useState([]);
-  const [status, setStatus] = useState('loading'); // loading | error | success
+  const [status, setStatus] = useState('loading');
   const [error, setError] = useState('');
+  const logout = useGuestAuthStore((state) => state.logout);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  }
 
   useEffect(() => {
     let active = true;
@@ -68,8 +79,8 @@ export default function MyLodgingPage() {
           <Logo className="my-lodging-page__logo" />
           <PageHeader
             eyebrow="Tu alojamiento"
-            title={lodgingName ?? 'Mi alojamiento'}
-            reference={lodgingRef ?? ''}
+            title={lodgingName ?? "Mi alojamiento"}
+            reference={lodgingRef ?? ""}
           />
         </>
       }
@@ -77,25 +88,25 @@ export default function MyLodgingPage() {
       <div className="my-lodging-page">
         <PrimaryButton
           className="my-lodging-page__report"
-          onClick={() => navigate('/incidencias/nueva')}
+          onClick={() => navigate("/incidencias/nueva")}
         >
           Reportar incidencia
         </PrimaryButton>
 
         <div className="my-lodging-page__section-head">
           <h2 className="my-lodging-page__section-title">Tus incidencias</h2>
-          {status === 'success' && (
+          {status === "success" && (
             <span className="my-lodging-page__count">
               {incidents.length} incidencias
             </span>
           )}
         </div>
 
-        {status === 'loading' && (
+        {status === "loading" && (
           <p className="my-lodging-page__status">Cargando…</p>
         )}
 
-        {status === 'error' && (
+        {status === "error" && (
           <div className="my-lodging-page__error">
             <AlertCircle size={24} aria-hidden="true" />
             <p>{error}</p>
@@ -103,16 +114,13 @@ export default function MyLodgingPage() {
           </div>
         )}
 
-        {status === 'success' && incidents.length === 0 && (
-          <EmptyState
-            icon={CheckCircle2}
-            title="Todo en orden"
-          >
+        {status === "success" && incidents.length === 0 && (
+          <EmptyState icon={CheckCircle2} title="Todo en orden">
             No hay incidencias en tu alojamiento.
           </EmptyState>
         )}
 
-        {status === 'success' && incidents.length > 0 && (
+        {status === "success" && incidents.length > 0 && (
           <>
             <NoticeBox>
               Para incidencias urgentes como una fuga de agua o un corte de luz,
@@ -124,7 +132,7 @@ export default function MyLodgingPage() {
                   key={incident.id}
                   to={`/incidencias/${incident.id}`}
                   code={incident.code}
-                  title={incident.description}
+                  title={truncate(incident.description)}
                   status={incident.status}
                   openedAt={incident.openedAt}
                   resolvedAt={incident.resolvedAt}
@@ -132,9 +140,38 @@ export default function MyLodgingPage() {
                 />
               ))}
             </ul>
+
+            <TextButton
+              className="my-lodging-page__logout"
+              onClick={() => setConfirmOpen(true)}
+            >
+              Salir
+            </TextButton>
           </>
         )}
       </div>
+
+      <Modal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title="Cerrar sesión"
+        closeLabel="Cancelar"
+        footer={
+          <div className="my-lodging-page__logout-actions">
+            <Button variant="primary" onClick={handleLogout}>
+              Sí, cerrar sesión
+            </Button>
+            <Button variant="secondary" onClick={() => setConfirmOpen(false)}>
+              Cancelar
+            </Button>
+          </div>
+        }
+      >
+        <p>
+          ¿Seguro que quieres salir? Tendrás que volver a introducir la
+          referencia y el PIN para acceder de nuevo.
+        </p>
+      </Modal>
     </ContentLayout>
   );
 }

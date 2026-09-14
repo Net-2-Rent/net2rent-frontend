@@ -26,11 +26,13 @@
   }
 
   &__form .pin-input {
-    justify-content: center;
+    justify-content: stretch;
   }
 
   &__form .pin-input__box {
-    width: 62px;
+    flex: 1;
+    width: auto;
+    min-width: 0;
     height: 62px;
   }
 }

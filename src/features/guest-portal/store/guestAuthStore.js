@@ -1,5 +1,9 @@
 import { create } from "zustand";
-import { loadGuestSession, saveGuestSession, clearGuestSession } from "../services/guestAuthStorage.js";
+import {
+  loadGuestSession,
+  saveGuestSession,
+  clearGuestSession,
+} from "../services/guestAuthStorage.js";
 import { requestGuestAccess } from "../services/guestApi.js";
 
 const initial = loadGuestSession();
@@ -36,7 +40,7 @@ export const useGuestAuthStore = create((set) => ({
     }
   },
 
-    logout() {
+  logout() {
     clearGuestSession();
     set({
       token: null,

@@ -1,0 +1,7 @@
+.address-autocomplete {
+  width: 100%;
+
+  &--invalid .geoapify-autocomplete-input {
+    border-color: var(--color-danger, #d64545);
+  }
+}

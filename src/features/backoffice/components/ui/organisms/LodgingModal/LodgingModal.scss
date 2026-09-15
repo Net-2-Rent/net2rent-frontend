@@ -5,7 +5,11 @@
   form {
     display: flex;
     flex-direction: column;
-    gap: vars.space(20);
+    gap: vars.space(24);
+  }
+
+  &__address-field.form-field {
+    gap: vars.space(12);
   }
 
   &__alert {

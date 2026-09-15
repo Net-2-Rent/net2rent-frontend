@@ -1,4 +1,5 @@
 import { useId, useEffect } from "react";
+import { Building2, MapPin, NotebookPen, Save, CircleX } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import Modal from "../../../../../../shared/components/ui/molecules/Modal/Modal.jsx";
 import TextField from "../../../../../../shared/components/ui/atoms/TextField/TextField.jsx";
@@ -65,9 +66,11 @@ export default function LodgingModal({
             variant="primary"
             disabled={isSubmitting}
           >
+            <Save size={16} aria-hidden="true" />
             Guardar
           </Button>
           <Button variant="secondary" onClick={onClose} disabled={isSubmitting}>
+            <CircleX size={16} aria-hidden="true" />
             Cancelar
           </Button>
         </div>
@@ -84,7 +87,12 @@ export default function LodgingModal({
           <>
             <FormField
               id="name"
-              label="Nombre del alojamiento"
+              label={
+                <>
+                  <Building2 size={14} aria-hidden="true" />
+                  <span>Nombre del alojamiento</span>
+                </>
+              }
               error={errors.name?.message}
               required
             >
@@ -96,7 +104,12 @@ export default function LodgingModal({
 
             <FormField
               id="address"
-              label="Dirección"
+              label={
+                <>
+                  <MapPin size={14} aria-hidden="true" />
+                  <span>Dirección</span>
+                </>
+              }
               error={errors.address?.message}
               required
             >
@@ -147,7 +160,15 @@ export default function LodgingModal({
         </div>
 
         {!isPinOnly && (
-          <FormField id="notes" label="Notas privadas de acceso (uso interno)">
+          <FormField
+            id="notes"
+            label={
+              <>
+                <NotebookPen size={16} aria-hidden="true" />
+                <span>Notas privadas de acceso (uso interno)</span>
+              </>
+            }
+          >
             <TextArea className="lodging-modal__notes" {...register("notes")} />
           </FormField>
         )}

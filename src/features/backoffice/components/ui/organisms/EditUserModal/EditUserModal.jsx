@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Save, CircleX } from "lucide-react";
 import Modal from "../../../../../../shared/components/ui/molecules/Modal/Modal.jsx";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
 import Input from "../../../../../../shared/components/ui/atoms/Input/Input.jsx";
@@ -132,6 +133,7 @@ export default function EditUserModal({
             className="edit-user-modal__save"
             onClick={handleSave}
           >
+            <Save size={16} aria-hidden="true" />
             {isCreate ? "Crear usuario" : "Guardar cambios"}
           </Button>
           <Button
@@ -139,6 +141,7 @@ export default function EditUserModal({
             className="edit-user-modal__cancel"
             onClick={onClose}
           >
+            <CircleX size={16} aria-hidden="true" />
             Cancelar
           </Button>
         </div>

@@ -7,6 +7,9 @@
   gap: vars.space(4);
 
   &__label {
+    display: flex;
+    align-items: center;
+    gap: vars.space(6);
     color: var(--color-text-strong);
 
     @include mix.when-guest {

@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Building2, MapPin, UserRound } from "lucide-react";
 import DataList from "../../molecules/DataList/DataList.jsx";
 import "./LodgingCard.scss";
 import PrivateNotes from "../../atoms/PrivateNotes/PrivateNotes.jsx";
@@ -38,20 +38,27 @@ export default function LodgingCard({
   return (
     <section className={classes}>
       <div className="lodging-card__info">
-        <h2 className="lodging-card__title">Alojamiento</h2>
+        <h2 className="lodging-card__title">
+          <Building2 size={18} aria-hidden="true" />
+          <span>Alojamiento</span>
+        </h2>
 
         <DataList items={lodgingDetails} />
 
         {accessNotes && <PrivateNotes>{accessNotes}</PrivateNotes>}
 
         <h2 className="lodging-card__title lodging-card__title--reporter">
-          Reportante
+          <UserRound size={18} aria-hidden="true" />
+          <span>Reportante</span>
         </h2>
         <DataList items={reporterDetails} />
       </div>
 
       <div className="lodging-card__location">
-        <h2 className="lodging-card__title">Ubicación</h2>
+        <h2 className="lodging-card__title">
+          <MapPin size={18} aria-hidden="true" />
+          <span>Ubicación</span>
+        </h2>
 
         {mapEmbedUrl && (
           <div className="lodging-card__map">

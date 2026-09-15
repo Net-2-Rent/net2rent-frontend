@@ -14,7 +14,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Plus, X } from "lucide-react";
+import { GripVertical, Plus, X, ListTodo } from "lucide-react";
 import Input from "../../../../../../shared/components/ui/atoms/Input/Input";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button";
 import "./ChecklistCard.scss";
@@ -219,7 +219,10 @@ export default function ChecklistCard({
   return (
     <section className={classes}>
       <header className="checklist__header">
-        <h2 className="checklist__title">{title}</h2>
+        <h2 className="checklist__title">
+          <ListTodo size={18} aria-hidden="true" />
+          <span>{title}</span>
+        </h2>
         {total > 0 && (
           <p className="checklist__progress" aria-live="polite">
             {done} de {total} {total === 1 ? "tarea" : "tareas"} completadas

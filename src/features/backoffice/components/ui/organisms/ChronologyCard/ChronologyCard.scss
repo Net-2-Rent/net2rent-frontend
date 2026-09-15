@@ -11,6 +11,9 @@
 
   &__title {
     @include mix.text-style("block-eyebrow", "backoffice");
+    display: flex;
+    align-items: center;
+    gap: vars.space(8);
     margin: 0;
     color: var(--color-text-muted);
   }
@@ -37,7 +40,9 @@
     gap: vars.space(12);
     padding-bottom: vars.space(16);
 
-    &:last-child { padding-bottom: 0; }
+    &:last-child {
+      padding-bottom: 0;
+    }
 
     &::before {
       content: "";
@@ -48,8 +53,12 @@
       width: 2px;
       background: var(--color-border);
     }
-    &:first-child::before { top: 9px; }
-    &:last-child::before { bottom: calc(100% - 9px); }
+    &:first-child::before {
+      top: 9px;
+    }
+    &:last-child::before {
+      bottom: calc(100% - 9px);
+    }
   }
 
   &__dot {

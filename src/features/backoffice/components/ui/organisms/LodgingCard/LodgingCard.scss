@@ -20,6 +20,10 @@
     color: var(--color-text-muted);
   }
 
+  &__title--reporter {
+    margin-top: vars.space(24);
+  }
+
   &__coords {
     @include mix.text-style("mono-data", "backoffice");
     @include mix.mono-data;

@@ -545,9 +545,6 @@ export default function IncidentDetailPage() {
 
       <ReporterCard
         message={incident.description}
-        reporterName={`${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim()}
-        reporterContact={incident.guestContact}
-        openedLabel={incident.openedAt}
       />
 
       <LodgingCard
@@ -555,6 +552,9 @@ export default function IncidentDetailPage() {
         address={incident.lodgingAddress}
         reference={incident.lodgingRef}
         accessNotes={incident.lodgingAccessNotes}
+        reporterName={`${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim()}
+        reporterContact={incident.guestContact}
+        openedLabel={incident.openedAt}
         mapEmbedUrl={
           incident.lodgingAddress
             ? `https://maps.google.com/maps?q=${encodeURIComponent(incident.lodgingAddress)}&output=embed`

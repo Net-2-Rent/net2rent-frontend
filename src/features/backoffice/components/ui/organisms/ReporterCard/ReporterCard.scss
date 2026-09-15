@@ -3,16 +3,8 @@
 
 .reporter-card {
   @include mix.surface-card;
-
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: vars.space(24);
   padding: vars.space(24);
 
-  @include mix.respond-to("tablet") {
-    grid-template-columns: 1.6fr 1fr;
-    gap: vars.space(40);
-  }
 
   &__title {
     @include mix.text-style("block-eyebrow", "backoffice");

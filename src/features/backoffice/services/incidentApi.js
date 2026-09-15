@@ -201,3 +201,11 @@ export async function listIncidents(filters) {
   });
   return data;
 }
+
+export async function getIncidentImageBlob(incidentId, imageId) {
+  const { data } = await httpClient.get(
+      `/incidents/${incidentId}/images/${imageId}`,
+      { responseType: "blob" },
+  );
+  return data;
+}

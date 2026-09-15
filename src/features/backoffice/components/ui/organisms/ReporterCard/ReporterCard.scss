@@ -5,6 +5,15 @@
   @include mix.surface-card;
   padding: vars.space(24);
 
+  &--with-aside {
+    @include mix.respond-to("tablet") {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: vars.space(40);
+      align-items: start;
+    }
+  }
+
   &__title {
     @include mix.text-style("block-eyebrow", "backoffice");
     display: flex;

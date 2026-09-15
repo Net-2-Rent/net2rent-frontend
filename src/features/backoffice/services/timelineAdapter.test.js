@@ -55,7 +55,7 @@ describe('timelineAdapter', () => {
         expect(mapTimeline(items).map((e) => e.id)).toEqual(['event-0', 'comment-1']);
     });
 
-    it("usa item.note cuando existe, en vez del antes → después", () => {
+    it("combina el 'antes → después' con el motivo cuando el evento trae note", () => {
       const item = {
         type: "EVENT",
         at: "2026-09-04T12:00:00",
@@ -67,7 +67,28 @@ describe('timelineAdapter', () => {
         text: null,
       };
       const entry = mapTimelineItemToEntry(item, 3);
-      expect(entry.description).toBe("Falta el recambio del termo");
+      expect(entry.description).toBe(
+        "En curso → Pausada — Motivo: Falta el recambio del termo",
+      );
+    });
+
+    it("en REASSIGNED con note, muestra el cambio de operario y el motivo", () => {
+      const item = {
+        type: "EVENT",
+        at: "2026-09-04T12:30:00",
+        actorName: "Admin Demo",
+        eventType: "REASSIGNED",
+        previousValue: "Operario Demo",
+        newValue: "Juan Palomo",
+        note: "Se cogió la baja",
+        text: null,
+      };
+      const entry = mapTimelineItemToEntry(item, 5);
+      expect(entry.title).toBe("Operario reasignado");
+      expect(entry.description).toBe(
+        "Operario Demo → Juan Palomo — Motivo: Se cogió la baja",
+      );
+      expect(entry.status).toBeNull();
     });
 
     it('formatea TIME_LOGGED con la unidad "min"', () => {

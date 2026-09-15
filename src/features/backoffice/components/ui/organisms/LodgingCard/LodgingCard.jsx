@@ -1,66 +1,88 @@
-import { ExternalLink } from 'lucide-react';
-import DataList from '../../molecules/DataList/DataList.jsx';
-import './LodgingCard.scss';
-import PrivateNotes from '../../atoms/PrivateNotes/PrivateNotes.jsx';
+import { ExternalLink, Building2, MapPin, UserRound } from "lucide-react";
+import DataList from "../../molecules/DataList/DataList.jsx";
+import "./LodgingCard.scss";
+import PrivateNotes from "../../atoms/PrivateNotes/PrivateNotes.jsx";
 
 export default function LodgingCard({
-    name,
-    address,
-    reference,
-    owner,
-    coordinates,
-    mapEmbedUrl,
-    mapsUrl,
-    accessNotes, 
-    className = '',
+  name,
+  address,
+  reference,
+  owner,
+  coordinates,
+  mapEmbedUrl,
+  mapsUrl,
+  accessNotes,
+  reporterName,
+  reporterContact,
+  openedLabel,
+  stayLabel,
+  className = "",
 }) {
-    const classes = ['lodging-card', className].filter(Boolean).join(' ');
+  const classes = ["lodging-card", className].filter(Boolean).join(" ");
 
-    const details = [
-        { label: 'Alojamiento', value: name },
-        { label: 'Dirección', value: address },
-        { label: 'Referencia', value: reference },
-        { label: 'Propietario', value: owner },
-        { label: 'Coordenadas', value: coordinates, mono: true },
-    ].filter((item) => item.value);
+  const lodgingDetails = [
+    { label: "Alojamiento", value: name },
+    { label: "Dirección", value: address },
+    { label: "Referencia", value: reference },
+    { label: "Propietario", value: owner },
+    { label: "Coordenadas", value: coordinates, mono: true },
+  ].filter((item) => item.value);
 
-    return (
-        <section className={classes}>
-            <div className="lodging-card__info">
-                <h2 className="lodging-card__title">Alojamiento</h2>
-                <DataList items={details} />
+  const reporterDetails = [
+    { label: "Nombre", value: reporterName },
+    { label: "Contacto", value: reporterContact },
+    { label: "Apertura", value: openedLabel },
+    { label: "Estancia", value: stayLabel },
+  ].filter((item) => item.value);
 
-                
-                {accessNotes && <PrivateNotes>{accessNotes}</PrivateNotes>}
-            </div>
+  return (
+    <section className={classes}>
+      <div className="lodging-card__info">
+        <h2 className="lodging-card__title">
+          <Building2 size={18} aria-hidden="true" />
+          <span>Alojamiento</span>
+        </h2>
 
-            <div className="lodging-card__location">
-                <h2 className="lodging-card__title">Ubicación</h2>
+        <DataList items={lodgingDetails} />
 
-                {mapEmbedUrl && (
-                    <div className="lodging-card__map">
-                        <iframe
-                            src={mapEmbedUrl}
-                            title="Mapa del alojamiento"
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                        />
-                    </div>
-                )}
+        {accessNotes && <PrivateNotes>{accessNotes}</PrivateNotes>}
 
-                {mapsUrl && (
+        <h2 className="lodging-card__title lodging-card__title--reporter">
+          <UserRound size={18} aria-hidden="true" />
+          <span>Reportante</span>
+        </h2>
+        <DataList items={reporterDetails} />
+      </div>
 
-                    <a
-                        className="lodging-card__open"
-                        href={mapsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <span>Abrir en mapas</span>
-                        <ExternalLink size={14} aria-hidden="true" />
-                    </a>
-                )}
-            </div>
-        </section>
-    );
+      <div className="lodging-card__location">
+        <h2 className="lodging-card__title">
+          <MapPin size={18} aria-hidden="true" />
+          <span>Ubicación</span>
+        </h2>
+
+        {mapEmbedUrl && (
+          <div className="lodging-card__map">
+            <iframe
+              src={mapEmbedUrl}
+              title="Mapa del alojamiento"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        )}
+
+        {mapsUrl && (
+          <a
+            className="lodging-card__open"
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>Abrir en mapas</span>
+            <ExternalLink size={14} aria-hidden="true" />
+          </a>
+        )}
+      </div>
+    </section>
+  );
 }

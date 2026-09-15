@@ -2,6 +2,8 @@
 @use "mixins" as mix;
 
 .phone-incident-form {
+  @include mix.surface-card;
+  padding: vars.space(24);
   display: flex;
   flex-direction: column;
   gap: vars.space(20);

@@ -19,6 +19,9 @@
 
   &__title {
     @include mix.text-style("block-eyebrow", "backoffice");
+    display: flex;
+    align-items: center;
+    gap: vars.space(8);
     margin: 0;
     color: var(--color-text-muted);
   }
@@ -121,7 +124,7 @@
     gap: vars.space(4);
   }
 
-    &__index {
+  &__index {
     @include mix.text-style("field-label", "backoffice");
 
     flex: none;

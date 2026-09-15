@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Pencil, XCircle, UserPlus } from "lucide-react";
+import { Pencil, XCircle, UserPlus, Pause } from "lucide-react";
 import HeroIncidentCard from "../../components/ui/molecules/HeroIncidentCard/HeroIncidentCard";
 import ClassificationCard from "../../components/ui/organisms/ClassificationCard/ClassificationCard";
 import ChecklistCard from "../../components/ui/organisms/ChecklistCard/ChecklistCard";
@@ -320,7 +320,7 @@ export default function IncidentDetailPage() {
     } catch (err) {
       setAssignError(
         err.response?.data?.message ??
-        "No se pudo asignar el operario. Inténtalo de nuevo"
+          "No se pudo asignar el operario. Inténtalo de nuevo",
       );
     } finally {
       setAssigning(false);
@@ -341,6 +341,9 @@ export default function IncidentDetailPage() {
     incident.status === INCIDENT_STATUS.CLOSED ||
     incident.status === INCIDENT_STATUS.REJECTED;
 
+  const checklistLocked =
+    isTerminal || incident.status === INCIDENT_STATUS.RESOLVED;
+
   const canReject =
     canTriage &&
     [
@@ -355,7 +358,7 @@ export default function IncidentDetailPage() {
   const canEdit = canTriage && !isUnclassified && !editing && !isTerminal;
 
   const isClassified = incident.category != null && incident.priority != null;
-  const canAssign = 
+  const canAssign =
     canTriage &&
     isClassified &&
     [
@@ -371,13 +374,14 @@ export default function IncidentDetailPage() {
     secondaryActions.push({
       id: "pause",
       label: "Pausar trabajo",
+      icon: Pause,
       onSelect: () => {
         setPauseError(null);
         setPauseOpen(true);
       },
     });
   }
-  
+
   if (canAssign) {
     secondaryActions.push({
       id: "assign",
@@ -466,6 +470,7 @@ export default function IncidentDetailPage() {
         category={incident.category}
         assigneeName={incident.assigneeName}
         actions={heroActions}
+        actions={heroActions}
       />
 
       {claimError && (
@@ -541,9 +546,6 @@ export default function IncidentDetailPage() {
 
       <ReporterCard
         message={incident.description}
-        reporterName={`${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim()}
-        reporterContact={incident.guestContact}
-        openedLabel={incident.openedAt}
       />
 
       <IncidentImageGallery
@@ -555,6 +557,9 @@ export default function IncidentDetailPage() {
         address={incident.lodgingAddress}
         reference={incident.lodgingRef}
         accessNotes={incident.lodgingAccessNotes}
+        reporterName={`${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim()}
+        reporterContact={incident.guestContact}
+        openedLabel={incident.openedAt}
         mapEmbedUrl={
           incident.lodgingAddress
             ? `https://maps.google.com/maps?q=${encodeURIComponent(incident.lodgingAddress)}&output=embed`
@@ -573,7 +578,7 @@ export default function IncidentDetailPage() {
         error={checklistError}
         adding={checklistAdding}
         pendingIds={checklistPendingIds}
-        disabled={isTerminal}
+        disabled={checklistLocked}
         onAdd={addChecklistItem}
         onToggle={toggleChecklistItem}
         onRemove={removeChecklistItem}

@@ -16,8 +16,15 @@
 
   &__title {
     @include mix.text-style("block-eyebrow", "backoffice");
+    display: flex;
+    align-items: center;
+    gap: vars.space(8);
     margin: 0 0 vars.space(12);
     color: var(--color-text-muted);
+  }
+
+  &__title--reporter {
+    margin-top: vars.space(24);
   }
 
   &__coords {
@@ -37,7 +44,9 @@
     min-height: var(--touch-target-min);
     color: var(--color-brand-ink);
 
-    &:hover { color: var(--color-brand-ink-hover); }
+    &:hover {
+      color: var(--color-brand-ink-hover);
+    }
   }
 
   &__caret {
@@ -52,8 +61,8 @@
     margin-top: vars.space(12);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
-    overflow: hidden;            // recorta el iframe a las esquinas redondeadas
-    aspect-ratio: 16 / 10;       // mantiene proporción sin alto fijo
+    overflow: hidden; // recorta el iframe a las esquinas redondeadas
+    aspect-ratio: 16 / 10; // mantiene proporción sin alto fijo
 
     iframe {
       width: 100%;

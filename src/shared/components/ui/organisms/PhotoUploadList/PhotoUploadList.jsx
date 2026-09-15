@@ -1,4 +1,4 @@
-import FileUpload from "../../../../../../shared/components/ui/molecules/FileUpload/FileUpload.jsx";
+import FileUpload from "../../molecules/FileUpload/FileUpload.jsx";
 import "./PhotoUploadList.scss";
 
 export default function PhotoUploadList({

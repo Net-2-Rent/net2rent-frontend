@@ -3,7 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import TextField from "../../../../../../shared/components/ui/atoms/TextField/TextField.jsx";
 import TextArea from "../../../../../../shared/components/ui/atoms/TextArea/TextArea.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
-import PhotoUploadList from "../PhotoUploadList/PhotoUploadList.jsx";
+import PhotoUploadList from "../../../../../../shared/components/ui/organisms/PhotoUploadList/PhotoUploadList.jsx";
 import PrimaryButton from "../../atoms/PrimaryButton/PrimaryButton.jsx";
 import DropdownField from "../../../../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx";
 import {
@@ -24,6 +24,7 @@ export default function NewIncidentForm({ onSubmit }) {
     handleSubmit,
     control,
     watch,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onTouched",

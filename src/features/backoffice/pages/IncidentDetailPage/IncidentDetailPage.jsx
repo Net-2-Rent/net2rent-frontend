@@ -34,6 +34,7 @@ import { INCIDENT_STATUS } from "../../../../shared/constants/incidentStatus";
 import "./IncidentDetailPage.scss";
 import ReporterCard from "../../components/ui/organisms/ReporterCard/ReporterCard";
 import LodgingCard from "../../components/ui/organisms/LodgingCard/LodgingCard";
+import IncidentImageGallery from "../../components/ui/organisms/IncidentImageGallery/IncidentImageGallery.jsx";
 import IncidentPrimaryAction from "../../components/ui/molecules/IncidentPrimaryAction/IncidentPrimaryAction";
 import NoticeBanner from "../../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner";
 import ChronologyCard from "../../components/ui/organisms/ChronologyCard/ChronologyCard.jsx";
@@ -464,7 +465,7 @@ export default function IncidentDetailPage() {
         priority={incident.priority}
         category={incident.category}
         assigneeName={incident.assigneeName}
-        actions={heroActions}vale geni
+        actions={heroActions}
       />
 
       {claimError && (
@@ -543,6 +544,10 @@ export default function IncidentDetailPage() {
         reporterName={`${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim()}
         reporterContact={incident.guestContact}
         openedLabel={incident.openedAt}
+      />
+
+      <IncidentImageGallery
+          incidentId={incident.id} images={incident.images ?? []}
       />
 
       <LodgingCard

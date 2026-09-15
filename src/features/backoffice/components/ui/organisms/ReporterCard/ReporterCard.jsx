@@ -7,7 +7,6 @@ export default function ReporterCard({
     reporterName,
     reporterContact,
     openedLabel,
-    stayLabel,
     hasPhoto = false,
     onViewPhoto,
     className = '',
@@ -18,7 +17,6 @@ export default function ReporterCard({
         { label: 'Nombre', value: reporterName },
         { label: 'Contacto', value: reporterContact },
         { label: 'Apertura', value: openedLabel },
-        { label: 'Estancia', value: stayLabel },
     ];
 
     return (

@@ -10,13 +10,13 @@ export async function requestGuestAccess(ref, pin) {
 
 // CU-GST-03: listado de incidencias del alojamiento
 export async function fetchGuestIncidents() {
-  const { data } = await guestHttpClient.get("/api/incidents/guest");
+  const { data } = await guestHttpClient.get("/api/guest/incidents");
   return data; // [{ code, description, status, openedAt }]
 }
 
 // CU-GST-04/09: detalle público (404 si no pertenece al lodging)
 export async function fetchGuestIncidentDetail(id) {
-  const { data } = await guestHttpClient.get(`/api/incidents/guest/${id}`);
+  const { data } = await guestHttpClient.get(`/api/guest/incidents/${id}`);
   return data; // { code, description, status, openedAt, closedAt }
 }
 

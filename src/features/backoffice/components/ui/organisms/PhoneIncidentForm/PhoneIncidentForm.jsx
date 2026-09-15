@@ -14,6 +14,7 @@ import NoticeBox from "../../../../../../shared/components/ui/molecules/NoticeBo
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
 import PhoneField from "../../../../../../shared/components/ui/molecules/PhoneField/PhoneField.jsx";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
+import PhotoUploadList from "../../../../../../shared/components/ui/organisms/PhotoUploadList/PhotoUploadList.jsx";
 import "./PhoneIncidentForm.scss";
 
 const DESC_MIN = 10;
@@ -53,6 +54,7 @@ export default function PhoneIncidentForm({
       category: "",
       priority: INCIDENT_PRIORITY.NORMAL,
       description: "",
+      images: [],
     },
   });
 
@@ -264,6 +266,17 @@ export default function PhoneIncidentForm({
           })}
         />
       </FormField>
+
+      <fieldset className="phone-incident-form__fieldset">
+        <legend>Fotos (opcional, máx. 3)</legend>
+        <Controller
+          name="images"
+          control={control}
+          render={({ field }) => (
+            <PhotoUploadList value={field.value} onChange={field.onChange} />
+          )}
+        />
+      </fieldset>
 
       <div className="phone-incident-form__actions">
         <Button type="submit" variant="primary" disabled={isSubmitting}>

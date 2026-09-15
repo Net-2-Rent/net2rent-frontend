@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Pencil, XCircle, UserPlus } from "lucide-react";
+import { Pencil, XCircle, UserPlus, Pause } from "lucide-react";
 import HeroIncidentCard from "../../components/ui/molecules/HeroIncidentCard/HeroIncidentCard";
 import ClassificationCard from "../../components/ui/organisms/ClassificationCard/ClassificationCard";
 import ChecklistCard from "../../components/ui/organisms/ChecklistCard/ChecklistCard";
@@ -370,6 +370,7 @@ export default function IncidentDetailPage() {
     secondaryActions.push({
       id: "pause",
       label: "Pausar trabajo",
+      icon: Pause,
       onSelect: () => {
         setPauseError(null);
         setPauseOpen(true);

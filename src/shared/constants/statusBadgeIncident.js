@@ -3,7 +3,7 @@ export const ALL_STATUS = "ALL";
 export const STATUS_BADGE_LABEL = {
   NEW: "Nuevas",
   ASSIGNED: "Asignadas",
-  IN_PROGRESS: "En progreso",
+  IN_PROGRESS: "En curso",
   PAUSED: "Pausadas",
   RESOLVED: "Resueltas",
   CLOSED: "Cerradas",

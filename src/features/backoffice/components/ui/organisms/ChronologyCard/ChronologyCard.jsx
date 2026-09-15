@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { ClockArrowRight } from "lucide-react";
+import { ClockArrowRight, Save } from "lucide-react";
 import { formatDate } from "../../../../../../shared/utils/formatDate.js";
 import { toStatusModifier } from "../../../../../../shared/constants/incidentStatus.js";
 import Input from "../../../../../../shared/components/ui/atoms/Input/Input.jsx";
@@ -104,6 +104,7 @@ export default function ChronologyCard({
             variant="primary"
             disabled={!draft.trim() || submitting}
           >
+            <Save size={16} aria-hidden="true" />
             {submitting ? "Enviando…" : "Enviar"}
           </Button>
         </form>

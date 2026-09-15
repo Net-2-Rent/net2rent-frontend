@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { Pencil } from "lucide-react";
 import ActiveBadge from "../../atoms/ActiveBadge/ActiveBadge.jsx";
 import PinBadge from "../../atoms/PinBadge/PinBadge.jsx";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
@@ -44,6 +45,7 @@ export default function LodgingRow({
         <div className="lodging-row__actions">
           {onEdit && (
             <Button variant="secondary" onClick={onEdit}>
+              <Pencil size={16} aria-hidden="true" />
               Editar
             </Button>
           )}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Save } from "lucide-react";
 import PasswordInput from "../../../../../../shared/components/ui/molecules/PasswordInput/PasswordInput.jsx";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
@@ -16,8 +17,10 @@ export default function ChangePasswordForm({ onSubmit, submitting = false }) {
     e.preventDefault();
     let ok = true;
 
-    if (!current) { setErrCurrent("Introduce tu contraseña actual"); ok = false; }
-    else setErrCurrent(null);
+    if (!current) {
+      setErrCurrent("Introduce tu contraseña actual");
+      ok = false;
+    } else setErrCurrent(null);
 
     const hasLetter = /[a-zA-Z]/.test(next);
     const hasNumber = /[0-9]/.test(next);
@@ -26,8 +29,10 @@ export default function ChangePasswordForm({ onSubmit, submitting = false }) {
       ok = false;
     } else setErrNext(null);
 
-    if (next !== repeat) { setErrRepeat("Las contraseñas no coinciden."); ok = false; }
-    else setErrRepeat(null);
+    if (next !== repeat) {
+      setErrRepeat("Las contraseñas no coinciden.");
+      ok = false;
+    } else setErrRepeat(null);
 
     if (ok) onSubmit?.({ currentPassword: current, newPassword: next });
   }
@@ -36,7 +41,11 @@ export default function ChangePasswordForm({ onSubmit, submitting = false }) {
     <form className="change-password-form" onSubmit={handleSubmit} noValidate>
       <div className="change-password-form__title">Cambiar contraseña</div>
 
-      <FormField id="current-password" label="Contraseña actual" error={errCurrent}>
+      <FormField
+        id="current-password"
+        label="Contraseña actual"
+        error={errCurrent}
+      >
         <PasswordInput
           value={current}
           invalid={!!errCurrent}
@@ -59,13 +68,19 @@ export default function ChangePasswordForm({ onSubmit, submitting = false }) {
             const value = e.target.value;
             setNext(value);
             if (repeat) {
-              setErrRepeat(value !== repeat ? "Las contraseñas no coinciden." : null);
+              setErrRepeat(
+                value !== repeat ? "Las contraseñas no coinciden." : null,
+              );
             }
           }}
         />
       </FormField>
 
-      <FormField id="repeat-password" label="Repetir nueva contraseña" error={errRepeat}>
+      <FormField
+        id="repeat-password"
+        label="Repetir nueva contraseña"
+        error={errRepeat}
+      >
         <PasswordInput
           value={repeat}
           invalid={!!errRepeat}
@@ -73,7 +88,9 @@ export default function ChangePasswordForm({ onSubmit, submitting = false }) {
           onChange={(e) => {
             const value = e.target.value;
             setRepeat(value);
-            setErrRepeat(value && value !== next ? "Las contraseñas no coinciden." : null);
+            setErrRepeat(
+              value && value !== next ? "Las contraseñas no coinciden." : null,
+            );
           }}
         />
       </FormField>
@@ -84,6 +101,7 @@ export default function ChangePasswordForm({ onSubmit, submitting = false }) {
         className="change-password-form__submit"
         disabled={submitting}
       >
+        <Save size={16} aria-hidden="true" />
         {submitting ? "Guardando…" : "Guardar cambios"}
       </Button>
     </form>

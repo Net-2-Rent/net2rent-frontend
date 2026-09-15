@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { TriangleAlert } from "lucide-react";
 import LodgingRow from "../../components/ui/molecules/LodgingRow/LodgingRow.jsx";
 import LodgingModal from "../../components/ui/organisms/LodgingModal/LodgingModal.jsx";
 import ConfirmationModal from "../../components/ui/organisms/ConfirmationModal/ConfirmationModal.jsx";
@@ -38,11 +39,10 @@ export default function LodgingsPage() {
   const [submitError, setSubmitError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
 
-  const [modalMode, setModalMode] = useState(null); 
+  const [modalMode, setModalMode] = useState(null);
   const [selected, setSelected] = useState(null);
 
-   const [revealedPins, setRevealedPins] = useState({});
-  
+  const [revealedPins, setRevealedPins] = useState({});
 
   const [confirmTarget, setConfirmTarget] = useState(null);
 
@@ -94,7 +94,7 @@ export default function LodgingsPage() {
   async function handleSubmit(values) {
     setSubmitError("");
     try {
-       let saved;
+      let saved;
       if (modalMode === "create") {
         saved = await createLodging(values);
       } else if (modalMode === "edit") {
@@ -106,13 +106,13 @@ export default function LodgingsPage() {
           notes: selected.accessNotes,
           pin: values.pin,
         });
-         }
+      }
       if (values.pin) {
         setRevealedPins((prev) => ({ ...prev, [saved.id]: values.pin }));
       }
       closeModal();
       await loadLodgings();
-        } catch (err) {
+    } catch (err) {
       const data = err.response?.data;
       const backendErrors = data?.errors ?? [];
 
@@ -223,7 +223,12 @@ export default function LodgingsPage() {
           isOpen={!!confirmTarget}
           onClose={() => setConfirmTarget(null)}
           onConfirm={confirmDeactivate}
-          title="Desactivar alojamiento"
+          title={
+            <>
+              <TriangleAlert size={18} aria-hidden="true" />
+              <span>Desactivar alojamiento</span>
+            </>
+          }
           message={`¿Seguro que quieres desactivar "${confirmTarget?.name}"? No se elimina, pero dejará de estar disponible para nuevas incidencias.`}
           confirmLabel="Desactivar"
           tone="danger"

@@ -2,9 +2,6 @@
 @use "mixins" as mix;
 
 .image-gallery {
-  @include mix.surface-card;
-  padding: vars.space(24);
-
   &__title {
     @include mix.text-style("block-eyebrow", "backoffice");
     display: inline-flex;

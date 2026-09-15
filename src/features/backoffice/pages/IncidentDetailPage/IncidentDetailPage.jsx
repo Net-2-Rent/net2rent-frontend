@@ -1,12 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Pencil, XCircle, UserPlus, Pause } from "lucide-react";
+import { formatDate } from "../../../../shared/utils/formatDate";
 import HeroIncidentCard from "../../components/ui/molecules/HeroIncidentCard/HeroIncidentCard";
 import ClassificationCard from "../../components/ui/organisms/ClassificationCard/ClassificationCard";
 import ChecklistCard from "../../components/ui/organisms/ChecklistCard/ChecklistCard";
 import IncidentEditForm from "../../components/ui/organisms/IncidentEditForm/IncidentEditForm";
 import Button from "../../../../shared/components/ui/atoms/Button/Button";
 import Spinner from "../../../../shared/components/ui/atoms/Spinner/Spinner";
+
 import {
   closeIncident,
   getIncidentById,
@@ -545,11 +547,12 @@ export default function IncidentDetailPage() {
       )}
 
       <ReporterCard
-        message={incident.description}
-      />
-
-      <IncidentImageGallery
-          incidentId={incident.id} images={incident.images ?? []}
+          message={incident.description}
+          aside={
+            incident.images?.length > 0 ? (
+                <IncidentImageGallery incidentId={incident.id} images={incident.images} />
+            ) : null
+          }
       />
 
       <LodgingCard
@@ -559,7 +562,7 @@ export default function IncidentDetailPage() {
         accessNotes={incident.lodgingAccessNotes}
         reporterName={`${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim()}
         reporterContact={incident.guestContact}
-        openedLabel={incident.openedAt}
+        openedLabel={formatDate(incident.openedAt)}
         mapEmbedUrl={
           incident.lodgingAddress
             ? `https://maps.google.com/maps?q=${encodeURIComponent(incident.lodgingAddress)}&output=embed`

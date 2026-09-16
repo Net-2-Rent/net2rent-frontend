@@ -67,16 +67,4 @@
 
     color: var(--color-text-muted);
   }
-
-  &__sep {
-    @include mix.text-style("meta", "guest");
-
-    color: var(--color-text-muted);
-  }
-
-  &__closed {
-    @include mix.text-style("meta", "guest");
-
-    color: var(--color-text-strong);
-  }
 }

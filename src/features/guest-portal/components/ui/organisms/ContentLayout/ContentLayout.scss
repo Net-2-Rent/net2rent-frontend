@@ -1,8 +1,11 @@
+@use "variables" as vars;
+
 .content-layout {
   width: 100%;
 
   &__header {
     padding: 20px 20px 34px;
+    min-height: vars.space(64);
     display: flex;
     justify-content: center;
   }
@@ -16,8 +19,9 @@
     width: 100%;
     max-width: var(--layout-content-max);
     margin-inline: auto;
+    margin-top: vars.space(32);
     padding: 0 20px;
-    padding-bottom: 32px;
+    padding-bottom: vars.space(56);
   }
 
   &__plain {

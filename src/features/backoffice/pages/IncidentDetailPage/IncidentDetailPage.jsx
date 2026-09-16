@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Pencil, XCircle, UserPlus, Pause } from "lucide-react";
+import { Pencil, XCircle, UserPlus, Pause, UserRound } from "lucide-react";
 import { formatDate } from "../../../../shared/utils/formatDate";
 import HeroIncidentCard from "../../components/ui/molecules/HeroIncidentCard/HeroIncidentCard";
 import ClassificationCard from "../../components/ui/organisms/ClassificationCard/ClassificationCard";
@@ -8,6 +8,7 @@ import ChecklistCard from "../../components/ui/organisms/ChecklistCard/Checklist
 import IncidentEditForm from "../../components/ui/organisms/IncidentEditForm/IncidentEditForm";
 import Button from "../../../../shared/components/ui/atoms/Button/Button";
 import Spinner from "../../../../shared/components/ui/atoms/Spinner/Spinner";
+import DataList from "../../components/ui/molecules/DataList/DataList.jsx";
 
 import {
   closeIncident,
@@ -346,6 +347,11 @@ export default function IncidentDetailPage() {
   if (loadError) return <p role="alert">{loadError}</p>;
   if (!incident) return null;
 
+  const imputedMinutes = timeEntries.reduce(
+    (sum, e) => sum + Number(e.minutes || 0),
+    0,
+  )
+
   const canClaim =
     isOperator &&
     incident.assigneeName == null &&
@@ -559,15 +565,33 @@ export default function IncidentDetailPage() {
       )}
 
       <ReporterCard
-        message={incident.description}
-        aside={
-          incident.images?.length > 0 ? (
-            <IncidentImageGallery
-              incidentId={incident.id}
-              images={incident.images}
-            />
-          ) : null
-        }
+          message={incident.description}
+          media={
+            incident.images?.length > 0 ? (
+                <IncidentImageGallery
+                    incidentId={incident.id}
+                    images={incident.images}
+                />
+            ) : null
+          }
+          aside={
+            <div className="incident-detail__reporter">
+              <h2 className="reporter-card__title">
+                <UserRound size={18} aria-hidden="true" />
+                <span>Reportante</span>
+              </h2>
+              <DataList
+                  items={[
+                    {
+                      label: "Nombre",
+                      value: `${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim(),
+                    },
+                    { label: "Contacto", value: incident.guestContact },
+                    { label: "Apertura", value: formatDate(incident.openedAt) },
+                  ].filter((item) => item.value)}
+              />
+            </div>
+          }
       />
 
       <LodgingCard
@@ -575,9 +599,6 @@ export default function IncidentDetailPage() {
         address={incident.lodgingAddress}
         reference={incident.lodgingRef}
         accessNotes={incident.lodgingAccessNotes}
-        reporterName={`${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim()}
-        reporterContact={incident.guestContact}
-        openedLabel={formatDate(incident.openedAt)}
         mapEmbedUrl={
           incident.lodgingAddress
             ? `https://maps.google.com/maps?q=${encodeURIComponent(incident.lodgingAddress)}&output=embed`
@@ -654,6 +675,7 @@ export default function IncidentDetailPage() {
         onResolve={handleResolve}
         submitting={resolving}
         error={resolveError}
+        imputedMinutes={imputedMinutes}
       />
 
       <AssignmentModal

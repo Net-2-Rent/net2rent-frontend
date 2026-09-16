@@ -1,3 +1,5 @@
+@use "variables" as vars;
+
 .content-layout {
   width: 100%;
 
@@ -16,8 +18,9 @@
     width: 100%;
     max-width: var(--layout-content-max);
     margin-inline: auto;
+    margin-top: vars.space(32);
     padding: 0 20px;
-    padding-bottom: 32px;
+    padding-bottom: vars.space(56);
   }
 
   &__plain {

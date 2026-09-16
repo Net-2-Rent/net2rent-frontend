@@ -42,6 +42,8 @@ import NoticeBanner from "../../../../shared/components/ui/molecules/NoticeBanne
 import ChronologyCard from "../../components/ui/organisms/ChronologyCard/ChronologyCard.jsx";
 import { withMinDuration } from "../../../../shared/utils/withMinDuration.js";
 import AssignmentModal from "../../components/ui/organisms/AssignmentModal/AssignmentModal.jsx";
+import TimeAllocation from "../../components/ui/organisms/TimeAllocation/TimeAllocation.jsx";
+import { useIncidentTimeEntries } from "../../hooks/useIncidentTimeEntries.js";
 
 export default function IncidentDetailPage() {
   const { id } = useParams();
@@ -105,6 +107,17 @@ export default function IncidentDetailPage() {
     addComment: addTimelineComment,
     reload: reloadTimeline,
   } = useIncidentTimeline(id);
+
+  const {
+    entries: timeEntries,
+    loading: timeLoading,
+    error: timeError,
+    adding: timeAdding,
+    pendingIds: timePendingIds,
+    addEntry: addTimeEntry,
+    updateEntry: updateTimeEntry,
+    removeEntry: removeTimeEntry,
+  } = useIncidentTimeEntries(id);
 
   const loadIncident = useCallback(async () => {
     setLoading(true);
@@ -472,7 +485,6 @@ export default function IncidentDetailPage() {
         category={incident.category}
         assigneeName={incident.assigneeName}
         actions={heroActions}
-        actions={heroActions}
       />
 
       {claimError && (
@@ -547,12 +559,15 @@ export default function IncidentDetailPage() {
       )}
 
       <ReporterCard
-          message={incident.description}
-          aside={
-            incident.images?.length > 0 ? (
-                <IncidentImageGallery incidentId={incident.id} images={incident.images} />
-            ) : null
-          }
+        message={incident.description}
+        aside={
+          incident.images?.length > 0 ? (
+            <IncidentImageGallery
+              incidentId={incident.id}
+              images={incident.images}
+            />
+          ) : null
+        }
       />
 
       <LodgingCard
@@ -588,14 +603,28 @@ export default function IncidentDetailPage() {
         onReorder={reorderChecklistItem}
       />
 
-      <ChronologyCard
-        entries={timelineEntries}
-        onAddComment={addTimelineComment}
-        loading={timelineLoading}
-        error={timelineError}
-        submitting={timelineSubmitting}
-        canComment={!isTerminal}
-      />
+      <div className="incident-detail__two-col">
+        <ChronologyCard
+          entries={timelineEntries}
+          onAddComment={addTimelineComment}
+          loading={timelineLoading}
+          error={timelineError}
+          submitting={timelineSubmitting}
+          canComment={!isTerminal}
+        />
+
+        <TimeAllocation
+          entries={timeEntries}
+          loading={timeLoading}
+          error={timeError}
+          adding={timeAdding}
+          pendingIds={timePendingIds}
+          disabled={isTerminal}
+          onImpute={addTimeEntry}
+          onUpdate={updateTimeEntry}
+          onRemove={removeTimeEntry}
+        />
+      </div>
 
       <RejectionModal
         isOpen={rejectOpen}

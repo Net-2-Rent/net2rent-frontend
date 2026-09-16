@@ -53,6 +53,7 @@
     flex-direction: column;
     gap: vars.space(2);
     min-width: 0;
+    flex: 1 1 auto;
   }
 
   &__operator {
@@ -70,6 +71,8 @@
   &__minutes {
     @include mix.text-style("body", "backoffice");
     flex: none;
+    min-width: 4rem;
+    text-align: right;
     color: var(--color-text-strong);
     font-weight: vars.weight("bold");
   }
@@ -85,4 +88,38 @@
 
   &__field-concept { flex: 1 1 160px; min-width: 0; }
   &__field-minutes { flex: 0 0 110px; }
+
+    &__actions {
+    display: flex;
+    gap: vars.space(4);
+    flex: none;
+  }
+
+  &__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: vars.space(6);
+    border: 0;
+    background: transparent;
+    border-radius: vars.space(6);
+    color: var(--color-text-muted);
+    cursor: pointer;
+
+    &:hover:not(:disabled) { background: var(--color-surface-muted); }
+    &:disabled { opacity: 0.5; cursor: default; }
+
+    &--danger:hover:not(:disabled) { color: var(--color-danger); }
+  }
+
+  &__row--editing {
+    gap: vars.space(12);
+  }
+
+  &__hint {
+    @include mix.text-style("field-label", "backoffice");
+    margin: 0;
+    color: var(--color-text-muted);
+
+  }
 }

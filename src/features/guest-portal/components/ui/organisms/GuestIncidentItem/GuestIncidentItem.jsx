@@ -26,24 +26,13 @@ export default function GuestIncidentItem({
                 <span className="guest-incident-item__title">{title}</span>
 
                 <span className="guest-incident-item__footer">
-                    <time className="guest-incident-item__date" dateTime={openedAt}>
-                        {formatDate(openedAt)}
-                    </time>
+                  <time className="guest-incident-item__date" dateTime={openedAt}>
+                    {formatDate(openedAt)}
+                  </time>
                     {resolvedAt && (
-                        <>
-                            <span className="guest-incident-item__sep" aria-hidden="true">-</span>
-                            <time className="guest-incident-item__resolved" dateTime={resolvedAt}>
-                                {formatDate(resolvedAt)}
-                            </time>
-                        </>
-                    )}
-                    {closedAt && (
-                        <>
-                            <span className="guest-incident-item__sep" aria-hidden="true">-</span>
-                            <time className="guest-incident-item__closed" dateTime={closedAt}>
-                                {formatDate(closedAt)}
-                            </time>
-                        </>
+                        <time className="guest-incident-item__resolved" dateTime={resolvedAt}>
+                            {formatDate(resolvedAt)}
+                        </time>
                     )}
                 </span>
             </Link>

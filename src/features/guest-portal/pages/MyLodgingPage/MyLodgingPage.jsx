@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, AlertCircle, LogOut } from 'lucide-react';
 import ContentLayout from '../../components/ui/organisms/ContentLayout/ContentLayout.jsx';
 import PageHeader from '../../components/ui/molecules/PageHeader/PageHeader.jsx';
 import Logo from '../../components/ui/atoms/Logo/Logo.jsx';
@@ -142,9 +142,10 @@ export default function MyLodgingPage() {
             </ul>
 
             <TextButton
-              className="my-lodging-page__logout"
-              onClick={() => setConfirmOpen(true)}
+                className="my-lodging-page__logout"
+                onClick={() => setConfirmOpen(true)}
             >
+              <LogOut size={16} aria-hidden="true" />
               Salir
             </TextButton>
           </>

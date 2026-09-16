@@ -28,10 +28,12 @@ export default function PinInput({
   };
 
   const handleKeyDown = (index, event) => {
-    if (event.key !== "Backspace" || digits[index]) return;
-
+    if (event.key !== "Backspace") return;
     event.preventDefault();
-    if (index > 0) {
+
+    if (digits[index]) {
+      onChange(value.slice(0, index) + value.slice(index + 1));
+    } else if (index > 0) {
       onChange(value.slice(0, index - 1) + value.slice(index));
       focusInput(index - 1);
     }

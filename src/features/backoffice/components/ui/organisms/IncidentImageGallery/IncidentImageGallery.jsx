@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Download, Images } from "lucide-react";
+import { Download } from "lucide-react";
 import Modal from "../../../../../../shared/components/ui/molecules/Modal/Modal";
 import Spinner from "../../../../../../shared/components/ui/atoms/Spinner/Spinner";
 import { getIncidentImageBlob } from "../../../../services/incidentApi";
@@ -53,11 +53,6 @@ export default function IncidentImageGallery({ incidentId, images = [] }) {
 
     return (
         <section className="image-gallery">
-            <h2 className="image-gallery__title">
-                <Images size={18} aria-hidden="true" />
-                Imágenes
-            </h2>
-
             {loading && <Spinner />}
 
             {error && (

@@ -2,15 +2,6 @@
 @use "mixins" as mix;
 
 .image-gallery {
-  &__title {
-    @include mix.text-style("block-eyebrow", "backoffice");
-    display: inline-flex;
-    align-items: center;
-    gap: vars.space(8);
-    margin: 0 0 vars.space(16);
-    color: var(--color-text-muted);
-  }
-
   &__grid {
     list-style: none;
     margin: 0;

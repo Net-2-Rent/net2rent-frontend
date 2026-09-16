@@ -5,12 +5,12 @@
   @include mix.surface-card;
 
   display: grid;
-  grid-template-columns: 1fr;          // móvil: apilado
+  grid-template-columns: 1fr;
   gap: vars.space(24);
   padding: vars.space(24);
 
   @include mix.respond-to("tablet") {
-    grid-template-columns: 1fr 1fr 1.4fr;   // Alojamiento | Reportante | Mapa
+    grid-template-columns: 1fr 1fr;
     column-gap: vars.space(24);
     row-gap: vars.space(24);
     align-items: start;
@@ -18,17 +18,17 @@
 
   &__location {
     @include mix.respond-to("tablet") {
-      grid-column: 3;
+      grid-column: 2;
       grid-row: 1 / span 2;
-      align-self: stretch;      // 👈 ocupa todo el alto de las dos filas
+      align-self: stretch;
       display: flex;
-      flex-direction: column;   // 👈 el mapa abarca las dos filas de la izquierda
+      flex-direction: column;
     }
   }
 
   &__notes {
     @include mix.respond-to("tablet") {
-      grid-column: 1 / 3;             // notas a lo ancho, debajo del todo
+      grid-column: 1;
     }
   }
 
@@ -75,11 +75,11 @@
     margin-top: vars.space(12);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
-    overflow: hidden;         // recorta el iframe a las esquinas redondeadas
+    overflow: hidden;
     aspect-ratio: 16 / 10;
 
     @include mix.respond-to("tablet") {
-      flex: 1;                 // 👈 desktop: el mapa llena la columna → sin blanco
+      flex: 1;
       aspect-ratio: auto;
     }
 

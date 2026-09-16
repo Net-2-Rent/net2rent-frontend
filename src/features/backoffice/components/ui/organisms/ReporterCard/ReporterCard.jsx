@@ -3,6 +3,7 @@ import "./ReporterCard.scss";
 
 export default function ReporterCard({
                                          message,
+                                         media,
                                          aside,
                                          hasPhoto = false,
                                          onViewPhoto,
@@ -20,6 +21,8 @@ export default function ReporterCard({
                     <span>Descripción de la incidencia</span>
                 </h2>
                 <p className="reporter-card__message">{message}</p>
+
+                {media && <div className="reporter-card__media">{media}</div>}
 
                 {hasPhoto && (
                     <button type="button" className="reporter-card__photo" onClick={onViewPhoto}>

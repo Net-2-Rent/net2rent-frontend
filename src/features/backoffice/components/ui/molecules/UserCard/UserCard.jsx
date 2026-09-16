@@ -41,7 +41,7 @@ export default function UserCard({
           <Pencil size={16} aria-hidden="true" />
           Editar
         </Button>
-        {active && (
+        {active && onDeactivate && (
           <Button
             variant="secondary"
             className="user-card__deactivate"

@@ -33,6 +33,7 @@ export default function PhoneIncidentForm({
   operators = [],
   onSubmit,
   submitError,
+  onDiscard,
 }) {
   const {
     register,
@@ -40,6 +41,7 @@ export default function PhoneIncidentForm({
     watch,
     getValues,
     control,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onTouched",
@@ -59,6 +61,11 @@ export default function PhoneIncidentForm({
   });
 
   const descriptionLength = watch("description").length;
+
+  function handleDiscard() {
+    reset();
+    onDiscard?.();
+  }
 
   return (
     <form
@@ -282,8 +289,12 @@ export default function PhoneIncidentForm({
         <Button type="submit" variant="primary" disabled={isSubmitting}>
           Registrar incidencia
         </Button>
-        <Button type="button" variant="secondary">
-          Cancelar
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={handleDiscard}
+        >
+          Descartar
         </Button>
       </div>
     </form>

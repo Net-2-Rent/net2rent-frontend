@@ -49,6 +49,6 @@ describe("PinGenerator", () => {
     render(<PinGenerator value="1234" onChange={vi.fn()} />);
     fireEvent.click(screen.getByRole("button", { name: "Copiar PIN" }));
 
-    expect(writeText).toHaveBeenCalledWith("1234");
+    expect(writeText).toHaveBeenCalledWith("PIN: 1234");
   });
 });

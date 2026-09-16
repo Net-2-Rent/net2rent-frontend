@@ -1,7 +1,28 @@
-import { CheckCircle, Circle, Wrench } from "lucide-react";
+import { CheckCircle, Circle, Wrench, XCircle } from "lucide-react";
 import { formatDate } from "../../../../../../shared/utils/formatDate.js";
 import { useId } from "react";
 import "./GuestIncidentTimeline.scss";
+
+const TERMINAL = {
+  RESOLVED: {
+    key: "resolved",
+    label: "Resuelta",
+    Icon: CheckCircle,
+    dateField: "resolvedAt",
+  },
+  CLOSED: {
+    key: "closed",
+    label: "Cerrada",
+    Icon: CheckCircle,
+    dateField: "closedAt",
+  },
+  REJECTED: {
+    key: "rejected",
+    label: "Rechazada",
+    Icon: XCircle,
+    dateField: "closedAt",
+  },
+};
 
 export default function GuestIncidentTimeline({ incident }) {
   const titleId = useId();
@@ -12,21 +33,26 @@ export default function GuestIncidentTimeline({ incident }) {
       at: incident.openedAt,
       Icon: Circle,
     },
-    {
+  ];
+
+  if (incident.assignedAt) {
+    milestones.push({
       key: "assigned",
-      label: "Asignada",
+      label: "En curso",
       at: incident.assignedAt,
       Icon: Wrench,
-    },
-    {
-      key: "resolved",
-      label: "Resuelta",
-      at: incident.resolvedAt,
-      Icon: CheckCircle,
-    },
-  ].filter((m) => Boolean(m.at));
+    });
+  }
 
-  if (milestones.length === 0) return null;
+  const terminal = TERMINAL[incident.status];
+  if (terminal) {
+    milestones.push({
+      key: terminal.key,
+      label: terminal.label,
+      at: incident[terminal.dateField],
+      Icon: terminal.Icon,
+    });
+  }
 
   return (
     <section aria-labelledby={titleId} className="guest-timeline">
@@ -44,9 +70,11 @@ export default function GuestIncidentTimeline({ incident }) {
             />
             <div className="guest-timeline__content">
               <span className="guest-timeline__label">{label}</span>
-              <time className="guest-timeline__date" dateTime={at}>
-                {formatDate(at)}
-              </time>
+              {at && (
+                <time className="guest-timeline__date" dateTime={at}>
+                  {formatDate(at)}
+                </time>
+              )}
             </div>
           </li>
         ))}

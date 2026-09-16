@@ -35,3 +35,7 @@
     padding-right: vars.space(32);
   }
 }
+
+.phone-incident-form__fieldset {
+  min-inline-size: 0;
+}

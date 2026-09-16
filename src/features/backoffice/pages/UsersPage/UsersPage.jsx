@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/ui/molecules/SearchBar/SearchBar.jsx";
 import RoleFilter from "../../components/ui/molecules/RoleFilter/RoleFilter.jsx";
 import UserCard from "../../components/ui/molecules/UserCard/UserCard.jsx";
 import EditUserModal from "../../components/ui/organisms/EditUserModal/EditUserModal.jsx";
 import ConfirmationModal from "../../components/ui/organisms/ConfirmationModal/ConfirmationModal.jsx";
+import ConfirmToast from "../../components/ui/molecules/ConfirmToast/ConfirmToast.jsx"; // NUEVO
 import {
   listUsers,
   createUser,
   updateUser,
   resetUserPassword,
   deactivateUser,
+  getActiveIncidentsCount,
 } from "../../services/userApi.js";
 import { useAuthStore } from "../../../auth/store/authStore.js";
 import {
@@ -54,7 +57,9 @@ function loadErrorMessage(err) {
 
 export default function UsersPage() {
   const role = useAuthStore((s) => s.user?.role);
+  const currentUser = useAuthStore((s) => s.user); // NUEVO
   const isAdmin = role === ROLES.ADMIN;
+  const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -68,6 +73,9 @@ export default function UsersPage() {
   const [submitError, setSubmitError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [confirmTarget, setConfirmTarget] = useState(null);
+  const [operatorIncidentCount, setOperatorIncidentCount] = useState(0);
+  const [toastTarget, setToastTarget] = useState(null); // NUEVO
+  const [removing, setRemoving] = useState(false); // NUEVO
 
   useEffect(() => {
     let active = true;
@@ -166,18 +174,65 @@ export default function UsersPage() {
     }
   }
 
-  async function confirmDeactivate() {
+  function closeConfirmModal() {
+    setConfirmTarget(null);
+    setOperatorIncidentCount(0);
+  }
+
+  async function handleDeactivateClick(user) {
+    if (user.role === ROLES.OPERATOR) {
+      try {
+        const count = await getActiveIncidentsCount(user.id);
+        setOperatorIncidentCount(count);
+        setConfirmTarget(user);
+        return;
+      } catch (err) {
+        // Si el conteo falla, se abre el modal normal;
+        // el backend seguirá protegiendo la desactivación.
+      }
+    }
+    setOperatorIncidentCount(0);
+    setConfirmTarget(user);
+  }
+
+  function handleReassign() {
     if (!confirmTarget) return;
+    const id = confirmTarget.id;
+    closeConfirmModal();
+    navigate(`/backoffice/incidencias?assigneeId=${id}`);
+  }
+
+  // ==================== NUEVO: doble confirmación ====================
+
+  // Ya no desactiva directo: pide confirmación irreversible en el toast.
+  function confirmDeactivate() {
+    if (!confirmTarget) return;
+    setToastTarget(confirmTarget);
+    closeConfirmModal();
+  }
+
+  async function confirmIrreversibleDeactivate() {
+    if (!toastTarget) return;
+    setRemoving(true);
     try {
-      await deactivateUser(confirmTarget.id);
-      setConfirmTarget(null);
+      await deactivateUser(toastTarget.id);
+      setToastTarget(null);
       await refreshUsers();
     } catch (err) {
       const data = err.response?.data;
       setLoadError(data?.message ?? "No se pudo desactivar el usuario.");
-      setConfirmTarget(null);
+      setToastTarget(null);
+    } finally {
+      setRemoving(false);
     }
   }
+
+  function cancelIrreversibleDeactivate() {
+    setToastTarget(null);
+  }
+
+  // Autenticación normalizada para comparar con el listado
+  const currentUserEmail = currentUser?.email?.toLowerCase();
 
   const term = search.trim().toLowerCase();
   const filteredUsers = users.filter((user) => {
@@ -256,7 +311,12 @@ export default function UsersPage() {
             active={user.active}
             onEdit={isAdmin ? () => openEdit(user) : undefined}
             onDeactivate={
-              isAdmin && user.active ? () => setConfirmTarget(user) : undefined
+              isAdmin &&
+              user.active &&
+              // NUEVO: ocultar "Desactivar" en la propia tarjeta
+              user.email?.toLowerCase() !== currentUserEmail
+                ? () => handleDeactivateClick(user)
+                : undefined
             }
           />
         ))}
@@ -285,8 +345,8 @@ export default function UsersPage() {
 
       {isAdmin && (
         <ConfirmationModal
-          isOpen={!!confirmTarget}
-          onClose={() => setConfirmTarget(null)}
+          isOpen={!!confirmTarget && operatorIncidentCount === 0}
+          onClose={closeConfirmModal}
           onConfirm={confirmDeactivate}
           title="Desactivar usuario"
           subtitle={confirmTarget ? fullName(confirmTarget) : undefined}
@@ -297,6 +357,38 @@ export default function UsersPage() {
           }
           confirmLabel="Desactivar"
           tone="danger"
+        />
+      )}
+
+      {isAdmin && operatorIncidentCount > 0 && (
+        <ConfirmationModal
+          isOpen={!!confirmTarget && operatorIncidentCount > 0}
+          onClose={closeConfirmModal}
+          onConfirm={handleReassign}
+          title="No se puede desactivar"
+          subtitle={confirmTarget ? fullName(confirmTarget) : undefined}
+          message={
+            confirmTarget
+              ? `El operario ${fullName(confirmTarget)} tiene ${operatorIncidentCount} incidencia(s) activa(s) y no puede desactivarse. Primero deben reasignarse sus incidencias a otro(s) operario(s).`
+              : undefined
+          }
+          confirmLabel="Reasignar"
+          cancelLabel="Cancelar"
+          tone="default"
+        />
+      )}
+
+      {isAdmin && (
+        <ConfirmToast
+          isOpen={!!toastTarget}
+          onConfirm={confirmIrreversibleDeactivate}
+          onCancel={cancelIrreversibleDeactivate}
+          busy={removing}
+          message={
+            toastTarget
+              ? `Esta acción no es reversible, si desactiva a ${fullName(toastTarget)} no podrá reactivarlo de nuevo`
+              : ""
+          }
         />
       )}
     </div>

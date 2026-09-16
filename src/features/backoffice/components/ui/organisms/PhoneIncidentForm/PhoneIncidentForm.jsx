@@ -20,6 +20,13 @@ import "./PhoneIncidentForm.scss";
 const DESC_MIN = 10;
 const DESC_MAX = 2000;
 
+const NAME_FILTER = /[^\p{L}\p{M} '-]/gu;
+const NAME_PATTERN = /^[\p{L}\p{M} '-]+$/u;
+
+function onlyNameChars(value) {
+  return value.replace(NAME_FILTER, "");
+}
+
 function today() {
   const now = new Date();
   const year = now.getFullYear();
@@ -33,6 +40,7 @@ export default function PhoneIncidentForm({
   operators = [],
   onSubmit,
   submitError,
+  onDiscard,
 }) {
   const {
     register,
@@ -40,6 +48,7 @@ export default function PhoneIncidentForm({
     watch,
     getValues,
     control,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onTouched",
@@ -59,6 +68,28 @@ export default function PhoneIncidentForm({
   });
 
   const descriptionLength = watch("description").length;
+
+  const firstNameField = register("firstName", {
+    required: "El nombre es obligatorio",
+    maxLength: { value: 80, message: "Máximo 80 caracteres" },
+    pattern: {
+      value: NAME_PATTERN,
+      message: "El nombre no puede contener números",
+    },
+  });
+  const lastNameField = register("lastName", {
+    required: "El apellido es obligatorio",
+    maxLength: { value: 80, message: "Máximo 80 caracteres" },
+    pattern: {
+      value: NAME_PATTERN,
+      message: "El apellido no puede contener números",
+    },
+  });
+
+  function handleDiscard() {
+    reset();
+    onDiscard?.();
+  }
 
   return (
     <form
@@ -162,7 +193,11 @@ export default function PhoneIncidentForm({
             placeholder="Nombre del reportante"
             invalid={!!errors.firstName}
             autoComplete="given-name"
-            {...register("firstName", { required: "El nombre es obligatorio" })}
+            {...firstNameField}
+            onChange={(e) => {
+              e.target.value = onlyNameChars(e.target.value);
+              firstNameField.onChange(e);
+            }}
           />
         </FormField>
 
@@ -176,9 +211,11 @@ export default function PhoneIncidentForm({
             placeholder="Apellido"
             invalid={!!errors.lastName}
             autoComplete="family-name"
-            {...register("lastName", {
-              required: "El apellido es obligatorio",
-            })}
+            {...lastNameField}
+            onChange={(e) => {
+              e.target.value = onlyNameChars(e.target.value);
+              lastNameField.onChange(e);
+            }}
           />
         </FormField>
       </div>
@@ -282,8 +319,12 @@ export default function PhoneIncidentForm({
         <Button type="submit" variant="primary" disabled={isSubmitting}>
           Registrar incidencia
         </Button>
-        <Button type="button" variant="secondary">
-          Cancelar
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={handleDiscard}
+        >
+          Descartar
         </Button>
       </div>
     </form>

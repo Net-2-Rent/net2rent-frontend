@@ -84,6 +84,7 @@ export default function NewIncidentPage() {
                     operators={operators}
                     onSubmit={handleSubmit}
                     submitError={submitError}
+                    onDiscard={() => setSubmitError(null)}
                 />
             )}
         </section>

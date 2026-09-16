@@ -8,7 +8,6 @@ import PrimaryButton from "../../components/ui/atoms/PrimaryButton/PrimaryButton
 import { formatDate } from "../../../../shared/utils/formatDate.js";
 import { fetchGuestIncidentDetail } from "../../services/guestApi.js";
 import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
-import { truncate } from "../../../../shared/utils/truncate.js";
 import "./IncidentDetailGuestPage.scss";
 import GuestIncidentTimeline from "../../components/ui/organisms/GuestIncidentTimeline/GuestIncidentTimeline.jsx"
 
@@ -84,7 +83,7 @@ export default function IncidentDetailGuestPage() {
           backLabel="Mi alojamiento"
           onBack={handleBack}
           eyebrow={incident?.code}
-          title={incident ? truncate(incident.description) : "Detalle de la incidencia"}
+          title={incident ? incident.description : "Detalle de la incidencia"}
         />
       }
     >
@@ -171,7 +170,7 @@ export default function IncidentDetailGuestPage() {
                 </div>
               </div>
             )}
-            
+
             {showNote && (
               <div className="incident-detail-guest__note">
                 Te avisaremos aquí cuando el estado cambie. No hace falta volver

@@ -23,3 +23,8 @@ export async function deactivateUser(id) {
     const { data } = await httpClient.patch(`/users/${id}/deactivate`);
     return data;
 }
+
+export async function getActiveIncidentsCount(id) {
+    const { data } = await httpClient.get(`/users/${id}/active-incidents-count`);
+    return data.count;
+}

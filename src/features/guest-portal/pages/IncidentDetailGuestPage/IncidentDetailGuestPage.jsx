@@ -12,7 +12,7 @@ import { truncate } from "../../../../shared/utils/truncate.js";
 import "./IncidentDetailGuestPage.scss";
 import GuestIncidentTimeline from "../../components/ui/organisms/GuestIncidentTimeline/GuestIncidentTimeline.jsx"
 
-const RESOLVED_STATES = new Set(["RESOLVED", "CLOSED"]);
+const CLOSED_STATES = new Set(["RESOLVED", "CLOSED", "REJECTED"]);
 
 export default function IncidentDetailGuestPage() {
   const { id } = useParams();
@@ -74,7 +74,7 @@ export default function IncidentDetailGuestPage() {
     );
   }
 
-  const showNote = incident && !RESOLVED_STATES.has(incident.status);
+  const showNote = incident && !CLOSED_STATES.has(incident.status);
 
   return (
     <ContentLayout

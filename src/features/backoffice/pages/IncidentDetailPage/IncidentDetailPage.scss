@@ -2,51 +2,62 @@
 @use "../../../../styles/mixins" as mix;
 
 .incident-detail {
-    @include mix.flex(column, vars.space(24));
-    width: 100%;
-    max-width: 1180px;
-    margin-inline: auto;
+  @include mix.flex(column, vars.space(24));
+  width: 100%;
+  max-width: 1180px;
+  margin-inline: auto;
 
-    &__back {
-        align-self: flex-start;
-        @include mix.text-style("field-label");
-    }
+  &__back {
+    align-self: flex-start;
+    @include mix.text-style("field-label");
+  }
 
-    .hero-incident {
-        position:relative;
-    }
+  &__two-col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: vars.space(24);
 
-    .hero-incident__actions {
-        position:relative;
+    @include mix.respond-to("tablet") {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
     }
+  }
 
-    .hero-incident__actions {
-        @include mix.respond-to("tablet") {
-            position: absolute;
-            top: vars.space(16);
-            right: vars.space(16);
-            margin: 0;
-        }
+  .hero-incident {
+    position: relative;
+  }
+
+  .hero-incident__actions {
+    position: relative;
+  }
+
+  .hero-incident__actions {
+    @include mix.respond-to("tablet") {
+      position: absolute;
+      top: vars.space(16);
+      right: vars.space(16);
+      margin: 0;
     }
+  }
 }
 
 .classification-summary {
-    @include mix.surface-card;
-    @include mix.flex(column, vars.space(12));
-    padding: vars.space(20);
+  @include mix.surface-card;
+  @include mix.flex(column, vars.space(12));
+  padding: vars.space(20);
 
-    &__title {
-        margin: 0;
-        @include mix.text-style("card-title");
+  &__title {
+    margin: 0;
+    @include mix.text-style("card-title");
+  }
+
+  &__row {
+    margin: 0;
+    @include mix.text-style("body");
+
+    span {
+      font-weight: 600;
+      margin-right: vars.space(6);
     }
-
-    &__row {
-        margin: 0;
-        @include mix.text-style("body");
-
-        span {
-            font-weight: 600;
-            margin-right: vars.space(6);
-        }
-    }
+  }
 }

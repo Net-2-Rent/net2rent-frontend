@@ -40,7 +40,10 @@ async function toCreatePayload(values) {
 }
 
 export async function createPhoneIncident(values) {
-  const { data } = await httpClient.post("/incidents", await toCreatePayload(values));
+  const { data } = await httpClient.post(
+    "/incidents",
+    await toCreatePayload(values),
+  );
   return data;
 }
 
@@ -125,8 +128,8 @@ export async function rejectIncident(id, reason) {
 }
 
 export async function claimIncident(id) {
-    const { data } = await httpClient.patch(`/incidents/${id}/claim`);
-    return data;
+  const { data } = await httpClient.patch(`/incidents/${id}/claim`);
+  return data;
 }
 
 export async function closeIncident(id) {
@@ -160,11 +163,11 @@ export async function resolveIncident(id, { minutes, note }) {
 }
 
 export async function assignOperator(id, { operatorId, reason }) {
-    const { data } = await httpClient.patch(`/incidents/${id}/assignee`, {
-        operatorId: Number(operatorId),
-        reason: reason?.trim() || null,
-    });
-    return data;
+  const { data } = await httpClient.patch(`/incidents/${id}/assignee`, {
+    operatorId: Number(operatorId),
+    reason: reason?.trim() || null,
+  });
+  return data;
 }
 
 function toListParams(filters = {}) {
@@ -189,7 +192,7 @@ function toListParams(filters = {}) {
   set("openedTo", filters.openedTo);
   set("sort", filters.sort);
   set("dir", filters.dir);
-    set("scope", filters.scope);
+  set("scope", filters.scope);
   if (filters.page != null) params.page = filters.page;
   if (filters.size != null) params.size = filters.size;
   return params;
@@ -204,8 +207,38 @@ export async function listIncidents(filters) {
 
 export async function getIncidentImageBlob(incidentId, imageId) {
   const { data } = await httpClient.get(
-      `/incidents/${incidentId}/images/${imageId}`,
-      { responseType: "blob" },
+    `/incidents/${incidentId}/images/${imageId}`,
+    { responseType: "blob" },
+  );
+  return data;
+}
+
+export async function getIncidentTimeEntries(incidentId) {
+  const { data } = await httpClient.get(
+    `/incidents/${incidentId}/time-entries`,
+  );
+  return data;
+}
+
+export async function addIncidentTimeEntry(incidentId, { concept, minutes }) {
+  const { data } = await httpClient.post(
+    `/incidents/${incidentId}/time-entries`,
+    { concept: concept.trim(), minutes: Number(minutes) },
+  );
+  return data;
+}
+
+export async function updateIncidentTimeEntry(incidentId, entryId, { concept, minutes }) {
+  const { data } = await httpClient.patch(
+    `/incidents/${incidentId}/time-entries/${entryId}`,
+    { concept: concept.trim(), minutes: Number(minutes) },
+  );
+  return data;
+}
+
+export async function deleteIncidentTimeEntry(incidentId, entryId) {
+  const { data } = await httpClient.delete(
+    `/incidents/${incidentId}/time-entries/${entryId}`,
   );
   return data;
 }

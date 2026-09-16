@@ -225,7 +225,7 @@ export default function NewIncidentForm({ onSubmit }) {
         <legend className="new-incident-form__label">
           Fotos{" "}
           <span className="new-incident-form__optional">
-            (opcional, máx. 3)
+            (opcional, máx. 3 de 5 MB)
           </span>
         </legend>
         <Controller

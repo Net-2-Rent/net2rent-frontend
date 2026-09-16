@@ -28,7 +28,7 @@
     font-weight: 700;
     margin: 5px 0 4px;
     color: var(--color-text-on-brand);
-    text-wrap: pretty;
+    @include mix.truncate(1);
   }
 
   &__reference {

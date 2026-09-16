@@ -15,27 +15,24 @@ export default function ResolutionModal({
   onResolve,
   submitting = false,
   error = null,
+  imputedMinutes = 0,
 }) {
-  const [minutes, setMinutes] = useState("");
   const [note, setNote] = useState("");
   const formId = useId();
   const minutesId = useId();
   const noteId = useId();
 
-  const canSubmit =
-    Number(minutes) > 0 && note.trim().length > 0 && !submitting;
+  const hasImputedTime = imputedMinutes > 0;
+  const canSubmit = hasImputedTime && note.trim().length > 0 && !submitting;
 
   useEffect(() => {
-    if (isOpen) {
-      setMinutes("");
-      setNote("");
-    }
+    if (isOpen) setNote("");
   }, [isOpen]);
 
   function handleSubmit(event) {
     event.preventDefault();
     if (!canSubmit) return;
-    onResolve?.({ minutes: Number(minutes), note: note.trim() });
+    onResolve?.({ minutes: imputedMinutes, note: note.trim() });
   }
 
   const subtitle = [incidentCode, lodgingName].filter(Boolean).join(" · ");
@@ -67,14 +64,21 @@ export default function ResolutionModal({
         className="resolution-modal__form"
         onSubmit={handleSubmit}
       >
-        <FormField id={minutesId} label="Minutos invertidos">
+        <FormField
+          id={minutesId}
+          label="Minutos invertidos"
+          hint={
+            hasImputedTime
+              ? "Calculado desde la imputación de tiempos."
+              : "Aún no hay tiempo imputado. Impútalo antes de resolver."
+          }
+        >
           <Input
-            type="number"
-            min="1"
-            inputMode="numeric"
-            value={minutes}
-            onChange={(e) => setMinutes(e.target.value)}
-            placeholder="Ej. 45"
+            type="text"
+            readOnly
+            value={`${imputedMinutes} min`}
+            className="resolution-modal__minutes"
+            tabIndex={-1}
           />
         </FormField>
 

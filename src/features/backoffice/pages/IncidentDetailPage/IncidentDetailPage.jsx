@@ -346,6 +346,11 @@ export default function IncidentDetailPage() {
   if (loadError) return <p role="alert">{loadError}</p>;
   if (!incident) return null;
 
+  const imputedMinutes = timeEntries.reduce(
+    (sum, e) => sum + Number(e.minutes || 0),
+    0,
+  )
+
   const canClaim =
     isOperator &&
     incident.assigneeName == null &&
@@ -654,6 +659,7 @@ export default function IncidentDetailPage() {
         onResolve={handleResolve}
         submitting={resolving}
         error={resolveError}
+        imputedMinutes={imputedMinutes}
       />
 
       <AssignmentModal

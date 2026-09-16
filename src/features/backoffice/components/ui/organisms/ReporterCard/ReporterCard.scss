@@ -8,8 +8,8 @@
   &--with-aside {
     @include mix.respond-to("tablet") {
       display: grid;
-      grid-template-columns: 1.6fr 1fr;
-      gap: vars.space(40);
+      grid-template-columns: 1fr 1fr;
+      gap: vars.space(24);
       align-items: start;
     }
   }
@@ -28,6 +28,10 @@
     margin: 0;
     color: var(--color-text-strong);
     white-space: pre-line;
+  }
+
+  &__media {
+    margin-top: vars.space(16);
   }
 
   &__photo {
@@ -50,6 +54,14 @@
     &:hover {
       background: var(--color-brand-soft);
       border-color: var(--color-brand);
+    }
+  }
+
+  &__aside {
+    margin-top: vars.space(24);
+
+    @include mix.respond-to("tablet") {
+      margin-top: 0; 
     }
   }
 }

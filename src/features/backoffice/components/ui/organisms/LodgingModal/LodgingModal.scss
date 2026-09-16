@@ -8,10 +8,10 @@
     gap: vars.space(24);
   }
 
-  &__address-field.form-field {
-    gap: vars.space(12);
+  &__address-field {
+    margin-top: vars.space(8);
   }
-
+  
   &__alert {
     padding: vars.space(12) vars.space(16);
     border: 1px solid var(--color-danger);

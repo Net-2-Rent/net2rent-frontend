@@ -24,7 +24,7 @@ export default function PinGenerator({
     async function handleCopy() {
         if (!isComplete) return;
         try {
-            await navigator.clipboard.writeText(value);
+            await navigator.clipboard.writeText(`PIN: ${value}`);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch {

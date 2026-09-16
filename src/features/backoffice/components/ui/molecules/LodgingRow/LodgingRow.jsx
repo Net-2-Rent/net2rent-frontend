@@ -3,13 +3,11 @@ import { Pencil } from "lucide-react";
 import ActiveBadge from "../../atoms/ActiveBadge/ActiveBadge.jsx";
 import PinBadge from "../../atoms/PinBadge/PinBadge.jsx";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
-import MaskedPin from "../../molecules/MaskedPin/MaskedPin.jsx";
 import "./LodgingRow.scss";
 
 export default function LodgingRow({
   name,
   address,
-  pin,
   reference,
   active,
   notes,
@@ -35,8 +33,6 @@ export default function LodgingRow({
         <p className="lodging-row__address">
           {address} <PinBadge value={reference} label="Referencia" />
         </p>
-
-        {pin && <MaskedPin value={pin} />}
 
         {notes && <p className="lodging-row__notes is-truncated">{notes}</p>}
       </div>

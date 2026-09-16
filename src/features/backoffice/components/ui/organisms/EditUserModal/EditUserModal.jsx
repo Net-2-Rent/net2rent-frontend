@@ -6,6 +6,7 @@ import Input from "../../../../../../shared/components/ui/atoms/Input/Input.jsx"
 import DropdownField from "../../../../../../shared/components/ui/atoms/DropdownField/DropdownField.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
 import NoticeBanner from "../../../../../../shared/components/ui/molecules/NoticeBanner/NoticeBanner.jsx";
+import PasswordInput from "../../../../../../shared/components/ui/molecules/PasswordInput/PasswordInput.jsx";
 import { ROLES, ROLE_LABEL } from "../../../../../../shared/constants/nav.js";
 import "./EditUserModal.scss";
 
@@ -100,10 +101,10 @@ export default function EditUserModal({
           label={isCreate ? "Contraseña inicial" : "Nueva contraseña"}
           error={fieldErrors.password}
         >
-          <Input
-            type="password"
+          <PasswordInput
             name="password"
             value={password}
+            invalid={!!fieldErrors.password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={
               isCreate
@@ -118,10 +119,10 @@ export default function EditUserModal({
           label="Repetir contraseña"
           error={error}
         >
-          <Input
-            type="password"
+          <PasswordInput
             name="repeatPassword"
             value={repeatPassword}
+            invalid={!!error} // reutiliza tu estado 'error' de "no coinciden"
             onChange={(e) => setRepeatPassword(e.target.value)}
             placeholder="Repite la contraseña"
           />

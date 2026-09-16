@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppScope from "./AppScope";
 import IdentificationPage from "../features/guest-portal/pages/IdentificationPage/IdentificationPage.jsx";
 import MyLodgingPage from "../features/guest-portal/pages/MyLodgingPage/MyLodgingPage.jsx";
@@ -8,7 +8,6 @@ import IncidentDetailGuestPage from "../features/guest-portal/pages/IncidentDeta
 import GuestRoute from "../features/guest-portal/components/GuestRoute";
 import LoginPage from "../features/auth/pages/LoginPage";
 import BackofficeLayout from "../features/backoffice/components/ui/organisms/BackofficeLayout/BackofficeLayout";
-import { BackofficeIndexPage } from "../features/backoffice/pages/BackofficePlaceholders.jsx";
 import ProtectedRoute from "../features/auth/components/ProtectedRoute";
 import ProfilePage from "../features/backoffice/pages/ProfilePage/ProfilePage.jsx";
 import NewIncidentPage from "../features/backoffice/pages/NewIncidentPage.jsx";
@@ -47,7 +46,7 @@ const router = createBrowserRouter([
             path: "/backoffice",
             element: <BackofficeLayout />,
             children: [
-              { index: true, element: <BackofficeIndexPage /> },
+              { index: true, element: <Navigate to="incidencias" replace /> },
               {
                 path: "incidencias",
                 element: <IncidentsListPage />,

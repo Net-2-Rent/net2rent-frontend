@@ -12,9 +12,6 @@ export default function LodgingCard({
                                       mapEmbedUrl,
                                       mapsUrl,
                                       accessNotes,
-                                      reporterName,
-                                      reporterContact,
-                                      openedLabel,
                                       className = "",
                                     }) {
   const classes = ["lodging-card", className].filter(Boolean).join(" ");
@@ -27,12 +24,6 @@ export default function LodgingCard({
     { label: "Coordenadas", value: coordinates, mono: true },
   ].filter((item) => item.value);
 
-  const reporterDetails = [
-    { label: "Nombre", value: reporterName },
-    { label: "Contacto", value: reporterContact },
-    { label: "Apertura", value: openedLabel },
-  ].filter((item) => item.value);
-
   return (
       <section className={classes}>
         <div className="lodging-card__lodging">
@@ -42,15 +33,7 @@ export default function LodgingCard({
           </h2>
           <DataList items={lodgingDetails} />
         </div>
-
-        <div className="lodging-card__reporter">
-          <h2 className="lodging-card__title">
-            <UserRound size={18} aria-hidden="true" />
-            <span>Reportante</span>
-          </h2>
-          <DataList items={reporterDetails} />
-        </div>
-
+          
         <div className="lodging-card__location">
           <h2 className="lodging-card__title">
             <MapPin size={18} aria-hidden="true" />

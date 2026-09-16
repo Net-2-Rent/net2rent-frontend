@@ -12,7 +12,7 @@
 
   &__forgot {
     @include mix.button-reset;
-    color: var(--color-surface);
+    color: var(--color-text-muted);
     @include mix.text-style("field-label");
     @include mix.focus-ring;
 

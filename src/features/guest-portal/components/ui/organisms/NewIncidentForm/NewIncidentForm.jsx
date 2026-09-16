@@ -18,6 +18,13 @@ import "./NewIncidentForm.scss";
 const DESCRIPTION_MIN = 10;
 const DESCRIPTION_MAX = 2000;
 
+const NAME_FILTER = /[^\p{L}\p{M} '-]/gu;
+const NAME_PATTERN = /^[\p{L}\p{M} '-]+$/u;
+
+function onlyNameChars(value) {
+  return value.replace(NAME_FILTER, "");
+}
+
 export default function NewIncidentForm({ onSubmit }) {
   const {
     register,
@@ -43,6 +50,23 @@ export default function NewIncidentForm({ onSubmit }) {
   const descriptionValue = watch("description");
   const descriptionLength = descriptionValue.length;
   const titlePreview = descriptionValue.trim().slice(0, 80);
+
+  const firstNameField = register("firstName", {
+    required: "El nombre es obligatorio",
+    maxLength: { value: 80, message: "Máximo 80 caracteres" },
+    pattern: {
+      value: NAME_PATTERN,
+      message: "El nombre no puede contener números",
+    },
+  });
+  const lastNameField = register("lastName", {
+    required: "El apellido es obligatorio",
+    maxLength: { value: 80, message: "Máximo 80 caracteres" },
+    pattern: {
+      value: NAME_PATTERN,
+      message: "El apellido no puede contener números",
+    },
+  });
 
   function describedBy(name, hasHint) {
     if (errors[name]) return `${name}-error`;
@@ -92,10 +116,11 @@ export default function NewIncidentForm({ onSubmit }) {
             invalid={!!errors.firstName}
             autoComplete="given-name"
             aria-describedby={describedBy("firstName", false)}
-            {...register("firstName", {
-              required: "El nombre es obligatorio",
-              maxLength: { value: 80, message: "Máximo 80 caracteres" },
-            })}
+            {...firstNameField}
+            onChange={(e) => {
+              e.target.value = onlyNameChars(e.target.value);
+              firstNameField.onChange(e);
+            }}
           />
         </FormField>
 
@@ -109,10 +134,11 @@ export default function NewIncidentForm({ onSubmit }) {
             invalid={!!errors.lastName}
             autoComplete="family-name"
             aria-describedby={describedBy("lastName", false)}
-            {...register("lastName", {
-              required: "El apellido es obligatorio",
-              maxLength: { value: 80, message: "Máximo 80 caracteres" },
-            })}
+            {...lastNameField}
+            onChange={(e) => {
+              e.target.value = onlyNameChars(e.target.value);
+              lastNameField.onChange(e);
+            }}
           />
         </FormField>
       </div>

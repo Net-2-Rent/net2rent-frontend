@@ -103,16 +103,18 @@ export default function LodgingModal({
             </FormField>
 
             <FormField
-              id="address"
-              label={
-                <>
-                  <MapPin size={14} aria-hidden="true" />
-                  <span>Dirección</span>
-                </>
-              }
-              error={errors.address?.message}
-              required
+                id="address"
+                className="lodging-modal__address-field"
+                label={
+                  <>
+                    <MapPin size={14} aria-hidden="true" />
+                    <span>Dirección</span>
+                  </>
+                }
+                error={errors.address?.message}
+                required
             >
+              
               <Controller
                 name="address"
                 control={control}
@@ -155,7 +157,8 @@ export default function LodgingModal({
           />
           {errors.pin && <InlineError>{errors.pin.message}</InlineError>}
           <HelperText>
-            Al guardar, el PIN anterior deja de funcionar.
+            Al guardar, el PIN anterior deja de funcionar. Copia el nuevo PIN y pégalo
+            en las notas de acceso del alojamiento.
           </HelperText>
         </div>
 

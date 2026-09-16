@@ -21,7 +21,6 @@ function toRowProps(lodging, revealedPins) {
     reference: lodging.ref,
     active: lodging.active,
     notes: lodging.accessNotes,
-    pin: revealedPins[lodging.id],
   };
 }
 const BACKEND_TO_FORM_FIELD = {
@@ -41,8 +40,6 @@ export default function LodgingsPage() {
 
   const [modalMode, setModalMode] = useState(null);
   const [selected, setSelected] = useState(null);
-
-  const [revealedPins, setRevealedPins] = useState({});
 
   const [confirmTarget, setConfirmTarget] = useState(null);
 
@@ -106,9 +103,6 @@ export default function LodgingsPage() {
           notes: selected.accessNotes,
           pin: values.pin,
         });
-      }
-      if (values.pin) {
-        setRevealedPins((prev) => ({ ...prev, [saved.id]: values.pin }));
       }
       closeModal();
       await loadLodgings();
@@ -184,7 +178,7 @@ export default function LodgingsPage() {
         {filteredLodgings.map((lodging) => (
           <LodgingRow
             key={lodging.id}
-            {...toRowProps(lodging, revealedPins)}
+            {...toRowProps(lodging)}
             onEdit={isAdmin ? () => openEdit(lodging) : undefined}
             onChangePin={isAdmin ? () => openPin(lodging) : undefined}
             onToggleActive={

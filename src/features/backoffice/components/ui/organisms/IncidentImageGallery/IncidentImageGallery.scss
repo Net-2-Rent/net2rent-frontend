@@ -46,4 +46,29 @@
     margin: 0;
     color: var(--color-danger);
   }
+
+  &__viewer {
+    position: relative;
+  }
+
+  &__nav {
+    @include mix.button-reset;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    min-height: var(--touch-target-min);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+
+    &--prev { left: vars.space(8); }
+    &--next { right: vars.space(8); }
+
+    &:hover { background: rgba(0, 0, 0, 0.7); }
+  }
 }

@@ -41,4 +41,14 @@ describe("PinGenerator", () => {
 
     expect(handleChange).toHaveBeenCalledWith(expect.stringMatching(/^\d{4}$/));
   });
+
+  it("copia el PIN al clicar Copiar", async () => {
+    const writeText = vi.fn().mockResolvedValue();
+    Object.assign(navigator, { clipboard: { writeText } });
+
+    render(<PinGenerator value="1234" onChange={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Copiar PIN" }));
+
+    expect(writeText).toHaveBeenCalledWith("1234");
+  });
 });

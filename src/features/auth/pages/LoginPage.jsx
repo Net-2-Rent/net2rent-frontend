@@ -2,6 +2,7 @@ import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useAuthStore, selectIsAuthenticated } from '../store/authStore.js';
 import LoginForm from '../components/ui/organisms/LoginForm/LoginForm.jsx';
 import './LoginPage.scss';
+import ThemeToggle from "../../guest-portal/components/ui/atoms/ThemeToggle/ThemeToggle.jsx";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ export default function LoginPage() {
   return (
     <main className="login-page" id="login-main">
       <a className="skip-link" href="#login-main">Saltar al contenido</a>
+      <ThemeToggle className="login-page__theme-toggle" />
       <div className="login-page__form-panel">
         <section className="login-page__card" aria-labelledby="login-title">
           <div className="login-page__brand">

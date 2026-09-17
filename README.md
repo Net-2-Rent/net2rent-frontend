@@ -3,7 +3,7 @@
 ![React](https://img.shields.io/badge/React-19-61DAFB)
 ![Vite](https://img.shields.io/badge/Vite-bundler-646CFF)
 ![SCSS](https://img.shields.io/badge/SCSS-styling-CC6699)
-![Status](https://img.shields.io/badge/status-in%20development-yellow)
+![Status](https://img.shields.io/badge/status-MVP-brightgreen)
 
 Frontend for the Incident Management App — two experiences in one app: a public guest portal (identify with a lodging reference + PIN, report and track incidents) and a staff backoffice (login, triage, manage lodgings and users).
 
@@ -11,11 +11,11 @@ Frontend for the Incident Management App — two experiences in one app: a publi
 
 ## Project Status
 
-Implemented: full guest portal flow (identification, lodging view, new incident, confirmation, incident detail), staff login, incident triage and detail screens, new phone-incident form, lodgings and users management.
+The MVP scope agreed with the client (net2rent) is implemented.
 
-Pending: the backoffice incident list (`/backoffice/incidencias`) is still a placeholder.
+Implemented: the full guest portal (identification, lodging view, new incident, confirmation, incident detail) and the full staff backoffice (login, incident list, incident detail, new phone incident, lodgings management, users management, profile). Both apps have their own not-found pages.
 
-`/sandbox` and `/sandbox/backoffice` are internal development routes, not part of the product — they should not be relied on and are expected to be removed before delivery.
+Remaining polish and any deviations agreed with the client are tracked in the team's internal documentation.
 
 ## Tech Stack
 
@@ -25,26 +25,29 @@ Pending: the backoffice incident list (`/backoffice/incidencias`) is still a pla
 - react-router-dom
 - react-hook-form
 - zustand (auth/session state)
+- @dnd-kit (drag-and-drop, e.g. checklist reordering)
+- react-phone-number-input (phone number fields)
+- Geoapify geocoder autocomplete (optional address autocomplete)
 - lucide-react (icons)
 - Vitest + Testing Library
+- ESLint + Prettier
 
 ## Project Structure
 ```
 src/
-├── app/ # Router, providers, guest/backoffice app scoping
+├── app/          # Router, providers, guest/backoffice app scoping
 ├── features/
-│ ├── auth/ # Staff login
-│ ├── backoffice/ # Staff-facing pages and components
-│ └── guest-portal/ # Public guest-facing pages and components
+│   ├── auth/          # Staff login
+│   ├── backoffice/    # Staff-facing pages and components
+│   └── guest-portal/  # Public guest-facing pages and components
 ├── shared/
-│ ├── api/ # HTTP clients
-│ ├── components/ui/ # Cross-platform components (atoms/molecules/organisms)
-│ ├── constants/
-│ └── utils/
-├── styles/ # Shared SCSS tokens and mixins
+│   ├── api/           # HTTP client
+│   ├── components/ui/ # Cross-platform components (atoms/molecules/organisms)
+│   ├── constants/
+│   └── utils/
+├── styles/       # Shared SCSS tokens and mixins
 └── hooks/
 ```
-
 
 ## Prerequisites
 
@@ -55,11 +58,10 @@ src/
 
 Copy `.env.example` to `.env` and adjust if needed:
 
-| Variable | Description |
-| :--- | :--- |
-| `VITE_API_URL` | Base URL of the backend, e.g. `http://localhost:8080` |
-
-Note: this variable is read by the guest portal's HTTP client (`guestHttpClient.js`). The staff client (`shared/api/httpClient.js`) currently has the backend URL hardcoded to `http://localhost:8080/api` instead — if your backend runs elsewhere, edit that file directly for now.
+| Variable | Required | Description |
+| :--- | :--- | :--- |
+| `VITE_API_URL` | Yes | Base URL of the backend, e.g. `http://localhost:8080`. The HTTP client appends `/api`. |
+| `VITE_GEOAPIFY_KEY` | No | API key for the Geoapify address autocomplete used in the lodging address field. **Optional**: if it's not set, the field falls back to a plain text input and everything else works normally. Get a free key at [geoapify.com](https://www.geoapify.com/). |
 
 ## Local Setup
 
@@ -74,7 +76,7 @@ Note: this variable is read by the guest portal's HTTP client (`guestHttpClient.
 ```bash
    npm run dev
 ```
-   Served by default at `http://localhost:5173/`.
+Served by default at `http://localhost:5173/`.
 
 ## Scripts
 
@@ -103,14 +105,12 @@ Note: this variable is read by the guest portal's HTTP client (`guestHttpClient.
 | Route | Screen |
 | :--- | :--- |
 | `/login` | Staff login |
-| `/backoffice` | Index |
-| `/backoffice/incidencias` | Incident list — placeholder, not implemented yet |
+| `/backoffice` | Redirects to `/backoffice/incidencias` |
+| `/backoffice/incidencias` | Incident list |
 | `/backoffice/incidencias/:id` | Incident detail |
 | `/backoffice/nueva-incidencia` | New phone incident |
 | `/backoffice/alojamientos` | Lodgings |
 | `/backoffice/usuarios` | Users |
 | `/backoffice/perfil` | Profile |
 
-## Related Documentation
-
-- [`VOCABULARIO.md`](./VOCABULARIO.md) — domain naming conventions.
+Unknown routes render a not-found page in the matching app (guest or backoffice).

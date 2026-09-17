@@ -344,7 +344,7 @@ export default function IncidentsListPage() {
           emptyMessage="No hay incidencias con esos filtros"
           emptyAction={
             hasActiveFilters && (
-              <Button variant="primary" onClick={clearFilters}>
+              <Button variant="secondary" onClick={clearFilters}>
                 Limpiar filtros
               </Button>
             )

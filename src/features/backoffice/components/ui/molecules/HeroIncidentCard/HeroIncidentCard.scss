@@ -4,12 +4,17 @@
 .hero-incident {
   @include mix.surface-card;
 
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "meta"
+    "heading"
+    "actions";
   gap: vars.space(16);
   padding: vars.space(24);
 
   &__meta {
+    grid-area: meta;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -22,16 +27,19 @@
     color: var(--color-text-muted);
   }
 
+  &__heading {
+    grid-area: heading;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(4);
+  }
+
   &__title {
     @include mix.text-style("card-title", "backoffice");
     margin: 0;
     color: var(--color-text-strong);
-  }
-
-  &__heading {
-    display: flex;
-    flex-direction: column;
-    gap: vars.space(4);
+    overflow-wrap: break-word;
   }
 
   &__assignee {
@@ -41,9 +49,22 @@
   }
 
   &__actions {
+    grid-area: actions;
     display: flex;
     flex-wrap: wrap;
     gap: vars.space(12);
-    margin-top: vars.space(4);
+  }
+
+  @include mix.respond-to("tablet") {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "meta    actions"
+      "heading actions";
+    align-items: start;
+
+    &__actions {
+      justify-self: end;
+      align-self: start;
+    }
   }
 }

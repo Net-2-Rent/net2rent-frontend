@@ -1,0 +1,27 @@
+@use "../../../../../../styles/variables" as vars;
+@use "../../../../../../styles/mixins" as mix;
+
+.text-button {
+  @include mix.button-reset;
+  @include mix.text-style("action-link", "guest");
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: vars.space(4);
+  min-height: var(--touch-target-min);
+  padding-inline: vars.space(4);
+  color: var(--color-brand-ink);
+  text-decoration: none;
+  transition: color vars.$transition-fast;
+
+  &:hover:not(:disabled) {
+    color: var(--color-brand-ink-hover);
+    text-decoration: underline;
+  }
+
+  &:disabled {
+    color: var(--color-disabled-text);
+    text-decoration: none;
+  }
+}

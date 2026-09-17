@@ -1,0 +1,48 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(4);
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: vars.space(6);
+    color: var(--color-text-strong);
+
+    @include mix.when-guest {
+      @include mix.text-style("field-label", "guest");
+    }
+    @include mix.when-backoffice {
+      @include mix.text-style("field-label", "backoffice");
+    }
+  }
+
+  &__required {
+    color: var(--color-danger);
+  }
+
+  &__control {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: vars.space(2);
+  }
+
+  &__optional {
+    color: var(--color-text-muted);
+  }
+
+  &__counter {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+}

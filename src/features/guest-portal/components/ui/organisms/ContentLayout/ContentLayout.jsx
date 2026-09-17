@@ -1,0 +1,24 @@
+import GradientBackground from '../../atoms/GradientBackground/GradientBackground'
+import Card from '../../atoms/Card/Card'
+import ThemeToggle from '../../atoms/ThemeToggle/ThemeToggle'
+import './ContentLayout.scss'
+
+export default function ContentLayout({ header, children, contained = true }) {
+  return (
+    <div className="content-layout">
+      <a className="skip-link" href="#main-content">Saltar al contenido</a>
+      <GradientBackground fullHeight={false} className="content-layout__header">
+        <ThemeToggle />
+        <div className="content-layout__header-inner">{header}</div>
+      </GradientBackground>
+
+      <main id="main-content" className="content-layout__body">
+        {contained ? (
+          <Card variant="content" className="content-layout__card">{children}</Card>
+        ) : (
+          <div className="content-layout__plain">{children}</div>
+        )}
+      </main>
+    </div>
+  )
+}

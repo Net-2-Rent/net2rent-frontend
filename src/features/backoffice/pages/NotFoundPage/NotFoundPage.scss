@@ -1,0 +1,87 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+ 
+.not-found-page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: vars.space(24);
+  background: var(--color-page-bg);
+ 
+  &__card {
+    width: 100%;
+    max-width: 480px;
+    padding: vars.space(40);
+    text-align: center;
+    @include mix.surface-floating;
+  }
+ 
+  &__logo {
+    height: 32px;
+    width: auto;
+    margin-bottom: vars.space(24);
+  }
+ 
+  &__code {
+    margin: 0 0 vars.space(8);
+    @include mix.text-style("page-title", "backoffice");
+    color: var(--color-brand);
+  }
+ 
+  &__title {
+    margin: 0 0 vars.space(8);
+    @include mix.text-style("card-title", "backoffice");
+    color: var(--color-text-strong);
+  }
+ 
+  &__subtitle {
+    margin: 0 0 vars.space(32);
+    @include mix.text-style("body", "backoffice");
+    color: var(--color-text-soft);
+  }
+ 
+  &__actions {
+    display: flex;
+    justify-content: center;
+  }
+ 
+  &__quick-links {
+    margin-top: vars.space(32);
+    padding-top: vars.space(24);
+    border-top: 1px solid var(--color-border);
+  }
+ 
+  &__quick-links-title {
+    margin: 0 0 vars.space(12);
+    @include mix.text-style("field-label", "backoffice");
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+ 
+  &__quick-links-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: vars.space(8);
+  }
+ 
+  &__quick-link {
+    display: inline-flex;
+    align-items: center;
+    gap: vars.space(6);
+    padding: vars.space(8) vars.space(14);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-surface);
+    color: var(--color-text-strong);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background vars.$transition-fast;
+ 
+    &:hover {
+      background: var(--color-surface-subtle);
+    }
+  }
+}

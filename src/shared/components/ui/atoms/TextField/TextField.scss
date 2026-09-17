@@ -1,0 +1,20 @@
+@use "../../../../../styles/mixins" as mix;
+@use "../../../../../styles/variables" as vars;
+
+.text-field {
+  @include mix.field-base;
+
+  &--invalid {
+    @include mix.field-error;
+  }
+}
+
+select.text-field {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: vars.space(40);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 16px;
+  background-position: right 16px center;
+}

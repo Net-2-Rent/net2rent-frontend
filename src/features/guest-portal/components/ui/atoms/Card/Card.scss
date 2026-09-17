@@ -1,0 +1,14 @@
+.card {
+  width: 100%;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  padding: 22px 20px;
+
+  &--content {
+    border-radius: var(--radius-card);
+  }
+
+  &--auth {
+    border-radius: var(--radius-card-auth);
+  }
+}

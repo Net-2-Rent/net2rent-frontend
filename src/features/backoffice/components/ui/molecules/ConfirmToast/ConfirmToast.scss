@@ -1,0 +1,59 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.confirm-toast {
+  position: fixed;
+  z-index: vars.z("toast");
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, calc(100vw - #{vars.space(32)}));
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+  padding: vars.space(20) vars.space(24);
+  border: 1px solid var(--color-danger);
+  border-radius: vars.space(16);
+  background: var(--color-surface-elevated, var(--color-surface));
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+
+  &__body {
+    display: flex;
+    align-items: flex-start;
+    gap: vars.space(12);
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    color: var(--color-danger);
+    margin-top: 2px;
+  }
+
+  &__message {
+    @include mix.text-style("body", "backoffice");
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    gap: vars.space(12);
+  }
+
+  &__confirm--danger.button {
+    background: var(--color-danger);
+    border-color: var(--color-danger);
+    color: var(--color-text-on-brand);
+
+    &:hover:not(:disabled) {
+      background: color-mix(in srgb, var(--color-danger) 82%, black);
+      border-color: color-mix(in srgb, var(--color-danger) 82%, black);
+      filter: none;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 3px var(--color-danger-ring);
+    }
+  }
+}

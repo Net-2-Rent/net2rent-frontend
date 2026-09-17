@@ -1,0 +1,108 @@
+import { describe, it, expect } from 'vitest';
+import { mapTimelineItemToEntry, mapTimeline } from './timelineAdapter.js';
+
+describe('timelineAdapter', () => {
+    it('mapea un COMMENT', () => {
+        const item = {
+            type: 'COMMENT', at: '2026-09-04T10:15:00', actorName: 'Pau Roig',
+            eventType: null, previousValue: null, newValue: null, text: 'Reviso el circuito',
+        };
+        expect(mapTimelineItemToEntry(item, 0)).toMatchObject({
+            id: 'comment-0', title: 'Comentario interno', author: 'Pau Roig',
+            description: 'Reviso el circuito', status: null,
+        });
+    });
+
+    it('mapea un EVENT de prioridad con "antes → después" legible', () => {
+        const item = {
+            type: 'EVENT', at: '2026-09-04T10:30:00', actorName: 'Pau Roig',
+            eventType: 'PRIORITY_CHANGED', previousValue: 'NORMAL', newValue: 'URGENT', text: null,
+        };
+        const entry = mapTimelineItemToEntry(item, 1);
+        expect(entry.title).toBe('Cambio de prioridad');
+        expect(entry.description).toBe('Normal → Urgente');
+        expect(entry.status).toBeNull();
+    });
+
+    it('en STATUS_CHANGED, status = newValue (para el color del punto)', () => {
+        const item = {
+            type: 'EVENT', at: '2026-09-04T11:00:00', actorName: 'Marc Vidal',
+            eventType: 'STATUS_CHANGED', previousValue: 'ASSIGNED', newValue: 'IN_PROGRESS', text: null,
+        };
+        const entry = mapTimelineItemToEntry(item, 2);
+        expect(entry.description).toBe('Asignada → En curso');
+        expect(entry.status).toBe('IN_PROGRESS');
+    });
+
+    it('usa "Sistema" cuando el evento no tiene actor (alta del huésped)', () => {
+        const item = {
+            type: 'EVENT', at: '2026-09-04T09:00:00', actorName: null,
+            eventType: 'CREATED', previousValue: null, newValue: 'NEW', text: null,
+        };
+        const entry = mapTimelineItemToEntry(item, 0);
+        expect(entry.author).toBe('Sistema');
+        expect(entry.title).toBe('Incidencia creada');
+        expect(entry.description).toBe('Nueva');
+    });
+
+    it('mapTimeline conserva el orden y asigna ids por índice', () => {
+        const items = [
+            { type: 'EVENT', at: '2026-09-04T10:00:00', actorName: 'X', eventType: 'CREATED',
+                previousValue: null, newValue: 'NEW', text: null },
+            { type: 'COMMENT', at: '2026-09-04T10:15:00', actorName: 'X', eventType: null,
+                previousValue: null, newValue: null, text: 'hola' },
+        ];
+        expect(mapTimeline(items).map((e) => e.id)).toEqual(['event-0', 'comment-1']);
+    });
+
+    it("combina el 'antes → después' con el motivo cuando el evento trae note", () => {
+      const item = {
+        type: "EVENT",
+        at: "2026-09-04T12:00:00",
+        actorName: "Marc Vidal",
+        eventType: "STATUS_CHANGED",
+        previousValue: "IN_PROGRESS",
+        newValue: "PAUSED",
+        note: "Falta el recambio del termo",
+        text: null,
+      };
+      const entry = mapTimelineItemToEntry(item, 3);
+      expect(entry.description).toBe(
+        "En curso → Pausada — Motivo: Falta el recambio del termo",
+      );
+    });
+
+    it("en REASSIGNED con note, muestra el cambio de operario y el motivo", () => {
+      const item = {
+        type: "EVENT",
+        at: "2026-09-04T12:30:00",
+        actorName: "Admin Demo",
+        eventType: "REASSIGNED",
+        previousValue: "Operario Demo",
+        newValue: "Juan Palomo",
+        note: "Se cogió la baja",
+        text: null,
+      };
+      const entry = mapTimelineItemToEntry(item, 5);
+      expect(entry.title).toBe("Operario reasignado");
+      expect(entry.description).toBe(
+        "Operario Demo → Juan Palomo — Motivo: Se cogió la baja",
+      );
+      expect(entry.status).toBeNull();
+    });
+
+    it('formatea TIME_LOGGED con la unidad "min"', () => {
+      const item = {
+        type: "EVENT",
+        at: "2026-09-04T13:00:00",
+        actorName: "Marc Vidal",
+        eventType: "TIME_LOGGED",
+        previousValue: null,
+        newValue: "45",
+        note: null,
+        text: null,
+      };
+      const entry = mapTimelineItemToEntry(item, 4);
+      expect(entry.description).toBe("45 min");
+    });
+});

@@ -1,0 +1,32 @@
+@use "variables" as vars;
+
+.resolution-modal {
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(16);
+  }
+
+  &__actions {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    gap: vars.space(12);
+  }
+
+  &__minutes {
+    background: var(--color-surface-subtle);
+    border-color: var(--color-border);
+    color: var(--color-text-strong);
+    font-weight: 700;
+    cursor: default;
+    caret-color: transparent;
+
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      border-color: var(--color-border);
+      box-shadow: none;
+    }
+  }
+}

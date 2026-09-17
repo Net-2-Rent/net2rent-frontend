@@ -1,0 +1,15 @@
+@use "mixins" as mix;
+
+.active-badge {
+  @include mix.badge-shape;
+
+  &--active {
+    background: var(--color-success-soft);
+    color: var(--color-success);
+  }
+
+  &--inactive {
+    background: var(--color-surface-subtle);
+    color: var(--color-text-muted);
+  }
+}

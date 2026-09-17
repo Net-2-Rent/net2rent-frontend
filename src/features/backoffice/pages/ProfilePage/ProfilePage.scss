@@ -1,0 +1,12 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.profile-page {
+  @include mix.flex(column, vars.space(20));
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+
+  @include mix.respond-to("tablet") {
+  }
+}

@@ -1,0 +1,9 @@
+@use "mixins" as mix;
+
+.input {
+  @include mix.field-base;
+
+  &--error {
+    @include mix.field-error;
+  }
+}

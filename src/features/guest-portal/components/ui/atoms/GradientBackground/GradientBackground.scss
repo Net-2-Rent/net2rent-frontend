@@ -1,0 +1,9 @@
+.gradient-background {
+  width: 100%;
+  background: var(--gradient-background);
+
+  &--full-height {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+}

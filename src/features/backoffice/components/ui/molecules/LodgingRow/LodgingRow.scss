@@ -1,0 +1,75 @@
+@use "mixins" as mix;
+@use "variables" as vars;
+
+.lodging-row {
+  @include mix.surface-card;
+
+  display: flex;
+  justify-content: space-between;
+  gap: vars.space(16);
+  padding: vars.space(20);
+
+  @include mix.respond-below("tablet") {
+    flex-direction: column;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(8);
+    min-width: 0;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: vars.space(12);
+  }
+
+  &__name {
+    font-size: 15.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0;
+    color: var(--color-text-strong);
+  }
+
+  &__address {
+    @include mix.text-style("body", "backoffice");
+
+    display: flex;
+    align-items: center;
+    gap: vars.space(8);
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  &__notes {
+    @include mix.text-style("body", "backoffice");
+
+    margin: 0;
+    color: var(--color-text-soft);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: flex-start;
+    gap: vars.space(8);
+    flex-wrap: wrap;
+
+    .button {
+      height: 44px;
+      min-height: 44px;
+      padding: 0 14px;
+      font-size: 13.5px;
+    }
+  }
+
+  &__deactivate.button--secondary {
+    color: var(--color-danger);
+
+    &:hover:not(:disabled) {
+      background: var(--color-danger-soft);
+    }
+  }
+}

@@ -1,0 +1,56 @@
+import Avatar from "../../../../../../shared/components/ui/atoms/Avatar/Avatar.jsx";
+import ActiveBadge from "../../../../../backoffice/components/ui/atoms/ActiveBadge/ActiveBadge.jsx";
+import { ROLE_LABEL } from "../../../../../../shared/constants/nav.js";
+import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
+import { Pencil } from "lucide-react";
+import "./UserCard.scss";
+
+export default function UserCard({
+  name,
+  email,
+  role,
+  roleLabel,
+  active = true,
+  onEdit,
+  onDeactivate,
+  className = "",
+}) {
+  const classes = ["user-card", className].filter(Boolean).join(" ");
+  const label = roleLabel ?? (role ? ROLE_LABEL[role] : "");
+
+  return (
+    <div className={classes}>
+      <div className="user-card__top">
+        <Avatar name={name} size="lg" />
+        <div className="user-card__info">
+          <div className="user-card__name">{name}</div>
+          <div className="user-card__email">{email}</div>
+        </div>
+        <div className="user-card__badges">
+          {label && <span className="user-card__role">{label}</span>}
+          <ActiveBadge active={active} />
+        </div>
+      </div>
+
+      <div className="user-card__actions">
+        <Button
+          variant="secondary"
+          className="user-card__edit"
+          onClick={onEdit}
+        >
+          <Pencil size={16} aria-hidden="true" />
+          Editar
+        </Button>
+        {active && onDeactivate && (
+          <Button
+            variant="secondary"
+            className="user-card__deactivate"
+            onClick={onDeactivate}
+          >
+            Desactivar
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,32 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.lodgings-page {
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(16);
+
+  &__toolbar {
+    display: flex;
+
+    .search-bar {
+      width: 100%;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(20);
+  }
+
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(20);
+  }
+
+  &__skeleton-row {
+    display: block;
+  }
+}

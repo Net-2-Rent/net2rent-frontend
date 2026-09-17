@@ -1,0 +1,27 @@
+@use "mixins" as mix;
+
+.spinner {
+  display: inline-flex;
+  --spinner-size: 24px;
+
+  &--sm { --spinner-size: 16px; }
+  &--md { --spinner-size: 24px; }
+  &--lg { --spinner-size: 40px; }
+
+  &__track {
+    width: var(--spinner-size);
+    height: var(--spinner-size);
+    border-radius: 50%;
+    border: 3px solid var(--color-border-strong);
+    border-top-color: var(--color-brand);
+
+    @include mix.motion-safe {
+      animation: n2r-spin 0.8s linear infinite;
+    }
+  }
+
+  &--on-brand &__track {
+    border-color: rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+  }
+}

@@ -1,0 +1,107 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.lodging-card {
+  @include mix.surface-card;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: vars.space(24);
+  padding: vars.space(24);
+
+  @include mix.respond-to("tablet") {
+    grid-template-columns: 1fr 1fr;
+    column-gap: vars.space(24);
+    row-gap: vars.space(24);
+    align-items: start;
+  }
+
+  &__location {
+    @include mix.respond-to("tablet") {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &__notes {
+    @include mix.respond-to("tablet") {
+      grid-column: 1;
+    }
+  }
+
+  &__title {
+    @include mix.text-style("block-eyebrow", "backoffice");
+    display: flex;
+    align-items: center;
+    gap: vars.space(8);
+    margin: 0 0 vars.space(12);
+    color: var(--color-text-muted);
+  }
+
+  &__coords {
+    @include mix.text-style("mono-data", "backoffice");
+    @include mix.mono-data;
+    margin: 0 0 vars.space(12);
+    color: var(--color-text-soft);
+  }
+
+  &__toggle {
+    @include mix.button-reset;
+    @include mix.text-style("field-label", "backoffice");
+
+    display: inline-flex;
+    align-items: center;
+    gap: vars.space(8);
+    min-height: var(--touch-target-min);
+    color: var(--color-brand-ink);
+
+    &:hover {
+      color: var(--color-brand-ink-hover);
+    }
+  }
+
+  &__caret {
+    transition: transform vars.$transition-fast;
+  }
+
+  &__toggle[aria-expanded="true"] &__caret {
+    transform: rotate(180deg);
+  }
+
+  &__map {
+    margin-top: vars.space(12);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+
+    @include mix.respond-to("tablet") {
+      flex: 1;
+      aspect-ratio: auto;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  }
+
+  &__open {
+    @include mix.text-style("field-label", "backoffice");
+
+    display: inline-flex;
+    align-items: center;
+    gap: vars.space(4);
+    margin-top: vars.space(12);
+    color: var(--color-brand-ink);
+
+    &:hover {
+      color: var(--color-brand-ink-hover);
+      text-decoration: underline;
+    }
+  }
+}

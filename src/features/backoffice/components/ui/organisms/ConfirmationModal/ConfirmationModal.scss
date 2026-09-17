@@ -1,0 +1,27 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.confirmation-modal {
+  &__message {
+    @include mix.text-style("body", "backoffice");
+    margin: 0;
+    color: var(--color-text-soft);
+  }
+
+  &__actions {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    gap: vars.space(12);
+  }
+
+  &__confirm--danger.button {
+    background: var(--color-danger);
+    border-color: var(--color-danger);
+    color: var(--color-text-on-brand);
+
+    &:hover:not(:disabled) {
+      filter: brightness(0.95);
+    }
+  }
+}

@@ -1,0 +1,87 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.reporter-card {
+  @include mix.surface-card;
+  padding: vars.space(24);
+
+  &--with-aside {
+    @include mix.respond-to("tablet") {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: vars.space(24);
+      align-items: start;
+    }
+  }
+
+  &__title {
+    @include mix.text-style("block-eyebrow", "backoffice");
+    display: flex;
+    align-items: center;
+    gap: vars.space(8);
+    margin: 0 0 vars.space(12);
+    color: var(--color-text-muted);
+  }
+
+  &__message {
+    @include mix.text-style("body", "backoffice");
+    margin: 0;
+    color: var(--color-text-strong);
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+
+  &__media {
+    margin-top: vars.space(16);
+  }
+
+  &__photo {
+    @include mix.button-reset;
+    @include mix.text-style("field-label", "backoffice");
+
+    display: inline-flex;
+    align-items: center;
+    gap: vars.space(8);
+    margin-top: vars.space(16);
+    min-height: var(--touch-target-min);
+    padding-inline: vars.space(12);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-button);
+    color: var(--color-brand-ink);
+    transition:
+      background-color vars.$transition-fast,
+      border-color vars.$transition-fast;
+
+    &:hover {
+      background: var(--color-brand-soft);
+      border-color: var(--color-brand);
+    }
+  }
+
+  &__aside {
+    margin-top: vars.space(24);
+
+    @include mix.respond-to("tablet") {
+      margin-top: 0; 
+    }
+  }
+
+  &__message--clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__toggle {
+    @include mix.button-reset;
+    @include mix.text-style("field-label", "backoffice");
+    margin-top: vars.space(8);
+    color: var(--color-brand-ink);
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

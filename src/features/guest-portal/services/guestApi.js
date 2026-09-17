@@ -1,0 +1,50 @@
+import guestHttpClient from "./guestHttpClient";
+
+export async function requestGuestAccess(ref, pin) {
+  const { data } = await guestHttpClient.post("/api/guest/access", {
+    ref,
+    pin,
+  });
+  return data;
+}
+
+// CU-GST-03: listado de incidencias del alojamiento
+export async function fetchGuestIncidents() {
+  const { data } = await guestHttpClient.get("/api/guest/incidents");
+  return data; // [{ code, description, status, openedAt }]
+}
+
+// CU-GST-04/09: detalle público (404 si no pertenece al lodging)
+export async function fetchGuestIncidentDetail(id) {
+  const { data } = await guestHttpClient.get(`/api/guest/incidents/${id}`);
+  return data; // { code, description, status, openedAt, closedAt }
+}
+
+function fileToDataUri(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function toCreatePayload(values) {
+  const images = await Promise.all((values.images ?? []).map(fileToDataUri));
+  return {
+    firstName: values.firstName.trim(),
+    lastName: values.lastName.trim(),
+    contact: values.contact?.trim() || null,
+    category: values.category || null,
+    description: values.description,
+    images,
+  };
+}
+
+export async function createGuestIncident(values) {
+  const { data } = await guestHttpClient.post(
+    "/api/guest/incidents",
+    await toCreatePayload(values),
+  );
+  return data;
+}

@@ -1,0 +1,11 @@
+@use "../../../../../styles/mixins" as mix;
+
+.phone-field {
+  .PhoneInputInput {
+    @include mix.field-base;
+  }
+
+  &--invalid .PhoneInputInput {
+    @include mix.field-error;
+  }
+}

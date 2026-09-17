@@ -1,0 +1,36 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+
+  // Avatar estilo del prototipo: brand + blanco
+  .avatar {
+    background: var(--color-brand);
+    color: var(--color-text-on-brand);
+  }
+
+  &__info {
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  &__meta {
+    font-size: 13.5px;
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

@@ -10,6 +10,7 @@ import { fetchGuestIncidentDetail } from "../../services/guestApi.js";
 import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
 import IncidentDetailGuestSkeleton from "../../components/ui/molecules/IncidentDetailGuestSkeleton/IncidentDetailGuestSkeleton.jsx";
 import GuestIncidentTimeline from "../../components/ui/organisms/GuestIncidentTimeline/GuestIncidentTimeline.jsx";
+import ImageGallery from "../../../../shared/components/ui/organisms/ImageGallery/ImageGallery.jsx";
 import "./IncidentDetailGuestPage.scss";
 
 const CLOSED_STATES = new Set(["RESOLVED", "CLOSED", "REJECTED"]);
@@ -89,7 +90,7 @@ export default function IncidentDetailGuestPage() {
       }
     >
       <div className="incident-detail-guest">
-        {status === "loading" && <IncidentDetailGuestSkeleton/>}
+        {status === "loading" && <IncidentDetailGuestSkeleton />}
 
         {status === "error" && (
           <div className="incident-detail-guest__error">
@@ -157,16 +158,10 @@ export default function IncidentDetailGuestPage() {
                 <span className="incident-detail-guest__label">
                   Fotos adjuntas
                 </span>
-                <div className="incident-detail-guest__images-list">
-                  {incident.images.map((src, index) => (
-                    <img
-                      key={index}
-                      src={src}
-                      alt={`Foto adjunta ${index + 1} de la incidencia`}
-                      className="incident-detail-guest__image"
-                    />
-                  ))}
-                </div>
+                <ImageGallery
+                  images={incident.images.map((src) => ({ src }))}
+                  downloadPrefix={`incidencia-${incident.code}`}
+                />
               </div>
             )}
 

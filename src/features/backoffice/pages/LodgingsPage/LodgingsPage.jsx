@@ -14,6 +14,7 @@ import {
 } from "../../services/lodgingApi.js";
 import { useAuthStore } from "../../../auth/store/authStore.js";
 import { ROLES } from "../../../../shared/constants/nav.js";
+import LoadErrorNotice from "../../../../shared/components/ui/molecules/LoadErrorNotice/LoadErrorNotice.jsx";
 
 function toRowProps(lodging, revealedPins) {
   return {
@@ -162,7 +163,6 @@ export default function LodgingsPage() {
           placeholder="Buscar por nombre, referencia, ubicación o estado"
         />
       </div>
-
       {loading && lodgings.length === 0 && (
         <div className="lodgings-page__skeleton" aria-hidden="true">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -176,8 +176,9 @@ export default function LodgingsPage() {
           ))}
         </div>
       )}
-
-      {loadError && <p role="alert">{loadError}</p>}
+      {loadError && (
+        <LoadErrorNotice message={loadError} onRetry={loadLodgings} />
+      )}{" "}
       {!loading && !loadError && lodgings.length === 0 && (
         <p>Todavía no hay alojamientos registrados.</p>
       )}
@@ -187,7 +188,6 @@ export default function LodgingsPage() {
         filteredLodgings.length === 0 && (
           <p>No se encontraron alojamientos para "{search}".</p>
         )}
-
       <div className="lodgings-page__list">
         {filteredLodgings.map((lodging) => (
           <LodgingRow
@@ -203,7 +203,6 @@ export default function LodgingsPage() {
           />
         ))}
       </div>
-
       {isAdmin && (
         <LodgingModal
           key={modalMode}
@@ -225,7 +224,6 @@ export default function LodgingsPage() {
           }
         />
       )}
-
       {isAdmin && (
         <ConfirmationModal
           isOpen={!!confirmTarget}

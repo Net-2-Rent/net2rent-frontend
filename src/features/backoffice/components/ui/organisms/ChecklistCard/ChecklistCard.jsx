@@ -18,6 +18,7 @@ import { GripVertical, Plus, X, ListTodo } from "lucide-react";
 import Input from "../../../../../../shared/components/ui/atoms/Input/Input";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button";
 import "./ChecklistCard.scss";
+import LoadErrorNotice from "../../../../../../shared/components/ui/molecules/LoadErrorNotice/LoadErrorNotice.jsx";
 
 function extractErrorMessage(err, fallback) {
   return (
@@ -244,9 +245,7 @@ export default function ChecklistCard({
           Cargando checklist…
         </p>
       ) : error ? (
-        <p className="checklist__empty" role="alert">
-          No se pudo cargar la checklist.
-        </p>
+        <LoadErrorNotice message="No se pudo cargar la checklist." />
       ) : total === 0 ? (
         <p className="checklist__empty">
           Aún no hay tareas. Añade la primera abajo.

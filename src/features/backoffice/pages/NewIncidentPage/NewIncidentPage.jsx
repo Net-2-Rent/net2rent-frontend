@@ -10,6 +10,7 @@ import {
 import { useAuthStore } from "../../../auth/store/authStore.js";
 import { ROLES } from "../../../../shared/constants/nav.js";
 import "./NewIncidentPage.scss";
+import LoadErrorNotice from "../../../../shared/components/ui/molecules/LoadErrorNotice/LoadErrorNotice.jsx";
 
 export default function NewIncidentPage() {
   const role = useAuthStore((s) => s.user?.role);
@@ -79,7 +80,7 @@ export default function NewIncidentPage() {
         </>
       )}
 
-      {loadError && <div role="alert">{loadError}</div>}
+      {loadError && <LoadErrorNotice message={loadError} />}
 
       {createdCode ? (
         <div className="new-incident-page__success" role="status">

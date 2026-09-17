@@ -121,7 +121,9 @@ export default function NewIncidentForm({ onSubmit }) {
             aria-describedby={describedBy("firstName", false)}
             {...firstNameField}
             onChange={(e) => {
-              e.target.value = onlyNameChars(e.target.value);
+              if (!e.nativeEvent.isComposing) {
+                e.target.value = onlyNameChars(e.target.value);
+              }
               firstNameField.onChange(e);
             }}
           />
@@ -139,7 +141,9 @@ export default function NewIncidentForm({ onSubmit }) {
             aria-describedby={describedBy("lastName", false)}
             {...lastNameField}
             onChange={(e) => {
-              e.target.value = onlyNameChars(e.target.value);
+              if (!e.nativeEvent.isComposing) {
+                e.target.value = onlyNameChars(e.target.value);
+              }
               lastNameField.onChange(e);
             }}
           />

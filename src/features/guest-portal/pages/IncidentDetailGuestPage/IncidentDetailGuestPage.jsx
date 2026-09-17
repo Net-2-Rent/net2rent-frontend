@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useId, useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
 import ContentLayout from "../../components/ui/organisms/ContentLayout/ContentLayout.jsx";
@@ -22,6 +22,10 @@ export default function IncidentDetailGuestPage() {
   const [incident, setIncident] = useState(null);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
+
+  const [descExpanded, setDescExpanded] = useState(false);
+  const descId = useId();
+  const isLongDesc = (incident?.description ?? "").length > 320;
 
   useEffect(() => {
     let active = true;
@@ -148,9 +152,27 @@ export default function IncidentDetailGuestPage() {
 
             <div className="incident-detail-guest__desc">
               <span className="incident-detail-guest__label">Descripción</span>
-              <p className="incident-detail-guest__text">
+              <p
+                  id={descId}
+                  className={
+                    isLongDesc && !descExpanded
+                        ? "incident-detail-guest__text incident-detail-guest__text--clamped"
+                        : "incident-detail-guest__text"
+                  }
+              >
                 {incident.description}
               </p>
+              {isLongDesc && (
+                  <button
+                      type="button"
+                      className="incident-detail-guest__toggle"
+                      onClick={() => setDescExpanded((v) => !v)}
+                      aria-expanded={descExpanded}
+                      aria-controls={descId}
+                  >
+                    {descExpanded ? "Ver menos" : "Ver más"}
+                  </button>
+              )}
             </div>
 
             {incident.images?.length > 0 && (

@@ -17,7 +17,7 @@ const ROLE_OPTIONS = [
 ];
 
 function onlyLetters(value) {
-  return value.replace(/[^\p{L} ]/gu, "");
+  return value.replace(/[^\p{L}\p{M} '-]/gu, "");
 }
 
 export default function EditUserModal({
@@ -72,7 +72,10 @@ export default function EditUserModal({
             type="text"
             name="name"
             value={name}
-            onChange={(e) => setName(onlyLetters(e.target.value))}
+            onChange={(e) => {
+              const next = e.target.value;
+              setName(e.nativeEvent.isComposing ? next : onlyLetters(next));
+            }}
             placeholder="Nombre y apellido"
           />
         </FormField>

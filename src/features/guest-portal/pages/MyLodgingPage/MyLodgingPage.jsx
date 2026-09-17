@@ -1,35 +1,36 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, AlertCircle, LogOut } from 'lucide-react';
-import ContentLayout from '../../components/ui/organisms/ContentLayout/ContentLayout.jsx';
-import PageHeader from '../../components/ui/molecules/PageHeader/PageHeader.jsx';
-import Logo from '../../components/ui/atoms/Logo/Logo.jsx';
-import GuestIncidentItem from '../../components/ui/organisms/GuestIncidentItem/GuestIncidentItem.jsx';
-import EmptyState from '../../components/ui/organisms/EmptyState/EmptyState.jsx';
-import PrimaryButton from '../../components/ui/atoms/PrimaryButton/PrimaryButton.jsx';
-import NoticeBox from '../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx';
-import { useGuestAuthStore } from '../../store/guestAuthStore.js';
-import { fetchGuestIncidents } from '../../services/guestApi.js';
-import { truncate } from '../../../../shared/utils/truncate.js'
-import TextButton from '../../components/ui/atoms/TextButton/TextButton.jsx';
-import Modal from '../../../../shared/components/ui/molecules/Modal/Modal.jsx';
-import Button from '../../../../shared/components/ui/atoms/Button/Button.jsx';
-import './MyLodgingPage.scss';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CheckCircle2, AlertCircle, LogOut } from "lucide-react";
+import ContentLayout from "../../components/ui/organisms/ContentLayout/ContentLayout.jsx";
+import PageHeader from "../../components/ui/molecules/PageHeader/PageHeader.jsx";
+import Logo from "../../components/ui/atoms/Logo/Logo.jsx";
+import GuestIncidentItem from "../../components/ui/organisms/GuestIncidentItem/GuestIncidentItem.jsx";
+import EmptyState from "../../components/ui/organisms/EmptyState/EmptyState.jsx";
+import PrimaryButton from "../../components/ui/atoms/PrimaryButton/PrimaryButton.jsx";
+import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
+import { useGuestAuthStore } from "../../store/guestAuthStore.js";
+import { fetchGuestIncidents } from "../../services/guestApi.js";
+import { truncate } from "../../../../shared/utils/truncate.js";
+import TextButton from "../../components/ui/atoms/TextButton/TextButton.jsx";
+import Modal from "../../../../shared/components/ui/molecules/Modal/Modal.jsx";
+import Button from "../../../../shared/components/ui/atoms/Button/Button.jsx";
+import GuestIncidentItemSkeleton from "../../components/ui/molecules/GuestIncidentItemSkeleton/GuestIncidentItemSkeleton.jsx";
+import "./MyLodgingPage.scss";
 
 export default function MyLodgingPage() {
   const lodgingName = useGuestAuthStore((state) => state.lodgingName);
   const lodgingRef = useGuestAuthStore((state) => state.lodgingRef);
   const [incidents, setIncidents] = useState([]);
-  const [status, setStatus] = useState('loading');
-  const [error, setError] = useState('');
+  const [status, setStatus] = useState("loading");
+  const [error, setError] = useState("");
   const logout = useGuestAuthStore((state) => state.logout);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
-    navigate('/');
-  }
+    navigate("/");
+  };
 
   useEffect(() => {
     let active = true;
@@ -38,15 +39,15 @@ export default function MyLodgingPage() {
       .then((data) => {
         if (!active) return;
         setIncidents(data);
-        setStatus('success');
+        setStatus("success");
       })
       .catch((err) => {
         if (!active) return;
         setError(
           err.response?.data?.message ??
-          'No se pudieron cargar las incidencias. Inténtalo de nuevo.'
+            "No se pudieron cargar las incidencias. Inténtalo de nuevo.",
         );
-        setStatus('error');
+        setStatus("error");
       });
 
     return () => {
@@ -55,19 +56,19 @@ export default function MyLodgingPage() {
   }, []);
 
   const handleRetry = () => {
-    setStatus('loading');
-    setError('');
+    setStatus("loading");
+    setError("");
     fetchGuestIncidents()
       .then((data) => {
         setIncidents(data);
-        setStatus('success');
+        setStatus("success");
       })
       .catch((err) => {
         setError(
           err.response?.data?.message ??
-          'No se pudieron cargar las incidencias. Inténtalo de nuevo.'
+            "No se pudieron cargar las incidencias. Inténtalo de nuevo.",
         );
-        setStatus('error');
+        setStatus("error");
       });
   };
 
@@ -103,7 +104,11 @@ export default function MyLodgingPage() {
         </div>
 
         {status === "loading" && (
-          <p className="my-lodging-page__status">Cargando…</p>
+          <ul className="my-lodging-page__list" aria-hidden="true">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <GuestIncidentItemSkeleton key={i} />
+            ))}
+          </ul>
         )}
 
         {status === "error" && (
@@ -142,8 +147,8 @@ export default function MyLodgingPage() {
             </ul>
 
             <TextButton
-                className="my-lodging-page__logout"
-                onClick={() => setConfirmOpen(true)}
+              className="my-lodging-page__logout"
+              onClick={() => setConfirmOpen(true)}
             >
               <LogOut size={16} aria-hidden="true" />
               Salir

@@ -126,7 +126,7 @@ export default function EditUserModal({
           <PasswordInput
             name="repeatPassword"
             value={repeatPassword}
-            invalid={!!error} // reutiliza tu estado 'error' de "no coinciden"
+            invalid={!!error}
             onChange={(e) => setRepeatPassword(e.target.value)}
             placeholder="Repite la contraseña"
           />
@@ -143,7 +143,6 @@ export default function EditUserModal({
           </Button>
           <Button
             variant="secondary"
-            className="edit-user-modal__cancel"
             onClick={onClose}
           >
             <CircleX size={16} aria-hidden="true" />

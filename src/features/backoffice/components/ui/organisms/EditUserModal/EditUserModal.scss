@@ -21,10 +21,6 @@
     }
   }
 
-  &__cancel.button {
-    color: var(--color-text-muted);
-  }
-
   @include mix.respond-to("desktop") {
   .edit-user-modal__actions {
     flex-direction: row;

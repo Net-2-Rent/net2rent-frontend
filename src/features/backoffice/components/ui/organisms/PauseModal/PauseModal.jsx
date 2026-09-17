@@ -1,4 +1,4 @@
-import { useState, useEffect, useId } from "react";
+import { useState, useId } from "react";
 import Modal from "../../../../../../shared/components/ui/molecules/Modal/Modal";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button";
 import TextArea from "../../../../../../shared/components/ui/atoms/TextArea/TextArea";
@@ -16,12 +16,14 @@ export default function PauseModal({
   error = null,
 }) {
   const [reason, setReason] = useState("");
+  const [wasOpen, setWasOpen] = useState(isOpen);
   const formId = useId();
   const reasonId = useId();
 
-  useEffect(() => {
+  if (isOpen !== wasOpen) {
+    setWasOpen(isOpen);
     if (isOpen) setReason("");
-  }, [isOpen]);
+  }
 
   const canSubmit = reason.trim().length > 0 && !submitting;
 

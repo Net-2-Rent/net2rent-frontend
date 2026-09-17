@@ -1,4 +1,4 @@
-import { ExternalLink, Building2, MapPin, UserRound } from "lucide-react";
+import { ExternalLink, Building2, MapPin } from "lucide-react";
 import DataList from "../../molecules/DataList/DataList.jsx";
 import "./LodgingCard.scss";
 import PrivateNotes from "../../atoms/PrivateNotes/PrivateNotes.jsx";

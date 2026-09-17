@@ -15,7 +15,7 @@ import {
 import { useAuthStore } from "../../../auth/store/authStore.js";
 import { ROLES } from "../../../../shared/constants/nav.js";
 
-function toRowProps(lodging, revealedPins) {
+function toRowProps(lodging) {
   return {
     name: lodging.name,
     address: lodging.address,
@@ -92,13 +92,12 @@ export default function LodgingsPage() {
   async function handleSubmit(values) {
     setSubmitError("");
     try {
-      let saved;
       if (modalMode === "create") {
-        saved = await createLodging(values);
+        await createLodging(values);
       } else if (modalMode === "edit") {
-        saved = await updateLodging(selected.id, values);
+        await updateLodging(selected.id, values);
       } else if (modalMode === "pin") {
-        saved = await updateLodging(selected.id, {
+        await updateLodging(selected.id, {
           name: selected.name,
           address: selected.address,
           notes: selected.accessNotes,

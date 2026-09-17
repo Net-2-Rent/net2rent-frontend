@@ -1,4 +1,4 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm, useWatch, Controller } from "react-hook-form";
 import TextField from "../../../../../../shared/components/ui/atoms/TextField/TextField.jsx";
 import TextArea from "../../../../../../shared/components/ui/atoms/TextArea/TextArea.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
@@ -46,7 +46,6 @@ export default function PhoneIncidentForm({
   const {
     register,
     handleSubmit,
-    watch,
     getValues,
     control,
     reset,
@@ -68,7 +67,8 @@ export default function PhoneIncidentForm({
     },
   });
 
-  const descriptionLength = watch("description").length;
+  const descriptionValue = useWatch({ control, name: "description" });
+  const descriptionLength = (descriptionValue ?? "").length;
 
   const firstNameField = register("firstName", {
     required: "El nombre es obligatorio",

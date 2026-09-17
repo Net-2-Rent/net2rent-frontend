@@ -48,7 +48,11 @@ export default function NewIncidentForm({ onSubmit }) {
 
   const descriptionValue = useWatch({ control, name: "description"}) ?? "";
   const descriptionLength = descriptionValue.length;
-  const titlePreview = descriptionValue.trim().slice(0, 80);
+  const trimmedDescription = descriptionValue.trim();
+  const titlePreview =
+      trimmedDescription.length > 80
+          ? `${trimmedDescription.slice(0, 79)}…`
+          : trimmedDescription;
 
   const firstNameField = register("firstName", {
     required: "El nombre es obligatorio",

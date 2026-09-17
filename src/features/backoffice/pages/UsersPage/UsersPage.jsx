@@ -22,6 +22,7 @@ import {
   ROLE_FILTER_OPTIONS,
 } from "../../../../shared/constants/nav.js";
 import "./UsersPage.scss";
+import LoadErrorNotice from "../../../../shared/components/ui/molecules/LoadErrorNotice/LoadErrorNotice.jsx";
 
 const STATUS_FILTER = {
   ACTIVE: "ACTIVE",
@@ -187,9 +188,7 @@ export default function UsersPage() {
         setOperatorIncidentCount(count);
         setConfirmTarget(user);
         return;
-      } catch {
-
-      }
+      } catch {}
     }
     setOperatorIncidentCount(0);
     setConfirmTarget(user);
@@ -295,9 +294,7 @@ export default function UsersPage() {
         </div>
       )}
       {loadError && (
-        <p role="alert" className="users-page__error">
-          {loadError}
-        </p>
+        <LoadErrorNotice message={loadError} onRetry={refreshUsers} />
       )}
       {!loading && !loadError && users.length === 0 && (
         <p>Todavía no hay usuarios registrados.</p>

@@ -305,7 +305,7 @@ export default function PhoneIncidentForm({
       </FormField>
 
       <fieldset className="phone-incident-form__fieldset">
-        <legend>Fotos (opcional, máx. 3)</legend>
+        <legend>Fotos (opcional, máx. 3 de 5MB)</legend>
         <Controller
           name="images"
           control={control}

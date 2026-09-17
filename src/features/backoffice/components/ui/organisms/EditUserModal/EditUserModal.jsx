@@ -16,6 +16,10 @@ const ROLE_OPTIONS = [
   { value: ROLES.OPERATOR, label: ROLE_LABEL[ROLES.OPERATOR] },
 ];
 
+function onlyLetters(value) {
+  return value.replace(/[^\p{L} ]/gu, "");
+}
+
 export default function EditUserModal({
   isOpen,
   onClose,
@@ -68,7 +72,7 @@ export default function EditUserModal({
             type="text"
             name="name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setName(onlyLetters(e.target.value))}
             placeholder="Nombre y apellido"
           />
         </FormField>

@@ -39,7 +39,8 @@
 
   &__actions {
     display: flex;
-    justify-content: flex-end;
+    flex:1;
+    justify-content: space-between;
     gap: vars.space(12);
   }
 

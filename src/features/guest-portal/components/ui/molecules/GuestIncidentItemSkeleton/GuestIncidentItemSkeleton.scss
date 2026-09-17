@@ -1,0 +1,27 @@
+@use "variables" as vars;
+
+.guest-incident-item-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: vars.space(8);
+  padding: vars.space(16);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-list-item);
+  box-shadow: var(--shadow-list-item);
+  list-style: none;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: vars.space(8);
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: vars.space(8);
+  }
+}

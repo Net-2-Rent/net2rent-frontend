@@ -8,8 +8,9 @@ import PrimaryButton from "../../components/ui/atoms/PrimaryButton/PrimaryButton
 import { formatDate } from "../../../../shared/utils/formatDate.js";
 import { fetchGuestIncidentDetail } from "../../services/guestApi.js";
 import NoticeBox from "../../../../shared/components/ui/molecules/NoticeBox/NoticeBox.jsx";
+import IncidentDetailGuestSkeleton from "../../components/ui/molecules/IncidentDetailGuestSkeleton/IncidentDetailGuestSkeleton.jsx";
+import GuestIncidentTimeline from "../../components/ui/organisms/GuestIncidentTimeline/GuestIncidentTimeline.jsx";
 import "./IncidentDetailGuestPage.scss";
-import GuestIncidentTimeline from "../../components/ui/organisms/GuestIncidentTimeline/GuestIncidentTimeline.jsx"
 
 const CLOSED_STATES = new Set(["RESOLVED", "CLOSED", "REJECTED"]);
 
@@ -18,7 +19,7 @@ export default function IncidentDetailGuestPage() {
   const navigate = useNavigate();
 
   const [incident, setIncident] = useState(null);
-  const [status, setStatus] = useState("loading"); // loading | error | notfound | success
+  const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -88,9 +89,7 @@ export default function IncidentDetailGuestPage() {
       }
     >
       <div className="incident-detail-guest">
-        {status === "loading" && (
-          <p className="incident-detail-guest__status">Cargando…</p>
-        )}
+        {status === "loading" && <IncidentDetailGuestSkeleton/>}
 
         {status === "error" && (
           <div className="incident-detail-guest__error">

@@ -20,6 +20,7 @@ export default function NewIncidentPage() {
   const [submitError, setSubmitError] = useState(null);
   const [createdCode, setCreatedCode] = useState(null);
   const [formKey, setFormKey] = useState(0);
+  const [loadingOptions, setLoadingOptions] = useState(true);
 
   useEffect(() => {
     if (role === ROLES.OPERATOR) return;
@@ -34,6 +35,9 @@ export default function NewIncidentPage() {
       .catch(() => {
         if (alive)
           setLoadError("No se pudieron cargar alojamientos u operarios.");
+      })
+      .finally(() => {
+        if (alive) setLoadingOptions(false);
       });
     return () => {
       alive = false;
@@ -91,6 +95,7 @@ export default function NewIncidentPage() {
           key={formKey}
           lodgings={lodgings}
           operators={operators}
+          loadingOptions={loadingOptions}
           onSubmit={handleSubmit}
           submitError={submitError}
           onDiscard={() => setSubmitError(null)}

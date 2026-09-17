@@ -28,6 +28,7 @@
     margin: 0;
     color: var(--color-text-strong);
     white-space: pre-line;
+    overflow-wrap: anywhere;
   }
 
   &__media {
@@ -62,6 +63,25 @@
 
     @include mix.respond-to("tablet") {
       margin-top: 0; 
+    }
+  }
+
+  &__message--clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__toggle {
+    @include mix.button-reset;
+    @include mix.text-style("field-label", "backoffice");
+    margin-top: vars.space(8);
+    color: var(--color-brand-ink);
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
     }
   }
 }

@@ -1,0 +1,38 @@
+@use "variables" as vars;
+@use "mixins" as mix;
+
+.not-found-page {
+  text-align: center;
+
+  &__back-content {
+  display: inline-flex;
+  align-items: center;
+  gap: vars.space(8);
+}
+
+  &__code {
+    margin: 0 0 vars.space(4);
+    @include mix.text-style("page-title", "guest");
+    color: var(--color-brand);
+    text-align: center;
+  }
+
+  &__title {
+    margin: 0 0 vars.space(8);
+    @include mix.text-style("card-title", "guest");
+    color: var(--color-text-strong);
+  }
+
+  &__subtitle {
+    margin: 0 0 vars.space(24);
+    @include mix.text-style("body", "guest");
+    color: var(--color-text-soft);
+    text-align: center;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: vars.space(12);
+  }
+}

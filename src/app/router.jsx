@@ -15,6 +15,8 @@ import LodgingsPage from "../features/backoffice/pages/LodgingsPage/LodgingsPage
 import IncidentDetailPage from "../features/backoffice/pages/IncidentDetailPage/IncidentDetailPage.jsx";
 import UsersPage from "../features/backoffice/pages/UsersPage/UsersPage.jsx";
 import IncidentsListPage from "../features/backoffice/pages/IncidentsListPage/IncidentsListPage.jsx";
+import NotFoundGuestPage from "../features/guest-portal/pages/NotFoundPage/NotFoundPage.jsx";
+import NotFoundBackofficePage from "../features/backoffice/pages/NotFoundPage/NotFoundPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +35,7 @@ const router = createBrowserRouter([
           { path: "/incidencias/:id", element: <IncidentDetailGuestPage /> },
         ],
       },
+      { path: "*", element: <NotFoundGuestPage /> },
     ],
   },
   {
@@ -58,6 +61,7 @@ const router = createBrowserRouter([
               { path: "perfil", element: <ProfilePage /> },
             ],
           },
+          { path: "/backoffice/*", element: <NotFoundBackofficePage /> },
         ],
       },
     ],

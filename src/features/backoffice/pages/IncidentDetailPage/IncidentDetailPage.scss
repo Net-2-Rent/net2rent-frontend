@@ -22,23 +22,6 @@
       align-items: start;
     }
   }
-
-  .hero-incident {
-    position: relative;
-  }
-
-  .hero-incident__actions {
-    position: relative;
-  }
-
-  .hero-incident__actions {
-    @include mix.respond-to("tablet") {
-      position: absolute;
-      top: vars.space(16);
-      right: vars.space(16);
-      margin: 0;
-    }
-  }
 }
 
 .classification-summary {

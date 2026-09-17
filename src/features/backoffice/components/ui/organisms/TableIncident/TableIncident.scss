@@ -36,6 +36,7 @@
     font-weight: 600;
     line-height: 1.35;
     text-wrap: pretty;
+    overflow-wrap: break-word;
   }
 
   &__card-meta {
@@ -146,6 +147,7 @@
     font-size: 14.5px;
     font-weight: 600;
     max-width: 320px;
+    overflow-wrap: break-word;
   }
 
   &__td--muted {

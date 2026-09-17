@@ -20,6 +20,14 @@ export default function TableIncident({
   className = "",
 }) {
   const classes = ["table-incident", className].filter(Boolean).join(" ");
+  const PAGE_WINDOW_SIZE = 3;
+  const windowStart =
+    Math.floor((page - 1) / PAGE_WINDOW_SIZE) * PAGE_WINDOW_SIZE + 1;
+  const windowEnd = Math.min(windowStart + PAGE_WINDOW_SIZE - 1, totalPages);
+  const visiblePages = Array.from(
+    { length: windowEnd - windowStart + 1 },
+    (_, i) => windowStart + i,
+  );
 
   if (incidents.length === 0) {
     return (
@@ -127,16 +135,17 @@ export default function TableIncident({
           </table>
         </div>
 
-        <div className="table-incident__footer">
+      </div>
+      <div className="table-incident__footer">
           <span className="table-incident__info">
             {incidents.length} de {totalResults} incidencias · página {page} de{" "}
             {totalPages}
           </span>
           <div className="table-incident__pagination">
-            <PageButton disabled={page <= 1} onClick={onPrevPage}>
-              Anterior
-            </PageButton>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            {totalPages > PAGE_WINDOW_SIZE && page > 1 && (
+              <PageButton onClick={onPrevPage}>Anterior</PageButton>
+            )}
+            {visiblePages.map((p) => (
               <PageButton
                 key={p}
                 active={p === page}
@@ -145,12 +154,11 @@ export default function TableIncident({
                 {p}
               </PageButton>
             ))}
-            <PageButton disabled={page >= totalPages} onClick={onNextPage}>
-              Siguiente
-            </PageButton>
+            {totalPages > PAGE_WINDOW_SIZE && page < totalPages && (
+              <PageButton onClick={onNextPage}>Siguiente</PageButton>
+            )}
           </div>
         </div>
-      </div>
     </div>
   );
 }

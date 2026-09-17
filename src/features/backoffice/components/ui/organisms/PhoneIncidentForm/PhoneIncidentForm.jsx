@@ -201,7 +201,9 @@ export default function PhoneIncidentForm({
             autoComplete="given-name"
             {...firstNameField}
             onChange={(e) => {
-              e.target.value = onlyNameChars(e.target.value);
+              if (!e.nativeEvent.isComposing) {
+                e.target.value = onlyNameChars(e.target.value);
+              }
               firstNameField.onChange(e);
             }}
           />
@@ -219,7 +221,9 @@ export default function PhoneIncidentForm({
             autoComplete="family-name"
             {...lastNameField}
             onChange={(e) => {
-              e.target.value = onlyNameChars(e.target.value);
+              if (!e.nativeEvent.isComposing) {
+                e.target.value = onlyNameChars(e.target.value);
+              }
               lastNameField.onChange(e);
             }}
           />

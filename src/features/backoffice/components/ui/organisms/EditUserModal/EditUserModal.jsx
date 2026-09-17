@@ -17,7 +17,7 @@ const ROLE_OPTIONS = [
 ];
 
 function onlyLetters(value) {
-  return value.replace(/[^\p{L} ]/gu, "");
+  return value.replace(/[^\p{L}\p{M} '-]/gu, "");
 }
 
 export default function EditUserModal({
@@ -72,7 +72,10 @@ export default function EditUserModal({
             type="text"
             name="name"
             value={name}
-            onChange={(e) => setName(onlyLetters(e.target.value))}
+            onChange={(e) => {
+              const next = e.target.value;
+              setName(e.nativeEvent.isComposing ? next : onlyLetters(next));
+            }}
             placeholder="Nombre y apellido"
           />
         </FormField>
@@ -126,7 +129,7 @@ export default function EditUserModal({
           <PasswordInput
             name="repeatPassword"
             value={repeatPassword}
-            invalid={!!error} // reutiliza tu estado 'error' de "no coinciden"
+            invalid={!!error}
             onChange={(e) => setRepeatPassword(e.target.value)}
             placeholder="Repite la contraseña"
           />
@@ -143,7 +146,6 @@ export default function EditUserModal({
           </Button>
           <Button
             variant="secondary"
-            className="edit-user-modal__cancel"
             onClick={onClose}
           >
             <CircleX size={16} aria-hidden="true" />

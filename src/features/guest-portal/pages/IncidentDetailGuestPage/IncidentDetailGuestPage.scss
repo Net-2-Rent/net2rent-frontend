@@ -101,13 +101,35 @@
     text-wrap: pretty;
   }
 
+  &__text--clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__toggle {
+    margin-top: 8px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-brand-ink);
+    font: inherit;
+    font-weight: 700;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   &__note {
-    background: rgb(241, 243, 246);
+    background: var(--color-surface-subtle);
     border-radius: 13px;
     padding: 14px 15px;
     font-size: 14px;
     line-height: 1.55;
-    color: var(--color-text-muted);
+    color: var(--color-text-soft);
   }
 
   &__error {

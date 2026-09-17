@@ -4,6 +4,7 @@ import LodgingRow from "../../components/ui/molecules/LodgingRow/LodgingRow.jsx"
 import LodgingModal from "../../components/ui/organisms/LodgingModal/LodgingModal.jsx";
 import ConfirmationModal from "../../components/ui/organisms/ConfirmationModal/ConfirmationModal.jsx";
 import SearchBar from "../../components/ui/molecules/SearchBar/SearchBar.jsx";
+import Skeleton from "../../../../shared/components/ui/atoms/Skeleton/Skeleton.jsx";
 import "./LodgingsPage.scss";
 import {
   listLodgings,
@@ -162,7 +163,20 @@ export default function LodgingsPage() {
         />
       </div>
 
-      {loading && <p>Cargando alojamientos…</p>}
+      {loading && lodgings.length === 0 && (
+        <div className="lodgings-page__skeleton" aria-hidden="true">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              width="100%"
+              height={72}
+              radius={8}
+              className="lodgings-page__skeleton-row"
+            />
+          ))}
+        </div>
+      )}
+
       {loadError && <p role="alert">{loadError}</p>}
       {!loading && !loadError && lodgings.length === 0 && (
         <p>Todavía no hay alojamientos registrados.</p>

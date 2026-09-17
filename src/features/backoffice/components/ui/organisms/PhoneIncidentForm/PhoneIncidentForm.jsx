@@ -41,6 +41,7 @@ export default function PhoneIncidentForm({
   onSubmit,
   submitError,
   onDiscard,
+  loadingOptions = false,
 }) {
   const {
     register,
@@ -116,11 +117,14 @@ export default function PhoneIncidentForm({
         >
           <select
             className="text-field"
+            disabled={loadingOptions}
             {...register("lodgingId", {
               required: "Selecciona un alojamiento",
             })}
           >
-            <option value="">Selecciona un alojamiento</option>
+            <option value="">
+              {loadingOptions ? "Cargando alojamientos..." : "Selecciona un alojamiento"}
+            </option>
             {lodgings.map((lodging) => (
               <option key={lodging.id} value={lodging.id}>
                 {lodging.ref} · {lodging.name}
@@ -131,7 +135,9 @@ export default function PhoneIncidentForm({
 
         <FormField id="operatorId" label="Operario asignado (opcional)">
           <select className="text-field" {...register("operatorId")}>
-            <option value="">Sin asignar · va al pool</option>
+            <option value="">
+              {loadingOptions ? "Cargando operarios..." : "Sin asignar"}
+            </option>
             {operators.map((operator) => (
               <option key={operator.id} value={operator.id}>
                 {operator.name}

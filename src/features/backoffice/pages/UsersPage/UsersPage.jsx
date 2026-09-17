@@ -5,7 +5,8 @@ import RoleFilter from "../../components/ui/molecules/RoleFilter/RoleFilter.jsx"
 import UserCard from "../../components/ui/molecules/UserCard/UserCard.jsx";
 import EditUserModal from "../../components/ui/organisms/EditUserModal/EditUserModal.jsx";
 import ConfirmationModal from "../../components/ui/organisms/ConfirmationModal/ConfirmationModal.jsx";
-import ConfirmToast from "../../components/ui/molecules/ConfirmToast/ConfirmToast.jsx"; // NUEVO
+import ConfirmToast from "../../components/ui/molecules/ConfirmToast/ConfirmToast.jsx";
+import Skeleton from "../../../../shared/components/ui/atoms/Skeleton/Skeleton.jsx";
 import {
   listUsers,
   createUser,
@@ -57,7 +58,7 @@ function loadErrorMessage(err) {
 
 export default function UsersPage() {
   const role = useAuthStore((s) => s.user?.role);
-  const currentUser = useAuthStore((s) => s.user); // NUEVO
+  const currentUser = useAuthStore((s) => s.user);
   const isAdmin = role === ROLES.ADMIN;
   const navigate = useNavigate();
 
@@ -74,8 +75,8 @@ export default function UsersPage() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [confirmTarget, setConfirmTarget] = useState(null);
   const [operatorIncidentCount, setOperatorIncidentCount] = useState(0);
-  const [toastTarget, setToastTarget] = useState(null); // NUEVO
-  const [removing, setRemoving] = useState(false); // NUEVO
+  const [toastTarget, setToastTarget] = useState(null);
+  const [removing, setRemoving] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -186,9 +187,8 @@ export default function UsersPage() {
         setOperatorIncidentCount(count);
         setConfirmTarget(user);
         return;
-      } catch (err) {
-        // Si el conteo falla, se abre el modal normal;
-        // el backend seguirá protegiendo la desactivación.
+      } catch {
+
       }
     }
     setOperatorIncidentCount(0);
@@ -202,9 +202,6 @@ export default function UsersPage() {
     navigate(`/backoffice/incidencias?assigneeId=${id}`);
   }
 
-  // ==================== NUEVO: doble confirmación ====================
-
-  // Ya no desactiva directo: pide confirmación irreversible en el toast.
   function confirmDeactivate() {
     if (!confirmTarget) return;
     setToastTarget(confirmTarget);
@@ -231,7 +228,6 @@ export default function UsersPage() {
     setToastTarget(null);
   }
 
-  // Autenticación normalizada para comparar con el listado
   const currentUserEmail = currentUser?.email?.toLowerCase();
 
   const term = search.trim().toLowerCase();
@@ -285,7 +281,19 @@ export default function UsersPage() {
         {filteredUsers.length === 1 ? "usuario" : "usuarios"}
       </div>
 
-      {loading && <p>Cargando usuarios…</p>}
+      {loading && users.length === 0 && (
+        <div className="users-page__skeleton" aria-hidden="true">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              width="100%"
+              height={72}
+              radius={8}
+              className="users-page__skeleton-row"
+            />
+          ))}
+        </div>
+      )}
       {loadError && (
         <p role="alert" className="users-page__error">
           {loadError}
@@ -313,7 +321,6 @@ export default function UsersPage() {
             onDeactivate={
               isAdmin &&
               user.active &&
-              // NUEVO: ocultar "Desactivar" en la propia tarjeta
               user.email?.toLowerCase() !== currentUserEmail
                 ? () => handleDeactivateClick(user)
                 : undefined

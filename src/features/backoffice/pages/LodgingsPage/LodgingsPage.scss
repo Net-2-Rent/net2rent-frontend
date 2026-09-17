@@ -19,4 +19,14 @@
     flex-direction: column;
     gap: vars.space(20);
   }
+
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: vars.space(20);
+  }
+
+  &__skeleton-row {
+    display: block;
+  }
 }

@@ -416,6 +416,19 @@ export default function IncidentDetailPage() {
     });
   }
 
+  const assignButton = canAssign && (
+    <Button
+      variant={incident.assigneeName ? "secondary" : "primary"}
+      onClick={() => {
+        setAssignError(null);
+        setAssignOpen(true);
+      }}
+    >
+      <UserPlus size={16} aria-hidden="true" />
+      {incident.assigneeName ? "Reasignar operario" : "Asignar operario"}
+    </Button>
+  );
+
   const heroActions = (
     <>
       {canClose && (
@@ -429,13 +442,11 @@ export default function IncidentDetailPage() {
           Cerrar
         </Button>
       )}
-
       {canClaim && (
         <Button variant="primary" onClick={handleClaim} disabled={claiming}>
           {claiming ? "Asignando…" : "Asignármela"}
         </Button>
       )}
-
       <IncidentPrimaryAction
         status={incident.status}
         loading={executing}
@@ -446,20 +457,7 @@ export default function IncidentDetailPage() {
         }}
         onResume={handleResume}
       />
-
-      {canAssign && (
-        <Button
-          variant={incident.assigneeName ? "secondary" : "primary"}
-          onClick={() => {
-            setAssignError(null);
-            setAssignOpen(true);
-          }}
-        >
-          <UserPlus size={16} aria-hidden="true" />
-          {incident.assigneeName ? "Reasignar operario" : "Asignar operario"}
-        </Button>
-      )}
-
+      {!incident.assigneeName && assignButton}
       {canEdit && (
         <Button
           variant="secondary"
@@ -473,8 +471,8 @@ export default function IncidentDetailPage() {
           <Pencil size={18} aria-hidden="true" />
         </Button>
       )}
-
       {secondaryActions.length > 0 && <ActionsMenu items={secondaryActions} />}
+      {incident.assigneeName && assignButton}{" "}
     </>
   );
 

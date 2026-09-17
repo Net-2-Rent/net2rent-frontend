@@ -10,7 +10,7 @@ import LoginPage from "../features/auth/pages/LoginPage";
 import BackofficeLayout from "../features/backoffice/components/ui/organisms/BackofficeLayout/BackofficeLayout";
 import ProtectedRoute from "../features/auth/components/ProtectedRoute";
 import ProfilePage from "../features/backoffice/pages/ProfilePage/ProfilePage.jsx";
-import NewIncidentPage from "../features/backoffice/pages/NewIncidentPage.jsx";
+import NewIncidentPage from "../features/backoffice/pages/NewIncidentPage/NewIncidentPage.jsx";
 import LodgingsPage from "../features/backoffice/pages/LodgingsPage/LodgingsPage.jsx";
 import IncidentDetailPage from "../features/backoffice/pages/IncidentDetailPage/IncidentDetailPage.jsx";
 import UsersPage from "../features/backoffice/pages/UsersPage/UsersPage.jsx";

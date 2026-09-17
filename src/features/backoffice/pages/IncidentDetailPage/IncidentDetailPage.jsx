@@ -350,7 +350,7 @@ export default function IncidentDetailPage() {
   const imputedMinutes = timeEntries.reduce(
     (sum, e) => sum + Number(e.minutes || 0),
     0,
-  )
+  );
 
   const canClaim =
     isOperator &&
@@ -403,18 +403,6 @@ export default function IncidentDetailPage() {
     });
   }
 
-  if (canAssign) {
-    secondaryActions.push({
-      id: "assign",
-      label: incident.assigneeName ? "Reasignar operario" : "Asignar operario",
-      icon: UserPlus,
-      onSelect: () => {
-        setAssignError(null);
-        setAssignOpen(true);
-      },
-    });
-  }
-
   if (canReject) {
     secondaryActions.push({
       id: "reject",
@@ -427,6 +415,19 @@ export default function IncidentDetailPage() {
       },
     });
   }
+
+  const assignButton = canAssign && (
+    <Button
+      variant={incident.assigneeName ? "secondary" : "primary"}
+      onClick={() => {
+        setAssignError(null);
+        setAssignOpen(true);
+      }}
+    >
+      <UserPlus size={16} aria-hidden="true" />
+      {incident.assigneeName ? "Reasignar operario" : "Asignar operario"}
+    </Button>
+  );
 
   const heroActions = (
     <>
@@ -441,13 +442,11 @@ export default function IncidentDetailPage() {
           Cerrar
         </Button>
       )}
-
       {canClaim && (
         <Button variant="primary" onClick={handleClaim} disabled={claiming}>
           {claiming ? "Asignando…" : "Asignármela"}
         </Button>
       )}
-
       <IncidentPrimaryAction
         status={incident.status}
         loading={executing}
@@ -458,7 +457,7 @@ export default function IncidentDetailPage() {
         }}
         onResume={handleResume}
       />
-
+      {!incident.assigneeName && assignButton}
       {canEdit && (
         <Button
           variant="secondary"
@@ -472,8 +471,8 @@ export default function IncidentDetailPage() {
           <Pencil size={18} aria-hidden="true" />
         </Button>
       )}
-
       {secondaryActions.length > 0 && <ActionsMenu items={secondaryActions} />}
+      {incident.assigneeName && assignButton}{" "}
     </>
   );
 
@@ -565,33 +564,34 @@ export default function IncidentDetailPage() {
       )}
 
       <ReporterCard
-          message={incident.description}
-          media={
-            incident.images?.length > 0 ? (
-                <IncidentImageGallery
-                    incidentId={incident.id}
-                    images={incident.images}
-                />
-            ) : null
-          }
-          aside={
-            <div className="incident-detail__reporter">
-              <h2 className="reporter-card__title">
-                <UserRound size={18} aria-hidden="true" />
-                <span>Reportante</span>
-              </h2>
-              <DataList
-                  items={[
-                    {
-                      label: "Nombre",
-                      value: `${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim(),
-                    },
-                    { label: "Contacto", value: incident.guestContact },
-                    { label: "Apertura", value: formatDate(incident.openedAt) },
-                  ].filter((item) => item.value)}
-              />
-            </div>
-          }
+        message={incident.description}
+        media={
+          incident.images?.length > 0 ? (
+            <IncidentImageGallery
+              incidentId={incident.id}
+              images={incident.images}
+            />
+          ) : null
+        }
+        aside={
+          <div className="incident-detail__reporter">
+            <h2 className="reporter-card__title">
+              <UserRound size={18} aria-hidden="true" />
+              <span>Reportante</span>
+            </h2>
+            <DataList
+              items={[
+                {
+                  label: "Nombre",
+                  value:
+                    `${incident.guestFirstName ?? ""} ${incident.guestLastName ?? ""}`.trim(),
+                },
+                { label: "Contacto", value: incident.guestContact },
+                { label: "Apertura", value: formatDate(incident.openedAt) },
+              ].filter((item) => item.value)}
+            />
+          </div>
+        }
       />
 
       <LodgingCard

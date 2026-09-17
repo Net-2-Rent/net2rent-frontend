@@ -55,7 +55,9 @@
     min-width: 200px;
   }
 
-  &__reload { white-space: nowrap; }
+  &__reload {
+    white-space: nowrap;
+  }
 
   &__filter-toggle {
     display: inline-flex;
@@ -87,16 +89,13 @@
     align-items: center;
   }
 
-  &__filters-card[hidden] { display: none; }
+  &__filters-card[hidden] {
+    display: none;
+  }
 
   &__filter {
     flex: 1 1 180px;
     min-width: 0;
-  }
-
-  &__error {
-    margin: 0;
-    color: var(--color-danger, #c0362c);
   }
 
   &__skeleton {
@@ -119,7 +118,7 @@
     font-size: 0.85rem;
     color: var(--color-text-muted, #6b7280);
   }
-  &__daterange .input { 
+  &__daterange .input {
     flex: 1 1 auto;
     min-width: 0;
   }

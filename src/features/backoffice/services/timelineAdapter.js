@@ -1,27 +1,36 @@
-import { INCIDENT_EVENT_LABEL, prettyValue } from '../../../shared/constants/incidentEvent.js';
+import {
+  INCIDENT_EVENT_LABEL,
+  prettyValue,
+} from "../../../shared/constants/incidentEvent.js";
+import { INCIDENT_STATUS } from "../../../shared/constants/incidentStatus.js";
 
 export function mapTimelineItemToEntry(item, index) {
-    const author = item.actorName ?? 'Sistema';
+  const author = item.actorName ?? "Sistema";
 
-    if (item.type === 'COMMENT') {
-        return {
-            id: `comment-${index}`,
-            title: 'Comentario interno',
-            at: item.at,
-            author,
-            description: item.text,
-            status: null,
-        };
-    }
-
+  if (item.type === "COMMENT") {
     return {
-        id: `event-${index}`,
-        title: INCIDENT_EVENT_LABEL[item.eventType] ?? item.eventType,
-        at: item.at,
-        author,
-        description: eventDescription(item),
-        status: item.eventType === 'STATUS_CHANGED' ? item.newValue : null,
+      id: `comment-${index}`,
+      title: "Comentario interno",
+      at: item.at,
+      author,
+      description: item.text,
+      status: null,
     };
+  }
+
+  return {
+    id: `event-${index}`,
+    title: INCIDENT_EVENT_LABEL[item.eventType] ?? item.eventType,
+    at: item.at,
+    author,
+    description: eventDescription(item),
+    status:
+      item.eventType === "STATUS_CHANGED"
+        ? item.newValue
+        : item.eventType === "ASSIGNED"
+          ? INCIDENT_STATUS.ASSIGNED
+          : null,
+  };
 }
 
 function eventDescription(item) {
@@ -39,5 +48,5 @@ function eventDescription(item) {
 }
 
 export function mapTimeline(items) {
-    return items.map(mapTimelineItemToEntry);
+  return items.map(mapTimelineItemToEntry);
 }

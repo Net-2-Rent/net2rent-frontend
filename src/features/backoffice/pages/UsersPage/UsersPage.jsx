@@ -188,7 +188,9 @@ export default function UsersPage() {
         setOperatorIncidentCount(count);
         setConfirmTarget(user);
         return;
-      } catch {}
+      } catch {
+        // Si falla el conteo, seguimos con el flujo normal (0 incidencias)
+      }
     }
     setOperatorIncidentCount(0);
     setConfirmTarget(user);

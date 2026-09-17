@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import TextField from "../../../../../../shared/components/ui/atoms/TextField/TextField.jsx";
 import TextArea from "../../../../../../shared/components/ui/atoms/TextArea/TextArea.jsx";
 import FormField from "../../../../../../shared/components/ui/molecules/FormField/FormField.jsx";
@@ -30,7 +30,6 @@ export default function NewIncidentForm({ onSubmit }) {
     register,
     handleSubmit,
     control,
-    watch,
     setError,
     formState: { errors, isSubmitting },
   } = useForm({
@@ -47,7 +46,7 @@ export default function NewIncidentForm({ onSubmit }) {
 
   const [submitError, setSubmitError] = useState(null);
 
-  const descriptionValue = watch("description");
+  const descriptionValue = useWatch({ control, name: "description"}) ?? "";
   const descriptionLength = descriptionValue.length;
   const titlePreview = descriptionValue.trim().slice(0, 80);
 

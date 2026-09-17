@@ -1,4 +1,4 @@
-import { useState, useId, useEffect } from "react";
+import { useState, useId } from "react";
 import Modal from "../../../../../../shared/components/ui/molecules/Modal/Modal.jsx";
 import Button from "../../../../../../shared/components/ui/atoms/Button/Button.jsx";
 import Input from "../../../../../../shared/components/ui/atoms/Input/Input.jsx";
@@ -18,16 +18,18 @@ export default function ResolutionModal({
   imputedMinutes = 0,
 }) {
   const [note, setNote] = useState("");
+  const [wasOpen, setWasOpen] = useState(isOpen);
   const formId = useId();
   const minutesId = useId();
   const noteId = useId();
 
+  if (isOpen !== wasOpen) {
+    setWasOpen(isOpen);
+    if (isOpen) setNote("");
+  }
+
   const hasImputedTime = imputedMinutes > 0;
   const canSubmit = hasImputedTime && note.trim().length > 0 && !submitting;
-
-  useEffect(() => {
-    if (isOpen) setNote("");
-  }, [isOpen]);
 
   function handleSubmit(event) {
     event.preventDefault();

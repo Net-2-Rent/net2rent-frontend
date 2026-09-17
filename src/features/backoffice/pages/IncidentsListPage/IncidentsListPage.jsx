@@ -342,6 +342,13 @@ export default function IncidentsListPage() {
           onNextPage={() => goToPage(page + 1)}
           onGoToPage={goToPage}
           emptyMessage="No hay incidencias con esos filtros"
+          emptyAction={
+            hasActiveFilters && (
+              <Button variant="secondary" onClick={clearFilters}>
+                Limpiar filtros
+              </Button>
+            )
+          }
         />
       )}
     </section>

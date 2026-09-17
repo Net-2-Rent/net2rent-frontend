@@ -16,6 +16,7 @@ export default function TableIncident({
   onNextPage,
   onGoToPage,
   emptyMessage,
+  emptyAction,
   className = "",
 }) {
   const classes = ["table-incident", className].filter(Boolean).join(" ");
@@ -23,7 +24,7 @@ export default function TableIncident({
   if (incidents.length === 0) {
     return (
       <div className={classes}>
-        <EmptyMessage message={emptyMessage} />
+        <EmptyMessage message={emptyMessage} action={emptyAction} />
       </div>
     );
   }

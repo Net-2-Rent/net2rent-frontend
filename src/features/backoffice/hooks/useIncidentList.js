@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { listIncidents } from "../services/incidentApi.js";
 import { mapIncidentList } from "../services/incidentListAdapter.js";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 export function useIncidentList() {
     const [searchParams, setSearchParams] = useSearchParams();

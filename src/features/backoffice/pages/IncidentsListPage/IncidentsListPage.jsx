@@ -25,6 +25,7 @@ import {
   CATEGORY_FILTER_OPTIONS,
   PRIORITY_FILTER_OPTIONS,
 } from "../../../../shared/constants/incidentFilterOptions.js";
+import LoadErrorNotice from "../../../../shared/components/ui/molecules/LoadErrorNotice/LoadErrorNotice.jsx";
 import "./IncidentsListPage.scss";
 
 const HEADER_STATUSES = STATUS_BADGE_FILTERS.filter((s) => s !== ALL_STATUS);
@@ -313,13 +314,12 @@ export default function IncidentsListPage() {
         )}
       </div>
 
-      {error && (
-        <p className="incidents-page__error" role="alert">
-          No se pudieron cargar las incidencias. Inténtalo de nuevo.
-        </p>
-      )}
-
-      {loading && rows.length === 0 ? (
+      {error ? (
+        <LoadErrorNotice
+          message="No se pudieron cargar las incidencias."
+          onRetry={reload}
+        />
+      ) : loading && rows.length === 0 ? (
         <div className="incidents-page__skeleton" aria-hidden="true">
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton

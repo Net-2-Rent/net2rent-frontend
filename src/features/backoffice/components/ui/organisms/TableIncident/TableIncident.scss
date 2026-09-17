@@ -2,6 +2,9 @@
 @use "../../../../../../styles/mixins" as mix;
 
 .table-incident {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   overflow: hidden;
 
   // ── CARDS (mobile-first) ────────────────────────────────
@@ -157,7 +160,7 @@
 
   &__td--date {
     font-size: 13px;
-    color: var(--color-text-muted);
+    color: var(--color-text-soft);
     text-align: right;
     white-space: nowrap;
   }
@@ -165,12 +168,12 @@
   // ── Footer paginación ───────────────────────────────────
 
   &__footer {
+    @include mix.surface-card;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
     padding: 13px 16px;
-    background: var(--color-surface-subtle);
     flex-wrap: wrap;
   }
 

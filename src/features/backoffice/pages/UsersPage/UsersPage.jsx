@@ -22,6 +22,7 @@ import {
   ROLE_FILTER_OPTIONS,
 } from "../../../../shared/constants/nav.js";
 import "./UsersPage.scss";
+import LoadErrorNotice from "../../../../shared/components/ui/molecules/LoadErrorNotice/LoadErrorNotice.jsx";
 
 const STATUS_FILTER = {
   ACTIVE: "ACTIVE",
@@ -190,215 +191,212 @@ export default function UsersPage() {
       } catch {
         // Si falla el conteo, seguimos con el flujo normal (0 incidencias)
       }
-
-      }
-      setOperatorIncidentCount(0);
-      setConfirmTarget(user);
     }
+    setOperatorIncidentCount(0);
+    setConfirmTarget(user);
+  }
 
-    function handleReassign() {
-      if (!confirmTarget) return;
-      const id = confirmTarget.id;
-      closeConfirmModal();
-      navigate(`/backoffice/incidencias?assigneeId=${id}`);
-    }
+  function handleReassign() {
+    if (!confirmTarget) return;
+    const id = confirmTarget.id;
+    closeConfirmModal();
+    navigate(`/backoffice/incidencias?assigneeId=${id}`);
+  }
 
-    function confirmDeactivate() {
-      if (!confirmTarget) return;
-      setToastTarget(confirmTarget);
-      closeConfirmModal();
-    }
+  function confirmDeactivate() {
+    if (!confirmTarget) return;
+    setToastTarget(confirmTarget);
+    closeConfirmModal();
+  }
 
-    async function confirmIrreversibleDeactivate() {
-      if (!toastTarget) return;
-      setRemoving(true);
-      try {
-        await deactivateUser(toastTarget.id);
-        setToastTarget(null);
-        await refreshUsers();
-      } catch (err) {
-        const data = err.response?.data;
-        setLoadError(data?.message ?? "No se pudo desactivar el usuario.");
-        setToastTarget(null);
-      } finally {
-        setRemoving(false);
-      }
-    }
-
-    function cancelIrreversibleDeactivate() {
+  async function confirmIrreversibleDeactivate() {
+    if (!toastTarget) return;
+    setRemoving(true);
+    try {
+      await deactivateUser(toastTarget.id);
       setToastTarget(null);
+      await refreshUsers();
+    } catch (err) {
+      const data = err.response?.data;
+      setLoadError(data?.message ?? "No se pudo desactivar el usuario.");
+      setToastTarget(null);
+    } finally {
+      setRemoving(false);
     }
+  }
 
-    const currentUserEmail = currentUser?.email?.toLowerCase();
+  function cancelIrreversibleDeactivate() {
+    setToastTarget(null);
+  }
 
-    const term = search.trim().toLowerCase();
-    const filteredUsers = users.filter((user) => {
-      const isRoleFilter = Object.values(ROLES).includes(filter);
-      const matchesFilter =
-        filter === ALL_ROLES ||
-        (isRoleFilter && user.role === filter) ||
-        (filter === STATUS_FILTER.ACTIVE && user.active) ||
-        (filter === STATUS_FILTER.INACTIVE && !user.active);
-      const matchesSearch =
-        !term ||
-        fullName(user).toLowerCase().includes(term) ||
-        user.email?.toLowerCase().includes(term);
-      return matchesFilter && matchesSearch;
-    });
+  const currentUserEmail = currentUser?.email?.toLowerCase();
 
-    const filterCounts = {
-      [ALL_ROLES]: users.length,
-      [ROLES.ADMIN]: users.filter((u) => u.role === ROLES.ADMIN).length,
-      [ROLES.COORDINATOR]: users.filter((u) => u.role === ROLES.COORDINATOR)
-        .length,
-      [ROLES.OPERATOR]: users.filter((u) => u.role === ROLES.OPERATOR).length,
-      [STATUS_FILTER.ACTIVE]: users.filter((u) => u.active).length,
-      [STATUS_FILTER.INACTIVE]: users.filter((u) => !u.active).length,
-    };
+  const term = search.trim().toLowerCase();
+  const filteredUsers = users.filter((user) => {
+    const isRoleFilter = Object.values(ROLES).includes(filter);
+    const matchesFilter =
+      filter === ALL_ROLES ||
+      (isRoleFilter && user.role === filter) ||
+      (filter === STATUS_FILTER.ACTIVE && user.active) ||
+      (filter === STATUS_FILTER.INACTIVE && !user.active);
+    const matchesSearch =
+      !term ||
+      fullName(user).toLowerCase().includes(term) ||
+      user.email?.toLowerCase().includes(term);
+    return matchesFilter && matchesSearch;
+  });
 
-    return (
-      <div className="users-page">
-        <div className="users-page__toolbar">
-          <SearchBar
-            search={search}
-            onSearchChange={(e) => setSearch(e.target.value)}
-            onCreate={isAdmin ? openCreate : undefined}
-            createLabel="Nuevo usuario"
-            placeholder="Buscar usuario"
-          />
-        </div>
+  const filterCounts = {
+    [ALL_ROLES]: users.length,
+    [ROLES.ADMIN]: users.filter((u) => u.role === ROLES.ADMIN).length,
+    [ROLES.COORDINATOR]: users.filter((u) => u.role === ROLES.COORDINATOR)
+      .length,
+    [ROLES.OPERATOR]: users.filter((u) => u.role === ROLES.OPERATOR).length,
+    [STATUS_FILTER.ACTIVE]: users.filter((u) => u.active).length,
+    [STATUS_FILTER.INACTIVE]: users.filter((u) => !u.active).length,
+  };
 
-        <div className="users-page__filters">
-          <RoleFilter
-            value={filter}
-            onChange={setFilter}
-            options={FILTER_OPTIONS}
-            counts={filterCounts}
-          />
-        </div>
+  return (
+    <div className="users-page">
+      <div className="users-page__toolbar">
+        <SearchBar
+          search={search}
+          onSearchChange={(e) => setSearch(e.target.value)}
+          onCreate={isAdmin ? openCreate : undefined}
+          createLabel="Nuevo usuario"
+          placeholder="Buscar usuario"
+        />
+      </div>
 
-        <div className="users-page__count" aria-live="polite">
-          {filteredUsers.length}{" "}
-          {filteredUsers.length === 1 ? "usuario" : "usuarios"}
-        </div>
+      <div className="users-page__filters">
+        <RoleFilter
+          value={filter}
+          onChange={setFilter}
+          options={FILTER_OPTIONS}
+          counts={filterCounts}
+        />
+      </div>
 
-        {loading && users.length === 0 && (
-          <div className="users-page__skeleton" aria-hidden="true">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton
-                key={i}
-                width="100%"
-                height={72}
-                radius={8}
-                className="users-page__skeleton-row"
-              />
-            ))}
-          </div>
-        )}
-        {loadError && (
-          <p role="alert" className="users-page__error">
-            {loadError}
-          </p>
-        )}
-        {!loading && !loadError && users.length === 0 && (
-          <p>Todavía no hay usuarios registrados.</p>
-        )}
-        {!loading &&
-          !loadError &&
-          users.length > 0 &&
-          filteredUsers.length === 0 && (
-            <p>No se encontraron usuarios con los filtros actuales.</p>
-          )}
+      <div className="users-page__count" aria-live="polite">
+        {filteredUsers.length}{" "}
+        {filteredUsers.length === 1 ? "usuario" : "usuarios"}
+      </div>
 
-        <div className="users-page__list">
-          {filteredUsers.map((user) => (
-            <UserCard
-              key={user.id}
-              name={fullName(user)}
-              email={user.email}
-              role={user.role}
-              active={user.active}
-              onEdit={isAdmin ? () => openEdit(user) : undefined}
-              onDeactivate={
-                isAdmin &&
-                user.active &&
-                user.email?.toLowerCase() !== currentUserEmail
-                  ? () => handleDeactivateClick(user)
-                  : undefined
-              }
+      {loading && users.length === 0 && (
+        <div className="users-page__skeleton" aria-hidden="true">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              width="100%"
+              height={72}
+              radius={8}
+              className="users-page__skeleton-row"
             />
           ))}
         </div>
-
-        {isAdmin && (
-          <EditUserModal
-            key={modalMode}
-            mode={modalMode === "create" ? "create" : "edit"}
-            isOpen={modalMode !== null}
-            onClose={closeModal}
-            user={
-              modalMode === "edit" && selected
-                ? {
-                    name: fullName(selected),
-                    email: selected.email,
-                    role: selected.role,
-                  }
-                : null
-            }
-            onSave={handleSubmit}
-            submitError={submitError}
-            fieldErrors={fieldErrors}
-          />
+      )}
+      {loadError && (
+        <LoadErrorNotice message={loadError} onRetry={refreshUsers} />
+      )}
+      {!loading && !loadError && users.length === 0 && (
+        <p>Todavía no hay usuarios registrados.</p>
+      )}
+      {!loading &&
+        !loadError &&
+        users.length > 0 &&
+        filteredUsers.length === 0 && (
+          <p>No se encontraron usuarios con los filtros actuales.</p>
         )}
 
-        {isAdmin && (
-          <ConfirmationModal
-            isOpen={!!confirmTarget && operatorIncidentCount === 0}
-            onClose={closeConfirmModal}
-            onConfirm={confirmDeactivate}
-            title="Desactivar usuario"
-            subtitle={confirmTarget ? fullName(confirmTarget) : undefined}
-            message={
-              confirmTarget?.role === ROLES.OPERATOR
-                ? "Si el operario tiene incidencias activas asignadas, no podrá desactivarse."
-                : "Dejará de poder acceder al sistema, pero se conservará todo su historial."
-            }
-            confirmLabel="Desactivar"
-            tone="danger"
-          />
-        )}
-
-        {isAdmin && operatorIncidentCount > 0 && (
-          <ConfirmationModal
-            isOpen={!!confirmTarget && operatorIncidentCount > 0}
-            onClose={closeConfirmModal}
-            onConfirm={handleReassign}
-            title="No se puede desactivar"
-            subtitle={confirmTarget ? fullName(confirmTarget) : undefined}
-            message={
-              confirmTarget
-                ? `El operario ${fullName(confirmTarget)} tiene ${operatorIncidentCount} incidencia(s) activa(s) y no puede desactivarse. Primero deben reasignarse sus incidencias a otro(s) operario(s).`
+      <div className="users-page__list">
+        {filteredUsers.map((user) => (
+          <UserCard
+            key={user.id}
+            name={fullName(user)}
+            email={user.email}
+            role={user.role}
+            active={user.active}
+            onEdit={isAdmin ? () => openEdit(user) : undefined}
+            onDeactivate={
+              isAdmin &&
+              user.active &&
+              user.email?.toLowerCase() !== currentUserEmail
+                ? () => handleDeactivateClick(user)
                 : undefined
             }
-            confirmLabel="Reasignar"
-            cancelLabel="Cancelar"
-            tone="default"
           />
-        )}
-
-        {isAdmin && (
-          <ConfirmToast
-            isOpen={!!toastTarget}
-            onConfirm={confirmIrreversibleDeactivate}
-            onCancel={cancelIrreversibleDeactivate}
-            busy={removing}
-            message={
-              toastTarget
-                ? `Esta acción no es reversible, si desactiva a ${fullName(toastTarget)} no podrá reactivarlo de nuevo`
-                : ""
-            }
-          />
-        )}
+        ))}
       </div>
-    );
-  }
+
+      {isAdmin && (
+        <EditUserModal
+          key={modalMode}
+          mode={modalMode === "create" ? "create" : "edit"}
+          isOpen={modalMode !== null}
+          onClose={closeModal}
+          user={
+            modalMode === "edit" && selected
+              ? {
+                  name: fullName(selected),
+                  email: selected.email,
+                  role: selected.role,
+                }
+              : null
+          }
+          onSave={handleSubmit}
+          submitError={submitError}
+          fieldErrors={fieldErrors}
+        />
+      )}
+
+      {isAdmin && (
+        <ConfirmationModal
+          isOpen={!!confirmTarget && operatorIncidentCount === 0}
+          onClose={closeConfirmModal}
+          onConfirm={confirmDeactivate}
+          title="Desactivar usuario"
+          subtitle={confirmTarget ? fullName(confirmTarget) : undefined}
+          message={
+            confirmTarget?.role === ROLES.OPERATOR
+              ? "Si el operario tiene incidencias activas asignadas, no podrá desactivarse."
+              : "Dejará de poder acceder al sistema, pero se conservará todo su historial."
+          }
+          confirmLabel="Desactivar"
+          tone="danger"
+        />
+      )}
+
+      {isAdmin && operatorIncidentCount > 0 && (
+        <ConfirmationModal
+          isOpen={!!confirmTarget && operatorIncidentCount > 0}
+          onClose={closeConfirmModal}
+          onConfirm={handleReassign}
+          title="No se puede desactivar"
+          subtitle={confirmTarget ? fullName(confirmTarget) : undefined}
+          message={
+            confirmTarget
+              ? `El operario ${fullName(confirmTarget)} tiene ${operatorIncidentCount} incidencia(s) activa(s) y no puede desactivarse. Primero deben reasignarse sus incidencias a otro(s) operario(s).`
+              : undefined
+          }
+          confirmLabel="Reasignar"
+          cancelLabel="Cancelar"
+          tone="default"
+        />
+      )}
+
+      {isAdmin && (
+        <ConfirmToast
+          isOpen={!!toastTarget}
+          onConfirm={confirmIrreversibleDeactivate}
+          onCancel={cancelIrreversibleDeactivate}
+          busy={removing}
+          message={
+            toastTarget
+              ? `Esta acción no es reversible, si desactiva a ${fullName(toastTarget)} no podrá reactivarlo de nuevo`
+              : ""
+          }
+        />
+      )}
+    </div>
+  );
+}

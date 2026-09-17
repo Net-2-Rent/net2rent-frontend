@@ -55,7 +55,6 @@
     width: auto;
     object-fit: contain;
     margin-bottom: 1.5rem;
-    margin-top:1rem;
   }
 
   &__close {
@@ -68,7 +67,7 @@
     height: 32px;
     margin-left: auto;
     border-radius: var(--radius-field);
-    color: var(--color-brand-soft);
+    color: var(--color-nav-text-muted);
     background-color: rgba(255, 255, 255, 0.1);
 
     @include mix.focus-ring;
@@ -168,7 +167,7 @@
     @include mix.truncate(1);
     font-size: 13px;
     font-weight: vars.weight("semibold");
-    color: var(--color-brand-soft);
+    color: var(--color-nav-text-muted);
   }
 
   &__user-role {
@@ -185,7 +184,7 @@
     width: 36px;
     height: 36px;
     border-radius: var(--radius-field);
-    color: var(--color-brand-soft);
+    color: var(--color-nav-text-muted);
     transition:
       background vars.$transition-fast,
       color vars.$transition-fast;

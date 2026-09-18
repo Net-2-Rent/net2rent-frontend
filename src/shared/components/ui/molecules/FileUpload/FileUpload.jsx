@@ -17,7 +17,6 @@ export default function FileUpload({
   const [previewUrl, setPreviewUrl] = useState(null);
   const [error, setError] = useState("");
 
-  // Crea la URL de previsualización y la libera al cambiar/quitar
   useEffect(() => {
     if (!value) {
       setPreviewUrl(null);

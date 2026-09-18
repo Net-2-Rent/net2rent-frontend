@@ -14,13 +14,17 @@ export function useFormDraft(key, initialValues) {
     setValues(next);
     try {
       sessionStorage.setItem(key, JSON.stringify(next));
-    } catch {}
+    } catch {
+      // sessionStorage may be unavailable (private browsing) or full; the draft simply won't persist.
+    }
   }
 
   function clearDraft() {
     try {
       sessionStorage.removeItem(key);
-    } catch {}
+    } catch {
+      // sessionStorage may be unavailable; nothing to clean up in that case.
+    }
     setValues(initialValues);
   }
 

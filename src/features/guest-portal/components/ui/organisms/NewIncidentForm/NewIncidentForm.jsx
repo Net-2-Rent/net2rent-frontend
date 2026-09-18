@@ -79,7 +79,8 @@ export default function NewIncidentForm({ onSubmit }) {
 
   useEffect(() => {
     const subscription = watch((values) => {
-      const { images, ...rest } = values;
+      const rest = { ...values };
+      delete rest.images;
       updateDraft(rest);
     });
     return () => subscription.unsubscribe();

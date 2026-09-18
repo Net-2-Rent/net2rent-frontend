@@ -54,4 +54,16 @@ describe("useNetworkAwareSubmit", () => {
     expect(result.current.error).toBe("Conflicto");
     expect(result.current.frozen).toBe(false);
   });
+
+    it("is frozen while offline, even without attempting a submit", () => {
+      Object.defineProperty(navigator, "onLine", {
+        value: false,
+        configurable: true,
+      });
+      const submitFn = vi.fn();
+      const { result } = renderHook(() => useNetworkAwareSubmit(submitFn));
+
+      expect(result.current.frozen).toBe(true);
+      expect(submitFn).not.toHaveBeenCalled();
+    });
 });

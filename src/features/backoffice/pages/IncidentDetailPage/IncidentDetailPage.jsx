@@ -137,7 +137,7 @@ export default function IncidentDetailPage() {
     incident.status === INCIDENT_STATUS.CLOSED ||
     incident.status === INCIDENT_STATUS.REJECTED;
 
-  const checklistLocked =
+  const isWorkLocked =
     isTerminal || incident.status === INCIDENT_STATUS.RESOLVED;
 
   const canReject =
@@ -403,7 +403,7 @@ export default function IncidentDetailPage() {
         error={checklistError}
         adding={checklistAdding}
         pendingIds={checklistPendingIds}
-        disabled={checklistLocked}
+        disabled={isWorkLocked}
         onAdd={addChecklistItem}
         onToggle={toggleChecklistItem}
         onRemove={removeChecklistItem}
@@ -417,7 +417,7 @@ export default function IncidentDetailPage() {
           loading={timelineLoading}
           error={timelineError}
           submitting={timelineSubmitting}
-          canComment={!isTerminal}
+          canComment={!isWorkLocked}
         />
 
         <TimeAllocation
@@ -426,7 +426,7 @@ export default function IncidentDetailPage() {
           error={timeError}
           adding={timeAdding}
           pendingIds={timePendingIds}
-          disabled={isTerminal}
+          disabled={isWorkLocked}
           onImpute={addTimeEntry}
           onUpdate={updateTimeEntry}
           onRemove={removeTimeEntry}

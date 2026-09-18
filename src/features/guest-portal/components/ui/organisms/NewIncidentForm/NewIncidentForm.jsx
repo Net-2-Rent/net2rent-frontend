@@ -14,6 +14,7 @@ import ReadonlyField from "../../../../../../shared/components/ui/molecules/Read
 import PhoneField from "../../../../../../shared/components/ui/molecules/PhoneField/PhoneField.jsx";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
 import "./NewIncidentForm.scss";
+import { useNetworkAwareSubmit } from "../../../../../../hooks/useNetworkAwareSubmit.js";
 
 const DESCRIPTION_MIN = 10;
 const DESCRIPTION_MAX = 2000;
@@ -44,15 +45,31 @@ export default function NewIncidentForm({ onSubmit }) {
     },
   });
 
-  const [submitError, setSubmitError] = useState(null);
+  const [hasFieldErrors, setHasFieldErrors] = useState(false);
 
-  const descriptionValue = useWatch({ control, name: "description"}) ?? "";
+  const {
+    submit,
+    frozen,
+    error: submitError,
+  } = useNetworkAwareSubmit(onSubmit, {
+    fallbackMessage: "No se pudo enviar la incidencia. Inténtalo de nuevo.",
+    onSuccess: () => setHasFieldErrors(false),
+    onError: (err) => {
+      const fieldErrors = err.response?.data?.errors;
+      setHasFieldErrors(!!fieldErrors?.length);
+      fieldErrors?.forEach(({ field, message }) => {
+        setError(field, { type: "server", message });
+      });
+    },
+  });
+
+  const descriptionValue = useWatch({ control, name: "description" }) ?? "";
   const descriptionLength = descriptionValue.length;
   const trimmedDescription = descriptionValue.trim();
   const titlePreview =
-      trimmedDescription.length > 80
-          ? `${trimmedDescription.slice(0, 79)}…`
-          : trimmedDescription;
+    trimmedDescription.length > 80
+      ? `${trimmedDescription.slice(0, 79)}…`
+      : trimmedDescription;
 
   const firstNameField = register("firstName", {
     required: "El nombre es obligatorio",
@@ -77,32 +94,19 @@ export default function NewIncidentForm({ onSubmit }) {
     return undefined;
   }
 
-  async function submit(values) {
-    setSubmitError(null);
+  async function handleFormSubmit(values) {
     try {
-      await onSubmit(values);
-    } catch (err) {
-      const fieldErrors = err.response?.data?.errors;
-      if (fieldErrors?.length) {
-        fieldErrors.forEach(({ field, message }) => {
-          setError(field, { type: "server", message });
-        });
-      } else {
-        setSubmitError(
-          err.response?.data?.message ??
-            "No se pudo enviar la incidencia. Inténtalo de nuevo.",
-        );
-      }
-    }
+      await submit(values);
+    } catch {}
   }
 
   return (
     <form
       className="new-incident-form"
-      onSubmit={handleSubmit(submit)}
+      onSubmit={handleSubmit(handleFormSubmit)}
       noValidate
     >
-      {submitError && (
+      {submitError && !hasFieldErrors && (
         <div className="new-incident-form__alert" role="alert">
           {submitError}
         </div>
@@ -119,6 +123,7 @@ export default function NewIncidentForm({ onSubmit }) {
             invalid={!!errors.firstName}
             autoComplete="given-name"
             aria-describedby={describedBy("firstName", false)}
+            disabled={frozen}
             {...firstNameField}
             onChange={(e) => {
               if (!e.nativeEvent.isComposing) {
@@ -139,6 +144,7 @@ export default function NewIncidentForm({ onSubmit }) {
             invalid={!!errors.lastName}
             autoComplete="family-name"
             aria-describedby={describedBy("lastName", false)}
+            disabled={frozen}
             {...lastNameField}
             onChange={(e) => {
               if (!e.nativeEvent.isComposing) {
@@ -170,6 +176,7 @@ export default function NewIncidentForm({ onSubmit }) {
               invalid={!!errors.contact}
               value={field.value}
               onChange={field.onChange}
+              disabled={frozen}
             />
           )}
         />
@@ -184,6 +191,7 @@ export default function NewIncidentForm({ onSubmit }) {
         <DropdownField
           id="category"
           invalid={!!errors.category}
+          disabled={frozen}
           {...register("category")}
         >
           <option value="">Selecciona una categoría</option>
@@ -214,6 +222,7 @@ export default function NewIncidentForm({ onSubmit }) {
           id="description"
           invalid={!!errors.description}
           aria-describedby={describedBy("description", true)}
+          disabled={frozen}
           {...register("description", {
             required: "La descripción es obligatoria",
             minLength: {
@@ -239,7 +248,11 @@ export default function NewIncidentForm({ onSubmit }) {
           name="images"
           control={control}
           render={({ field }) => (
-            <PhotoUploadList value={field.value} onChange={field.onChange} />
+            <PhotoUploadList
+              value={field.value}
+              onChange={field.onChange}
+              disabled={frozen}
+            />
           )}
         />
       </fieldset>

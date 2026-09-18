@@ -13,33 +13,33 @@ describe("PhoneIncidentForm", () => {
     const handleSubmit = renderPhoneIncidentForm();
 
     fireEvent.click(
-        screen.getByRole("button", { name: "Registrar incidencia" }),
+      screen.getByRole("button", { name: "Registrar incidencia" }),
     );
 
     expect(
-        await screen.findByText("Selecciona un alojamiento", {
-          selector: '[role="alert"] *',
-        }),
+      await screen.findByText("Selecciona un alojamiento", {
+        selector: '[role="alert"] *',
+      }),
     ).toBeInTheDocument();
     expect(
-        screen.getByText("El nombre es obligatorio", {
-          selector: '[role="alert"] *',
-        }),
+      screen.getByText("El nombre es obligatorio", {
+        selector: '[role="alert"] *',
+      }),
     ).toBeInTheDocument();
     expect(
-        screen.getByText("El apellido es obligatorio", {
-          selector: '[role="alert"] *',
-        }),
+      screen.getByText("El apellido es obligatorio", {
+        selector: '[role="alert"] *',
+      }),
     ).toBeInTheDocument();
     expect(
-        screen.getByText("Selecciona una categoría", {
-          selector: '[role="alert"] *',
-        }),
+      screen.getByText("Selecciona una categoría", {
+        selector: '[role="alert"] *',
+      }),
     ).toBeInTheDocument();
     expect(
-        screen.getByText("La descripción es obligatoria", {
-          selector: '[role="alert"] *',
-        }),
+      screen.getByText("La descripción es obligatoria", {
+        selector: '[role="alert"] *',
+      }),
     ).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();
   });
@@ -69,14 +69,23 @@ describe("PhoneIncidentForm", () => {
       target: { value: "600" },
     });
     fireEvent.click(
-        screen.getByRole("button", { name: "Registrar incidencia" }),
+      screen.getByRole("button", { name: "Registrar incidencia" }),
     );
 
     expect(
-        await screen.findByText("Introduce un teléfono válido", {
-          selector: '[role="alert"] *',
-        }),
+      await screen.findByText("Introduce un teléfono válido", {
+        selector: '[role="alert"] *',
+      }),
     ).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();
+  });
+
+  it("disables its fields when frozen is true", () => {
+    renderPhoneIncidentForm({ frozen: true });
+
+    expect(screen.getByLabelText(/^Hora de apertura/)).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "Registrar incidencia" }),
+    ).not.toBeDisabled();
   });
 });

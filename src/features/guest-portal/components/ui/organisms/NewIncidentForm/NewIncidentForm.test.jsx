@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import NewIncidentForm from "./NewIncidentForm.jsx";
 
@@ -15,6 +15,10 @@ function fillRequiredFields() {
 }
 
 describe("NewIncidentForm", () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+  });
+
   it("freezes the fields and shows a connectivity message on a network error", async () => {
     const onSubmit = vi.fn().mockRejectedValue({});
     render(<NewIncidentForm onSubmit={onSubmit} />);
@@ -58,5 +62,46 @@ describe("NewIncidentForm", () => {
       ),
     ).not.toBeInTheDocument();
     expect(screen.getByLabelText("Nombre")).not.toBeDisabled();
+  });
+
+  it("persists field values to sessionStorage as the user types", () => {
+    render(<NewIncidentForm onSubmit={vi.fn()} />);
+
+    fireEvent.change(screen.getByLabelText("Nombre"), {
+      target: { value: "Marta" },
+    });
+
+    const draft = JSON.parse(sessionStorage.getItem("guestIncidentDraft"));
+    expect(draft.firstName).toBe("Marta");
+  });
+
+  it("restores a saved draft when the form mounts", () => {
+    sessionStorage.setItem(
+      "guestIncidentDraft",
+      JSON.stringify({
+        firstName: "Marta",
+        lastName: "",
+        contact: "",
+        description: "",
+        category: "",
+      }),
+    );
+
+    render(<NewIncidentForm onSubmit={vi.fn()} />);
+
+    expect(screen.getByLabelText("Nombre")).toHaveValue("Marta");
+  });
+
+  it("clears the draft after a successful submit", async () => {
+    const onSubmit = vi.fn().mockResolvedValue({ code: "INC-1" });
+    render(<NewIncidentForm onSubmit={onSubmit} />);
+
+    fillRequiredFields();
+    fireEvent.click(screen.getByRole("button", { name: "Enviar incidencia" }));
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(sessionStorage.getItem("guestIncidentDraft")).toBeNull(),
+    );
   });
 });

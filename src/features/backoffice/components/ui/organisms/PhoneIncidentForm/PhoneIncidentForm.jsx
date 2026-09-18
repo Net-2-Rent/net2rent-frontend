@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, useWatch, Controller } from "react-hook-form";
 import TextField from "../../../../../../shared/components/ui/atoms/TextField/TextField.jsx";
 import TextArea from "../../../../../../shared/components/ui/atoms/TextArea/TextArea.jsx";
@@ -16,9 +17,12 @@ import PhoneField from "../../../../../../shared/components/ui/molecules/PhoneFi
 import { isPossiblePhoneNumber } from "react-phone-number-input";
 import PhotoUploadList from "../../../../../../shared/components/ui/organisms/PhotoUploadList/PhotoUploadList.jsx";
 import "./PhoneIncidentForm.scss";
+import { useFormDraft } from "../../../../../../hooks/useFormDraft.js";
 
 const DESC_MIN = 10;
 const DESC_MAX = 2000;
+
+const DRAFT_KEY = "phoneIncidentDraft";
 
 const NAME_FILTER = /[^\p{L}\p{M} '-]/gu;
 const NAME_PATTERN = /^[\p{L}\p{M} '-]+$/u;
@@ -44,29 +48,42 @@ export default function PhoneIncidentForm({
   loadingOptions = false,
   frozen = false,
 }) {
+  const [draft, updateDraft, clearDraft] = useFormDraft(DRAFT_KEY, {
+    lodgingId: "",
+    operatorId: "",
+    openedDate: today(),
+    openedTime: new Date().toTimeString().slice(0, 5),
+    firstName: "",
+    lastName: "",
+    contact: "",
+    category: "",
+    priority: INCIDENT_PRIORITY.NORMAL,
+    description: "",
+  });
+
   const {
     register,
     handleSubmit,
     getValues,
     control,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onTouched",
     defaultValues: {
-      lodgingId: "",
-      operatorId: "",
-      openedDate: today(),
-      openedTime: new Date().toTimeString().slice(0, 5),
-      firstName: "",
-      lastName: "",
-      contact: "",
-      category: "",
-      priority: INCIDENT_PRIORITY.NORMAL,
-      description: "",
+      ...draft,
       images: [],
     },
   });
+
+  useEffect(() => {
+    const subscription = watch((values) => {
+      const { images, ...rest } = values;
+      updateDraft(rest);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   const descriptionValue = useWatch({ control, name: "description" });
   const descriptionLength = (descriptionValue ?? "").length;
@@ -90,13 +107,19 @@ export default function PhoneIncidentForm({
 
   function handleDiscard() {
     reset();
+    clearDraft();
     onDiscard?.();
+  }
+
+  async function handleFormSubmit(values) {
+    const succeeded = await onSubmit(values);
+    if (succeeded) clearDraft();
   }
 
   return (
     <form
       className="phone-incident-form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleFormSubmit)}
       noValidate
     >
       <NoticeBox tone="brand">

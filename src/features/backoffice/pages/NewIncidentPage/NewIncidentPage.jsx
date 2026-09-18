@@ -106,8 +106,9 @@ function PhoneIncidentFormWithNetworkAwareness({
   async function handleFormSubmit(values) {
     try {
       await submit(values);
+      return true;
     } catch {
-      // ya gestionado por onSuccess/onError de useNetworkAwareSubmit
+      return false;
     }
   }
 

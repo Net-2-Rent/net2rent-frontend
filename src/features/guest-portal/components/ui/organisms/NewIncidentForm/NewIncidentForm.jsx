@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useFormDraft } from "../../../../../../hooks/useFormDraft.js";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import TextField from "../../../../../../shared/components/ui/atoms/TextField/TextField.jsx";
 import TextArea from "../../../../../../shared/components/ui/atoms/TextArea/TextArea.jsx";
@@ -18,6 +19,14 @@ import { useNetworkAwareSubmit } from "../../../../../../hooks/useNetworkAwareSu
 
 const DESCRIPTION_MIN = 10;
 const DESCRIPTION_MAX = 2000;
+const DRAFT_KEY = "guestIncidentDraft";
+const DRAFT_DEFAULTS = {
+  firstName: "",
+  lastName: "",
+  contact: "",
+  description: "",
+  category: "",
+};
 
 const NAME_FILTER = /[^\p{L}\p{M} '-]/gu;
 const NAME_PATTERN = /^[\p{L}\p{M} '-]+$/u;
@@ -27,20 +36,22 @@ function onlyNameChars(value) {
 }
 
 export default function NewIncidentForm({ onSubmit }) {
+  const [draft, updateDraft, clearDraft] = useFormDraft(
+    DRAFT_KEY,
+    DRAFT_DEFAULTS,
+  );
+
   const {
     register,
     handleSubmit,
     control,
     setError,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     mode: "onTouched",
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      contact: "",
-      description: "",
-      category: "",
+      ...draft,
       images: [],
     },
   });
@@ -53,7 +64,10 @@ export default function NewIncidentForm({ onSubmit }) {
     error: submitError,
   } = useNetworkAwareSubmit(onSubmit, {
     fallbackMessage: "No se pudo enviar la incidencia. Inténtalo de nuevo.",
-    onSuccess: () => setHasFieldErrors(false),
+    onSuccess: () => {
+      setHasFieldErrors(false);
+      clearDraft();
+    },
     onError: (err) => {
       const fieldErrors = err.response?.data?.errors;
       setHasFieldErrors(!!fieldErrors?.length);
@@ -62,6 +76,14 @@ export default function NewIncidentForm({ onSubmit }) {
       });
     },
   });
+
+  useEffect(() => {
+    const subscription = watch((values) => {
+      const { images, ...rest } = values;
+      updateDraft(rest);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   const descriptionValue = useWatch({ control, name: "description" }) ?? "";
   const descriptionLength = descriptionValue.length;

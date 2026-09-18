@@ -104,12 +104,8 @@ function PhoneIncidentFormWithNetworkAwareness({
   });
 
   async function handleFormSubmit(values) {
-    try {
-      await submit(values);
-      return true;
-    } catch {
-      return false;
-    }
+    const { ok } = await submit(values);
+    return ok;
   }
 
   return (

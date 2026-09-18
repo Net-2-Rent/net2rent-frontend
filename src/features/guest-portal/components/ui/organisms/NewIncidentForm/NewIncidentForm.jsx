@@ -117,9 +117,7 @@ export default function NewIncidentForm({ onSubmit }) {
   }
 
   async function handleFormSubmit(values) {
-    try {
-      await submit(values);
-    } catch {}
+    await submit(values);
   }
 
   return (

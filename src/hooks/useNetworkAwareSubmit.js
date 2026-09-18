@@ -22,12 +22,12 @@ export function useNetworkAwareSubmit(
         const result = await submitFn(values);
         setFrozen(false);
         onSuccess?.(result);
-        return result;
+        return { ok: true, data: result };
       } catch (err) {
         setError(getErrorMessage(err, fallbackMessage));
         setFrozen(isNetworkError(err));
         onError?.(err);
-        throw err;
+        return { ok: false, error: err };
       }
     },
     [submitFn, fallbackMessage, onSuccess, onError],
